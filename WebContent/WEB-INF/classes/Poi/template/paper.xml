@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<excel id="patent" code="patent" name="论文信息导入">
+<excel id="paper" code="paper" name="论文信息导入">
     <colgroup>
         <col index="A" width='17em'></col>
         <col index="B" width='17em'></col>
@@ -8,19 +8,19 @@
         <col index="E" width='17em'></col>
         <col index="F" width='17em'></col> 
         <col index="G" width='17em'></col>              
-        <col index="H" width='17em'></col>              
     </colgroup>
     <title>
         <tr height="16px">
-            <td rowspan="1" colspan="5" value="论文信息导入" />
+            <td rowspan="1" colspan="7" value="论文信息导入" />
         </tr>
     </title>
     <thead>
         <tr height="16px">
-            <th value="名称" />
+        	<th value="检索号" />
+            <th value="论文名" />
             <th value="第一作者" />
             <th value="发表报刊" />
-            <th value="时间" />
+            <th value="发表时间" />
             <th value="级别" />
             <th value="备注" />            
         </tr>

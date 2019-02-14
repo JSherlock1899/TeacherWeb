@@ -11,9 +11,8 @@ import java.util.Map;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import dao.BaseDao;
+import dao.IBaseDao;
 import dao.IPatentDao;
-import dao.TeacherDao;
 import model.ExcelPatent;
 import model.Pager;
 import model.Patent;
@@ -24,9 +23,9 @@ import util.DbUtil;
 public class PatentDaoImpl implements IPatentDao{
 	protected DbUtil dbUtil = new DbUtil();
 	private PreparedStatement stmt = null;
-	TeacherDao teacherdao = new TeacherDao();
+	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
 	CommonUnit commondao = new CommonUnit();
-	BaseDao baseDao = new BaseDao();
+	IBaseDao baseDao = new BaseDaoImpl();
 	
 	@Override
 	public int delPatent(String Patsn) {		//根据授权号删除对应的专利信息
@@ -147,7 +146,7 @@ public class PatentDaoImpl implements IPatentDao{
 				System.out.println("1");
 				List params = Arrays.asList(m,n);
 				return dbUtil.getResultSet(sql1, params);
-			}else if(!college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院
+			}else if(!college.equals("") && sdept == null && starttime == null || !college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院
 				System.out.println("2");
 				List params = Arrays.asList(college,m,n);
 				return dbUtil.getResultSet(sql2, params);

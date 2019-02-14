@@ -1,15 +1,14 @@
-package dao;
+package dao.impl;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import dao.IBaseDao;
 import util.DbUtil;
 
 
-public class BaseDao {
+public class BaseDaoImpl implements IBaseDao {
 protected DbUtil dbUtil = new DbUtil();
 private PreparedStatement stmt = null;
 

@@ -1,10 +1,11 @@
+<%@page import="dao.impl.BaseDaoImpl"%>
+<%@page import="dao.IBaseDao"%>
 <%@page import="model.Pager"%>
 <%@page import="java.util.List"%>
 <%@page import="model.Patent"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="java.sql.ResultSet"%>
-<%@page import="dao.BaseDao"%>
 <%@page import="dao.impl.PatentDaoImpl"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -21,7 +22,7 @@
 </head>
 <body>
 				<%
-							BaseDao basedao = new BaseDao();
+							IBaseDao basedao = new BaseDaoImpl();
 							Pager pager = (Pager) request.getAttribute("pager");
 							List<Patent> datalist =  pager.getDataList();	//要显示的数据集合
 							int currentPage =  pager.getCurrentPage();		//获取当前页码
@@ -35,6 +36,8 @@
 							String Tname = (String) request.getAttribute("Tname");
 							int[] pageArr = (int[]) request.getAttribute("pageArr"); 
 							int grade = (int) session.getAttribute("grade");	//获取用户的权限等级
+							college = (String) session.getAttribute("Cname");	//获取用户的所属学院
+							System.out.println(college);
 				%>
 	<div class="table-main col-md-12">
 		<div class="col-md-4" >
@@ -59,6 +62,7 @@
 						<a class="btn btn-warning" href="../servlet/SelectExport?all=all&count=4">导出全部数据</a>
 						<input type="file" id="file" name="file"  class="btn btn-info" style="display: none" onchange="submitFile()"> 
 						<input type="button" name="" value="上传文件"  class="btn btn-warning" id="imporFileButton">
+						<input type="hidden" id="Cname" value="<%=college %>"/>
 				</div>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">

@@ -12,5 +12,10 @@ public interface IAdminDao {
 		
 	//判断管理员级别
 	public int AdminJudge(String adminName)throws SQLException;
+	
+	
+	//获取院管理员的所属学院
+	public String getAdminCname(String Adminname)throws SQLException;
+	
 		
 }

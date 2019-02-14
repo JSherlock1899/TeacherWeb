@@ -74,6 +74,8 @@ public class ReadExcel {
 							list.add(cellValue);
 							break;
 						}
+					}else {
+						list.add(null);
 					}
 				}
 			}

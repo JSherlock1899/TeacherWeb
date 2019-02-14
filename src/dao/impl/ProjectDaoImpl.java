@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import dao.BaseDao;
+import dao.IBaseDao;
 import dao.IProjectDao;
-import dao.TeacherDao;
 import model.Patent;
 import model.Project;
 import util.CommonUnit;
@@ -20,8 +19,8 @@ public class ProjectDaoImpl implements IProjectDao{
 	
 	protected DbUtil dbUtil = new DbUtil();
 	private PreparedStatement stmt = null;
-	TeacherDao teacherdao = new TeacherDao();
-	BaseDao basedao = new BaseDao();
+	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
+	IBaseDao baseDao = new BaseDaoImpl();
 	CommonUnit commondao = new CommonUnit();
 	@Override
 	public int delProject(String Psn) {
@@ -135,7 +134,7 @@ public class ProjectDaoImpl implements IProjectDao{
 						System.out.println("1");
 						List params = Arrays.asList(m,n);
 						return dbUtil.getResultSet(sql1, params);
-					}else if(!college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院
+					}else if(!college.equals("") && sdept == null && starttime == null ||!college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院
 						System.out.println("2");
 						List params = Arrays.asList(college,m,n);
 						return dbUtil.getResultSet(sql2, params);
@@ -187,7 +186,7 @@ public class ProjectDaoImpl implements IProjectDao{
 				} catch (NullPointerException | SQLException e) {
 					e.printStackTrace();
 				}finally {
-					basedao.closeCon();
+					baseDao.closeCon();
 				}
 				return null;
 	}

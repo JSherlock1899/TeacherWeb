@@ -32,6 +32,9 @@ public class Project {
 		Premarks = premarks;
 		this.totalRecord = totalRecord;
 	}
+	
+
+
 
 	public Project(String psn, String pname, String pleader, String pmember, String pgrad, String pkind, int pmoney,
 			Date pstatime, String pcondition, Date pendtime, String premarks, String paccessory) {
@@ -48,6 +51,22 @@ public class Project {
 		Pendtime = pendtime;
 		Premarks = premarks;
 		Paccessory = paccessory;
+	}
+
+	public Project(String psn, String pname, String pleader, String pmember, String pgrad, String pkind, int pmoney,
+			Date pstatime, String pcondition, Date pendtime, String premarks) {
+		super();
+		Psn = psn;
+		Pname = pname;
+		Pleader = pleader;
+		Pmember = pmember;
+		Pgrad = pgrad;
+		Pkind = pkind;
+		Pmoney = pmoney;
+		Pstatime = pstatime;
+		Pcondition = pcondition;
+		Pendtime = pendtime;
+		Premarks = premarks;
 	}
 
 	public String getPsn() {

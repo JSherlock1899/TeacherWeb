@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import dao.BaseDao;
+import dao.IBaseDao;
+import dao.impl.BaseDaoImpl;
 import model.Patent;
 import service.PatentService;
 import util.CommonUnit;
@@ -32,7 +32,7 @@ public class PatentServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// 根据不同的value值来分发到不同的操作
 		String value = request.getParameter("value");
-		BaseDao baseDao = new BaseDao();
+		IBaseDao baseDao = new BaseDaoImpl();
 		CommonUnit commondao = new CommonUnit();
 		PatentService patentservice = new PatentService();
 		String Patname = request.getParameter("Patname"); // 获取要更新的各字段值

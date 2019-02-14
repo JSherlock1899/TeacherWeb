@@ -14,18 +14,7 @@ public class Patent {
 	private int TotalRecord; //数据总条数
 
 	
-	public int getTotalRecord() {
-		return TotalRecord;
-	}
-	public void setTotalRecord(int totalRecord) {
-		TotalRecord = totalRecord;
-	}
-	public String getPaccessory() {
-		return Paccessory;
-	}
-	public void setPaccessory(String paccessory) {
-		Paccessory = paccessory;
-	}
+	
 	//	public Patent(Map <String,Object> map) {
 //		Patname = (String) map.get("Patname");
 //		Pleader = (String) map.get("Pleader");
@@ -36,9 +25,7 @@ public class Patent {
 //		Patremarks = (String) map.get("Patremarks");
 //	}
 	
-	public String getPatname() {
-		return Patname;
-	}
+	
 	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
 			String patremarks) {
 		super();
@@ -50,9 +37,7 @@ public class Patent {
 		Patgrad = patgrad;
 		Patremarks = patremarks;
 	}
-	public void setPatname(String patname) {
-		Patname = patname;
-	}
+	
 	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
 			String patremarks, String paccessory, int totalRecord) {
 		super();
@@ -65,6 +50,24 @@ public class Patent {
 		Patremarks = patremarks;
 		Paccessory = paccessory;
 		TotalRecord = totalRecord;
+	}
+	public int getTotalRecord() {
+		return TotalRecord;
+	}
+	public void setTotalRecord(int totalRecord) {
+		TotalRecord = totalRecord;
+	}
+	public String getPaccessory() {
+		return Paccessory;
+	}
+	public void setPaccessory(String paccessory) {
+		Paccessory = paccessory;
+	}
+	public String getPatname() {
+		return Patname;
+	}
+	public void setPatname(String patname) {
+		Patname = patname;
 	}
 	public String getPleader() {
 		return Pleader;

@@ -35,9 +35,6 @@ public class ReadExcelServlet extends HttpServlet {
 				try {
 					//获取excel文件各单元格的值
 					CellValues = ReadExcel.getValue(path);
-					for(Object i :CellValues ) {
-						System.out.println(i);
-					}
 				} catch (ParseException e) {
 					e.printStackTrace();
 				}

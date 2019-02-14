@@ -9,9 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import dao.BaseDao;
+
+import dao.IBaseDao;
+import dao.impl.BaseDaoImpl;
 import model.Honor;
 import model.Pager;
+import model.Paper;
 import model.Patent;
 import model.Project;
 import service.HonorService;
@@ -31,6 +34,10 @@ public class PageServlet extends HttpServlet {
 				// 根据不同的option值来分发到不同的jsp
 				String option = request.getParameter("option");
 				String collegevalue = request.getParameter("collegevalue");//所属学院
+				String college = request.getParameter("college");//所属学院
+				if(college!=null) {				//判断是否是院管理员
+					collegevalue = college;
+				}
 				String sdeptValue = request.getParameter("sdeptValue");//所属专业
 				String starttime = request.getParameter("starttime");//起止时间
 				String endtime = request.getParameter("endtime");
@@ -51,7 +58,7 @@ public class PageServlet extends HttpServlet {
 				}else{
 					pageSize = Integer.parseInt(request.getParameter("pageSizeSelect"));
 				}
-				BaseDao baseDao = new BaseDao();
+				IBaseDao baseDao = new BaseDaoImpl();
 				if(option.equals("Patent")) {
 					PatentService patentService = new PatentService();
 					ResultSet patentRs = patentService.selectCollegePatent(collegevalue, sdeptValue, starttime, endtime, selectByNameVal, currentPage, pageSize);
@@ -74,7 +81,7 @@ public class PageServlet extends HttpServlet {
 					}
 				}else if(option.equals("Honor")) {
 					HonorService honorservice = new HonorService();
-					ResultSet honorrs = honorservice.selectCollegeHonor(collegevalue, sdeptValue, endtime, selectByNameVal, currentPage, pageSize);
+					ResultSet honorrs = honorservice.selectCollegeHonor(collegevalue, sdeptValue, starttime, selectByNameVal, currentPage, pageSize);
 					List<Honor> datalist = honorservice.getDataList(honorrs);
 					if(datalist.size()>0) {
 						int totalRecord = datalist.get(0).getTotalRecord();//获取数据总条数
@@ -87,7 +94,7 @@ public class PageServlet extends HttpServlet {
 						request.setAttribute("pageArr", pageArr);
 						request.setAttribute("college", collegevalue);
 						request.setAttribute("sdept", sdeptValue);
-						request.setAttribute("endtime", endtime);
+						request.setAttribute("starttime", starttime);
 						request.setAttribute("Tname", selectByNameVal);
 						request.getRequestDispatcher("/School/Honor/SchoolHonorSelect.jsp").forward(request, response);
 					}
@@ -117,26 +124,26 @@ public class PageServlet extends HttpServlet {
 						e.printStackTrace();
 					}
 					
-//				}else if(option.equals("Paper")) {
-//					PaperService paperService = new PaperService();
-//					ResultSet paperRs = paperService.selectCollegeHonor(collegevalue, sdeptValue, endtime, selectByNameVal, currentPage, pageSize);
-//					List<Honor> datalist = paperService.getDataList(paperRs);
-//					if(datalist.size()>0) {
-//						int totalRecord = datalist.get(0).getTotalRecord();//获取数据总条数
-//						int totalPage = pageutil.getTotalPage(totalRecord, pageSize);//获取总页数
-//						@SuppressWarnings("unchecked")
-//						Pager pager = new Pager(pageSize,currentPage,totalRecord,totalPage,datalist);
-//						int[] pageArr = pageutil.getPage(currentPage,totalPage); //获取正确的页码
-//						request.setAttribute("pager", pager);
-//						request.setAttribute("currentPage", currentPage);
-//						request.setAttribute("pageArr", pageArr);
-//						request.setAttribute("college", collegevalue);
-//						request.setAttribute("sdept", sdeptValue);
-//						request.setAttribute("endtime", endtime);
-//						request.setAttribute("Tname", selectByNameVal);
-//						request.getRequestDispatcher("/School/Honor/SchoolPaperSelect.jsp").forward(request, response);
-//					
-//					}
+				}else if(option.equals("Paper")) {
+					PaperService paperService = new PaperService();
+					ResultSet paperRs = paperService.selectCollegePaper(collegevalue, sdeptValue, starttime, selectByNameVal, currentPage, pageSize);
+					List<Paper> datalist = paperService.getDataList(paperRs);
+					if(datalist.size()>0) {
+						int totalRecord = datalist.get(0).getTotalRecord();//获取数据总条数
+						int totalPage = pageutil.getTotalPage(totalRecord, pageSize);//获取总页数
+						@SuppressWarnings("unchecked")
+						Pager pager = new Pager(pageSize,currentPage,totalRecord,totalPage,datalist);
+						int[] pageArr = pageutil.getPage(currentPage,totalPage); //获取正确的页码
+						request.setAttribute("pager", pager);
+						request.setAttribute("currentPage", currentPage);
+						request.setAttribute("pageArr", pageArr);
+						request.setAttribute("college", collegevalue);
+						request.setAttribute("sdept", sdeptValue);
+						request.setAttribute("starttime", starttime);
+						request.setAttribute("Tname", selectByNameVal);
+						request.getRequestDispatcher("/School/Paper/SchoolPaperSelect.jsp").forward(request, response);
+					
+					}
 				}
 			}
 	

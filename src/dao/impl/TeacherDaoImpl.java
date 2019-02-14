@@ -1,4 +1,4 @@
-package dao;
+package dao.impl;
 
 import java.sql.PreparedStatement;
 
@@ -6,13 +6,15 @@ import util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import dao.ITeacherDao;
 import model.Teacher;
 /**
  * 教师数据库操作
  * @author Administrator
  */
-public class TeacherDao extends BaseDao {
+public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 	private PreparedStatement stmt = null;
+	@Override
 	public int TeacherLogin(Teacher teacher) throws SQLException{	
 		try {
 			String sql = "select count(*) from Teacher where Tsn=? and Tpsw=?";
@@ -37,6 +39,7 @@ public class TeacherDao extends BaseDao {
 	/*
 	 * 查询教师号
 	 */
+	@Override
 	public String getTsn(String Tname) throws SQLException {
 		String sql = "select Tsn from Teacher where Tname =?";
 		stmt = dbUtil.getConnection().prepareStatement(sql);
@@ -49,6 +52,20 @@ public class TeacherDao extends BaseDao {
 		}
 		return Tsn;
 		
+	}
+
+	@Override
+	public String getTname(String Tsn) throws SQLException {
+		String sql = "select Tname from Teacher where Tsn = ?";
+		stmt = dbUtil.getConnection().prepareStatement(sql);
+		stmt.setString(1,Tsn);
+		ResultSet Trs = stmt.executeQuery();
+		String Tname = null;
+		while(Trs.next()) {
+			Tname = Trs.getString("Tname");
+			 return Tname;
+		}
+		return Tsn;
 	}
 
 }

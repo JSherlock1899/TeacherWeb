@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import dao.IAdminDao;
-import dao.TeacherDao;
+import dao.ITeacherDao;
 import dao.impl.AdminDaoImpl;
+import dao.impl.TeacherDaoImpl;
 import model.Admin;
 import model.Teacher;
 
@@ -50,11 +51,12 @@ public class LoginServlet extends HttpServlet {
 						
 						
 						int result = adminDao.AdminJudge(name);// result为管理员身份判断返回值，0为院管理员，1为校管理员,-1为程序异常
-
+						String Cname = adminDao.getAdminCname(name);
 						if (result == 0) {
 							// 跳转到院管理员页面
 							request.getSession().setAttribute("grade", 2); //设置权限等级
-							out.print("<script>window.location='College/CollegeAdmin.jsp'</script>");
+							request.getSession().setAttribute("Cname", Cname);						
+							out.print("<script>window.location='School/SchoolAdmin.jsp'</script>");
 							return; 
 						} else if (result == 1) {
 							// 跳转到校管理员页面
@@ -66,7 +68,6 @@ public class LoginServlet extends HttpServlet {
 							out.print("<script>alert('系统错误！');window.location='error.jsp'</script>");
 							return;
 						}
-
 					} else if (count == 0) {	
 						// 因为还要判断教师表中是否有符合的用户所以不用进行操作
 					} else {
@@ -87,7 +88,7 @@ public class LoginServlet extends HttpServlet {
 		}
 		case 2: {
 
-			TeacherDao teacherDao = new TeacherDao();
+			ITeacherDao teacherDao = new TeacherDaoImpl();
 			Teacher teacher = new Teacher(name, password);
 			try {
 				int count = teacherDao.TeacherLogin(teacher);

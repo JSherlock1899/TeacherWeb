@@ -28,7 +28,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr height="16px" firstrow="2" firstcol="0">
+        <tr height="16px" firstrow="2" firstcol="0" repeat="5">
             <td type="string" isnullable="false" maxlength="30" />
             <td type="string" isnullable="false" maxlength="30" />
             <td type="string" isnullable="false" maxlength="30" />

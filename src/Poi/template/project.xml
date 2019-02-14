@@ -12,7 +12,6 @@
         <col index="I" width='17em'></col>
         <col index="J" width='17em'></col>
         <col index="K" width='17em'></col> 
-        <col index="L" width='17em'></col>              
     </colgroup>
     <title>
         <tr height="16px">
@@ -35,18 +34,18 @@
         </tr>
     </thead>
     <tbody>
-        <tr height="16px" firstrow="2" firstcol="0">
+        <tr height="16px" firstrow="2" firstcol="0" repeat="5">
             <td type="string" isnullable="false" maxlength="30" />
             <td type="string" isnullable="false" maxlength="30" />
             <td type="string" isnullable="false" maxlength="30" />
-            <td type="string" isnullable="true" maxlength="30" defaultValue=" " />
-            <td type="string" isnullable="true" maxlength="30" defaultValue=" " />
-            <td type="string" isnullable="true" maxlength="30" defaultValue=" " />
-             <td type="string" isnullable="true" maxlength="30" defaultValue=" " />
-             <td type="string" isnullable="true" maxlength="30" defaultValue=" " />
-            <td type="date" isnullable="true" maxlength="30" defaultValue=" " />
-             <td type="date" isnullable="true" maxlength="30" defaultValue=" " />
-             <td type="string" isnullable="true" maxlength="30" defaultValue=" " />
+            <td type="string" isnullable="true" maxlength="30"  />
+            <td type="string" isnullable="true" maxlength="30"  />
+            <td type="string" isnullable="true" maxlength="30"  />
+             <td type="string" isnullable="true" maxlength="30"  />
+             <td type="string" isnullable="true" maxlength="30"  />
+            <td type="date" isnullable="true" maxlength="30"  />
+             <td type="date" isnullable="true" maxlength="30"  />
+             <td type="string" isnullable="true" maxlength="30"  />
         </tr>
     </tbody>
 </excel>

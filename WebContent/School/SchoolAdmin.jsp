@@ -1,4 +1,5 @@
-<%@page import="dao.BaseDao"%>
+<%@page import="dao.impl.BaseDaoImpl"%>
+<%@page import="dao.IBaseDao"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@page import="java.sql.*"%>
@@ -26,7 +27,9 @@
 			request.getSession().removeAttribute("userType");
 			response.sendRedirect("../login.jsp");
 		}
+		String college = (String) session.getAttribute("Cname");	//获取用户的所属学院
 	%>
+	<input type="hidden" id="Cname" value="<%=college %>"/>
 	<nav class="navbar-default navbar-fixed-top">
 	<div class="navbar-header">
 		<a class="navbar-brand mystyle-brand"><span
@@ -61,28 +64,28 @@
 					<ul class="navContent" style="display: block">
 						<li>
 							<div class="showtitle" style="width: 100px;">项目查询</div> <a
-							href="../servlet/PageServlet?option=Project"
+							href="../servlet/PageServlet?option=Project&college=<%=college %>"
 							onclick="Projectchange()" class="active3" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">项目查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">论文查询</div> <a
-							href="../servlet/PageServlet?option=Paper"
+							href="../servlet/PageServlet?option=Paper&college=<%=college %>"
 							onclick="Paperchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">论文查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">荣誉查询</div> <a
-							href="../servlet/PageServlet?option=Honor"
+							href="../servlet/PageServlet?option=Honor&college=<%=college %>"
 							onclick="Honorchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">荣誉查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">专利查询</div> <a
-							href="../servlet/PageServlet?option=Patent"
+							href="../servlet/PageServlet?option=Patent&college=<%=college %>"
 							onclick="Patentchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">专利查询</span></a>
@@ -134,20 +137,31 @@
 					<!-- 查询下拉框及按要求进行查询  -->
 					<select id="college" class="form-control" name="college"
 						onchange="CollegeSelectchange();move()">
-						<option value="">请选择所在学院</option>
 						<%
-							BaseDao baseDao = new BaseDao();
+							IBaseDao baseDao = new BaseDaoImpl();
 							String sql = "select * from College";
 							ResultSet CollegeRs = baseDao.select(sql);
-							while (CollegeRs.next()) {
-								String CollegeName = CollegeRs.getString("Cname"); //获取学院名
-						%>
-						<option value="<%=CollegeName%>">
-							<%=CollegeName%>
-						</option>
-						<%
+							if(college == null){
+								%>
+								<option value="" id="selectCollege">请选择所在学院</option>
+								<%
+								while (CollegeRs.next()) {
+									String CollegeName = CollegeRs.getString("Cname"); //获取学院名
+							%>
+							<option value="<%=CollegeName%>">
+								<%=CollegeName%>
+							</option>
+							<%
+								}
 							}
-						%>
+							%>
+							<%if(college!=null){
+								%>
+							<option value="<%=college%>">
+							<%=college%>
+							</option>
+								
+							<%} %>
 					</select> <select id="sdept" class="form-control" style="margin-left: 25px"
 						onchange="CollegeSelectchange()">
 						<option value="">请选择所在专业</option>

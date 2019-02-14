@@ -33,8 +33,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
-
-import dao.BaseDao;
 import model.ExcelPatent;
 import servlet.PatentServlet;
 

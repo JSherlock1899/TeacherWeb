@@ -10,9 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import dao.BaseDao;
+import dao.IBaseDao;
+import dao.impl.BaseDaoImpl;
 import model.Project;
 import service.ProjectService;
 import util.CommonUnit;
@@ -32,7 +31,7 @@ public class ProjectServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// 根据不同的value值来分发到不同的操作
 		String value = request.getParameter("value");
-		BaseDao baseDao = new BaseDao();
+		IBaseDao baseDao = new BaseDaoImpl();
 		CommonUnit commondao = new CommonUnit();
 		ProjectService Projectservice = new ProjectService();
 		String Psn = request.getParameter("Psn"); // 获取要更新的各字段值

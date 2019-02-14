@@ -14,6 +14,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -42,6 +43,8 @@ public class UploadFileServlet extends HttpServlet {
 		String count = request.getParameter("count");
 		//grade为用户权限等级
 		String grade = request.getParameter("grade");
+		HttpSession session=request.getSession();
+		String college = (String)session.getAttribute("Cname");
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		// 设置上传文件时 用到的临时文件的大小DiskFileItemFactory
@@ -69,6 +72,19 @@ public class UploadFileServlet extends HttpServlet {
 						File fileupload = new File(path);
 						if (!fileupload.exists()) {
 							fileupload.mkdir();
+						}
+						File file = new File(path, fileName);
+						item.write(file);// 上传
+					}else if(grade.equals("2")) {
+						path = path + "\\" + college;
+						File fileupload = new File(path);
+						if (!fileupload.exists()) {
+							fileupload.mkdir();
+							path = path + "\\院管理员";
+							fileupload = new File(path);
+							if(!fileupload.exists()) {
+								fileupload.mkdir();
+							}
 						}
 						File file = new File(path, fileName);
 						item.write(file);// 上传

@@ -23,7 +23,7 @@ import model.Honor;
 import model.Paper;
 import model.Patent;
 import model.Project;
-import util.CommonUnit;
+import util.CommonUtil;
 import util.DbUtil;
 
 @WebServlet("/servlet/SelectExport")
@@ -41,7 +41,7 @@ public class SelectExport extends HttpServlet {
 		IBaseDao baseDao = new BaseDaoImpl();
 		ITeacherDao teacherDao = new TeacherDaoImpl();
 		DbUtil dbutil = new DbUtil();
-		CommonUnit util = new CommonUnit();
+		CommonUtil util = new CommonUtil();
 		String[] ids = request.getParameterValues("select");
 		if (count.equals("4")) { // 关于专利表的导出，count为传入用来判断的值
 			ExportExcel<Patent> ex = new ExportExcel<Patent>();

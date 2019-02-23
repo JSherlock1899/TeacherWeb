@@ -8,14 +8,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-public class CommonUnit {
-	public Date stringToDate(String str) {					//将字符串型的数据转化为日期型
+public class CommonUtil {
+	
+	//将字符串型的数据转化为日期型
+	public Date stringToDate(String str) {					
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
 		// String转Date
@@ -28,7 +34,9 @@ public class CommonUnit {
 		return date;
 	}
 	
-	public java.sql.Date utilToSql(Date utildate) {			//util.Date转化为sql.Date
+	
+	//util.Date转化为sql.Date
+	public java.sql.Date utilToSql(Date utildate) {			
 		java.sql.Date sqlDate=new java.sql.Date(utildate.getTime());
 		return sqlDate;
 		
@@ -63,7 +71,8 @@ public class CommonUnit {
 	}
 	
 	
-	public static String disposePageValue(String value) { //处理分页数据的问题
+	//处理分页数据的问题
+	public static String disposePageValue(String value) { 
 		if(value!=null) {
 			if(value.equals("null")) {
 				return null;
@@ -73,13 +82,34 @@ public class CommonUnit {
 		}
 		return value;
 	}
-	public static String disposeSdeptValue(String sdept) {	//处理分页数据的问题
+	
+	
+	//处理分页数据的问题
+	public static String disposeSdeptValue(String sdept) {	
 		if(sdept!=null) {
 			if(sdept.equals("请选择所在专业") ) {
 				return "";
 			}
 		}
 		return sdept;
+	}
+
+	
+	//将结果集转化成map
+	public Map<String,Integer> countRsToMap(ResultSet rs) throws SQLException{
+		Map<String,Integer> map = new HashMap<String,Integer>();
+		while(rs.next()) {
+			map.put(rs.getString("Cname"), rs.getInt("count"));
+		}
+		return map;
+	}
+	
+	public Map<String,Integer> moneyRsToMap(ResultSet rs) throws SQLException{
+		Map<String,Integer> map = new HashMap<String,Integer>();
+		while(rs.next()) {
+			map.put(rs.getString("Cname"), rs.getInt("Pmoney"));
+		}
+		return map;
 	}
 	public static void main(String[] args) {
 	

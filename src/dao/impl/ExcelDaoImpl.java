@@ -8,14 +8,14 @@ import java.util.Date;
 import java.util.List;
 import dao.IBaseDao;
 import dao.IExcelDao;
-import util.CommonUnit;
+import util.CommonUtil;
 import util.DbUtil;
 
 public class ExcelDaoImpl extends BaseDaoImpl implements IExcelDao {
 	private PreparedStatement stmt = null;
 	DbUtil dbutil = new DbUtil();
 	IBaseDao baseDao = new BaseDaoImpl();
-	CommonUnit unit = new CommonUnit();
+	CommonUtil unit = new CommonUtil();
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
 
 	public int insertPatentValues(List datalist) {

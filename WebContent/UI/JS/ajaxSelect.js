@@ -43,6 +43,7 @@ function ajaxSelect(option) {
 		    var reg = /.*aid\=([^\&]+).*/g;
 		    var result = newcss.replace(reg,"$1");
 		}
+		
 
 
 		//查询框的值改变时动态改变查询内容
@@ -53,11 +54,47 @@ function ajaxSelect(option) {
 		    var result = newcss.replace(reg,"$1");
 		    //当已经进行过一次查询后将正确的url分割出来
 		    var firsturl = result.split('option='); //通过字符串分割得到option
+		    //根据url中是否含Page来判断是查询还是统计
+		    var judge = result.indexOf("PageServlet");			
 		    var option = firsturl[1];
-		    console.log(firsturl)
-		    ajaxSelect(option);
-		    
+		    if(judge!=-1){
+		    	ajaxSelect(option);
+		    }else{
+		    	goStatistics(option);
+		    }  
 		}
 
+		//分发到统计页面
+		function goStatistics(option){
+			var collegevalue = $('#college option:selected').val();// 选中的学院值
+			var sdeptValue = $('#sdept option:selected').val();// 选中的专业值
+			var starttime = $('#starttime').val();
+			var endtime = $('#endtime').val();
+			var selectByNameVal = $("#selectByNameVal").val();
+			var pageSizeSelect = $("#pageSizeSelect").val();
+			var currentPage = $("#currentPage").val();
+			document.getElementById("select_frame").src="../servlet/StatisticsServlet?sdeptValue=" +sdeptValue 
+			+ "&collegevalue=" +collegevalue + "&starttime=" + starttime + "&endtime=" + endtime + "&selectByNameVal=" + selectByNameVal
+			+ "&pageSizeSelect=" + pageSizeSelect + "&currentPage=" + currentPage + "&option=" + option;
+		}
 		
+		function ProjectStatistics(){
+			goStatistics("Project")
+		    }
+			
+
+
+		function PaperStatistics(){
+			goStatistics("Paper")
+			
+		}
+
+		function HonorStatistics(){
+			goStatistics("Honor")
+
+		}
+
+		function PatentStatistics(){	
+			goStatistics("Patent")
+		}
 		

@@ -12,14 +12,14 @@ import dao.IBaseDao;
 import dao.IHonorDao;
 import model.Honor;
 import model.Patent;
-import util.CommonUnit;
+import util.CommonUtil;
 import util.DbUtil;
 
 public class HonorDaoImpl implements IHonorDao{
 	protected DbUtil dbUtil = new DbUtil();
 	private PreparedStatement stmt = null;
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
-	CommonUnit commondao = new CommonUnit();
+	CommonUtil commondao = new CommonUtil();
 	
 	@Override
 	public int delHonor(String Hsn) {			//根据荣誉号删除对应的荣誉信息
@@ -72,11 +72,11 @@ public class HonorDaoImpl implements IHonorDao{
 			//当前页的最后一条记录
 			int n = currentPage * pageSize;
 			IBaseDao baseDao = new BaseDaoImpl();
-			college = CommonUnit.disposePageValue(college);
-			sdept = CommonUnit.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
-			sdept = CommonUnit.disposeSdeptValue(sdept);
-			endtime = CommonUnit.disposePageValue(endtime);
-			Tname = CommonUnit.disposePageValue(Tname);
+			college = CommonUtil.disposePageValue(college);
+			sdept = CommonUtil.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
+			sdept = CommonUtil.disposeSdeptValue(sdept);
+			endtime = CommonUtil.disposePageValue(endtime);
+			Tname = CommonUtil.disposePageValue(Tname);
 			System.out.println("college = " + college);
 			System.out.println("sdept = " + sdept);
 			System.out.println("endtime = " + endtime);

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import Poi.CreateTemplate;
-import util.CommonUnit;
+import util.CommonUtil;
 
 /**
  * Servlet implementation class ImportExcel
@@ -20,7 +20,7 @@ public class DownloadTemplate extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//根据不同的count值来分发到不同的操作
 		String count = request.getParameter("count");
-		CommonUnit commondao = new CommonUnit();
+		CommonUtil commondao = new CommonUtil();
 		System.out.println(count);
 		CreateTemplate template = new CreateTemplate();
 		if(count.equals("4")) {							//分别读取对应的xml文件

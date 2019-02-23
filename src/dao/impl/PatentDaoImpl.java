@@ -16,7 +16,7 @@ import dao.IPatentDao;
 import model.ExcelPatent;
 import model.Pager;
 import model.Patent;
-import util.CommonUnit;
+import util.CommonUtil;
 import util.DbUtil;
 
 //对应专利的各种数据库操作
@@ -24,7 +24,7 @@ public class PatentDaoImpl implements IPatentDao{
 	protected DbUtil dbUtil = new DbUtil();
 	private PreparedStatement stmt = null;
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
-	CommonUnit commondao = new CommonUnit();
+	CommonUtil commondao = new CommonUtil();
 	IBaseDao baseDao = new BaseDaoImpl();
 	
 	@Override
@@ -82,12 +82,12 @@ public class PatentDaoImpl implements IPatentDao{
 		int m = (currentPage - 1) * pageSize + 1;
 		//当前页的最后一条记录
 		int n = currentPage * pageSize;
-		college = CommonUnit.disposePageValue(college);
-		sdept = CommonUnit.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
-		sdept = CommonUnit.disposeSdeptValue(sdept);
-		starttime = CommonUnit.disposePageValue(starttime);
-		endtime = CommonUnit.disposePageValue(endtime);
-		Tname = CommonUnit.disposePageValue(Tname);
+		college = CommonUtil.disposePageValue(college);
+		sdept = CommonUtil.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
+		sdept = CommonUtil.disposeSdeptValue(sdept);
+		starttime = CommonUtil.disposePageValue(starttime);
+		endtime = CommonUtil.disposePageValue(endtime);
+		Tname = CommonUtil.disposePageValue(Tname);
 		System.out.println("college =" + college);
 		System.out.println("sdept =" + sdept);
 		System.out.println("starttime =" + starttime);
@@ -215,7 +215,6 @@ public class PatentDaoImpl implements IPatentDao{
 			}
 			return datalist;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return datalist;

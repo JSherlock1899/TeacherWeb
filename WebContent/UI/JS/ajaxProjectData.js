@@ -83,25 +83,7 @@ $(document).on("click",".save",function(){
 });
 
 //新建信息
-//新建表格行
-$(document).on("click","#addMsg",function(){
-		var tr = "<tr><td><input type='checkbox' name = 'select'></td>"+
-		"<td class=Psn><input type='text' class='Psn' style='width:50px'></td>" +
-		"<td class=Pname><input type='text' class='Pname' style='width:50px'></td>" +
-		"<td class=Pleader><input type='text' class='Pleader' style='width:50px'></td>" +
-		"<td class=Pgrad><input type='text' class='Pgrad' style='width:80px'></td>"+ 
-		"<td class=Pkind><input type='text' class='Pkind' style='width:50px'></td>"+ 
-		"<td class=Pcondition><input type='text' class='Pcondition' style='width:80px'></td>"+ 
-		"<td class=Pmember><input type='text' class='Pmember' style='width:80px'></td>" +
-		"<td class=Pmoney><input type='text' class='Pmoney' style='width:50px'></td>" +		
-		"<td class=Pstatime><input type='date' class='Pstatime' style='width:50px'></td>"+
-		"<td class=Pendtime><input type='date' class='Pendtime' style='width:50px'></td>"+ 
-		"<td class=Premarks><input type='text' class='Premarks' style='width:50px'></td>" +
-		"<td class=Paccessory><input type='file' class='Paccessory' style='width:50px'></td>"+
-		"<td><a class='delete'>删除</a><a class='saveNewMsg' >保存</a></td>"
-		"</tr>";
-		$("table").append(tr);//向table中追加tr
-	});
+
 
 //获取新建行当前每个表格单元的信息
 $(document).on("click",".saveNewMsg",function(){

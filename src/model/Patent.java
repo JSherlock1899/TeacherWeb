@@ -51,6 +51,10 @@ public class Patent {
 		Paccessory = paccessory;
 		TotalRecord = totalRecord;
 	}
+	public Patent() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getTotalRecord() {
 		return TotalRecord;
 	}

@@ -2,6 +2,7 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import model.Patent;
 
@@ -28,4 +29,7 @@ public interface IPatentDao {
 	
 	
 	public List<Patent> getDataList(ResultSet rs);//将结果集转化为集合
+	
+	
+
 }

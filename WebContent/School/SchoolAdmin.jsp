@@ -100,25 +100,29 @@
 					<ul class="navContent" style="display: none">
 						<li>
 							<div class="showtitle" style="width: 100px;">项目统计</div> <a
-							href="#"><span
+							href="../servlet/StatisticsServlet?option=Project&college=<%=college %>" 
+							onclick="ProjectStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon  glyphicon-align-justify"></span><span
 								class="sub-title">项目统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">论文统计</div> <a
-							href="#"><span
+							href="../servlet/StatisticsServlet?option=Paper&college=<%=college %>" 
+							onclick="PaperStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
 								class="sub-title">论文统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">荣誉统计</div> <a
-							href="#"><span
+							href="../servlet/StatisticsServlet?option=Honor&college=<%=college %>" 
+							onclick="HonorStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
 								class="sub-title">荣誉统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">专利统计</div> <a
-							href="#"><span
+							href="../servlet/StatisticsServlet?option=Patent&college=<%=college %>" 
+							onclick="PatentStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
 								class="sub-title">专利统计</span></a>
 						</li>

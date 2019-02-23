@@ -18,7 +18,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-import util.CommonUnit;
+import util.CommonUtil;
 
 public class CreateTemplate {
 
@@ -149,7 +149,7 @@ public class CreateTemplate {
 			FileOutputStream stream = FileUtils.openOutputStream(tempFile);
 			wb.write(stream);
 			stream.close();
-			CommonUnit commondao = new CommonUnit();
+			CommonUtil commondao = new CommonUtil();
 			String filepath = "D://" + templateName + ".xls";
 			commondao.download(filepath, response);
 		} catch (Exception e) {

@@ -12,7 +12,7 @@ import dao.IBaseDao;
 import dao.IProjectDao;
 import model.Patent;
 import model.Project;
-import util.CommonUnit;
+import util.CommonUtil;
 import util.DbUtil;
 
 public class ProjectDaoImpl implements IProjectDao{
@@ -21,7 +21,7 @@ public class ProjectDaoImpl implements IProjectDao{
 	private PreparedStatement stmt = null;
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
 	IBaseDao baseDao = new BaseDaoImpl();
-	CommonUnit commondao = new CommonUnit();
+	CommonUtil commondao = new CommonUtil();
 	@Override
 	public int delProject(String Psn) {
 		String sql = "delete from project where Psn = ?";		
@@ -70,12 +70,12 @@ public class ProjectDaoImpl implements IProjectDao{
 				int m = (currentPage - 1) * pageSize + 1;
 				//当前页的最后一条记录
 				int n = currentPage * pageSize;
-				college = CommonUnit.disposePageValue(college);
-				sdept = CommonUnit.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
-				sdept = CommonUnit.disposeSdeptValue(sdept);
-				starttime = CommonUnit.disposePageValue(starttime);
-				endtime = CommonUnit.disposePageValue(endtime);
-				Tname = CommonUnit.disposePageValue(Tname);
+				college = CommonUtil.disposePageValue(college);
+				sdept = CommonUtil.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
+				sdept = CommonUtil.disposeSdeptValue(sdept);
+				starttime = CommonUtil.disposePageValue(starttime);
+				endtime = CommonUtil.disposePageValue(endtime);
+				Tname = CommonUtil.disposePageValue(Tname);
 				System.out.println("college =" + college);
 				System.out.println("sdept =" + sdept);
 				System.out.println("starttime =" + starttime);
@@ -127,7 +127,7 @@ public class ProjectDaoImpl implements IProjectDao{
 				//设置了要查询的学院和专业和起止时间和教师名
 				String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Cname,Dname ," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
-						+ " join Sdept s on t.Dsn = s.Dsn  where  c.Cname = ? and Dname = ? and    >= ? and Pendtime <= ? and Tname = ?) as pp where pp.r between ? and ?"; ;	
+						+ " join Sdept s on t.Dsn = s.Dsn  where  c.Cname = ? and Dname = ? and Pendtime <= ? and Tname = ?) as pp where pp.r between ? and ?"; ;	
 				try {
 				if(Tname == null || Tname.equals("")) {		//判断是否进行了精确查询
 					if(college ==  null && sdept == null && starttime == null || college.equals("") && sdept.equals("") && starttime.equals("") ) {							//此时刚跳转到该jsp,页面刚刷新，所有参数均为null，输出所有专利信息

@@ -16,7 +16,7 @@ import dao.IPaperDao;
 import dao.impl.BaseDaoImpl;
 import dao.impl.PaperDaoImpl;
 import model.Patent;
-import util.CommonUnit;
+import util.CommonUtil;
 
 /**
  * 对论文表进行增删改
@@ -42,7 +42,7 @@ public class PaperServlet extends HttpServlet {
 		response.setCharacterEncoding("utf-8");
 		IBaseDao baseDao = new BaseDaoImpl();
 		IPaperDao paperDao = new PaperDaoImpl();
-		CommonUnit commondao = new CommonUnit();
+		CommonUtil commondao = new CommonUtil();
 		String Pasearchnum = request.getParameter("Pasearchnum"); // 获取要更新的各字段值
 		String Paname = request.getParameter("Paname"); 
 		String Pawriter = request.getParameter("Pawriter");

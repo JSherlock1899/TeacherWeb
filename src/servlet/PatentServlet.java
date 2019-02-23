@@ -15,7 +15,7 @@ import dao.IBaseDao;
 import dao.impl.BaseDaoImpl;
 import model.Patent;
 import service.PatentService;
-import util.CommonUnit;
+import util.CommonUtil;
 
 /**
  * 对论文表进行增删改
@@ -33,7 +33,7 @@ public class PatentServlet extends HttpServlet {
 		// 根据不同的value值来分发到不同的操作
 		String value = request.getParameter("value");
 		IBaseDao baseDao = new BaseDaoImpl();
-		CommonUnit commondao = new CommonUnit();
+		CommonUtil commondao = new CommonUtil();
 		PatentService patentservice = new PatentService();
 		String Patname = request.getParameter("Patname"); // 获取要更新的各字段值
 		String Pleader = request.getParameter("Pleader"); // 专利第一责任人

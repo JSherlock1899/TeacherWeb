@@ -11,7 +11,7 @@ import java.util.List;
 import dao.IBaseDao;
 import dao.IPaperDao;
 import model.Paper;
-import util.CommonUnit;
+import util.CommonUtil;
 import util.DbUtil;
 
 public class PaperDaoImpl implements IPaperDao{
@@ -19,7 +19,7 @@ public class PaperDaoImpl implements IPaperDao{
 	protected DbUtil dbUtil = new DbUtil();
 	private PreparedStatement stmt = null;
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
-	CommonUnit commondao = new CommonUnit();
+	CommonUtil commondao = new CommonUtil();
 
 	@Override
 	public int delPaper(String Panum) {
@@ -69,11 +69,11 @@ public class PaperDaoImpl implements IPaperDao{
 		//当前页的最后一条记录
 		int n = currentPage * pageSize;
 		IBaseDao baseDao = new BaseDaoImpl();
-		college = CommonUnit.disposePageValue(college);
-		sdept = CommonUnit.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
-		sdept = CommonUnit.disposeSdeptValue(sdept);
-		endtime = CommonUnit.disposePageValue(endtime);
-		Tname = CommonUnit.disposePageValue(Tname);
+		college = CommonUtil.disposePageValue(college);
+		sdept = CommonUtil.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
+		sdept = CommonUtil.disposeSdeptValue(sdept);
+		endtime = CommonUtil.disposePageValue(endtime);
+		Tname = CommonUtil.disposePageValue(Tname);
 		System.out.println("college = " + college);
 		System.out.println("sdept = " + sdept);
 		System.out.println("endtime = " + endtime);

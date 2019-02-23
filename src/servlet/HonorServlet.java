@@ -13,7 +13,7 @@ import dao.IBaseDao;
 import dao.impl.BaseDaoImpl;
 import model.Honor;
 import service.HonorService;
-import util.CommonUnit;
+import util.CommonUtil;
 
 /**
  * 对荣誉表的增删改
@@ -32,7 +32,7 @@ public class HonorServlet extends HttpServlet {
 				String value = request.getParameter("value");
 				IBaseDao baseDao = new BaseDaoImpl();
 				HonorService honorservice = new HonorService();
-				CommonUnit commondao = new CommonUnit();
+				CommonUtil commondao = new CommonUtil();
 				String Hsn = request.getParameter("Hsn"); // 获取要更新的各字段值
 				String Hname = request.getParameter("Hname"); // 专利第一责任人
 				String Hwinner = request.getParameter("Hwinner");

@@ -12,17 +12,16 @@
     <error-code>500</error-code>
     <location>/500.jsp</location>
   </error-page>
-  <!-- 使用过滤器来解决字符编码问题 -->
   <filter>
-  	<filter-name>charsetEncodingFilter</filter-name>
-  	<filter-class>util.CharsetEncodingFilter</filter-class>
-  	<init-param>
-  		<param-name>CharsetEncoding</param-name>
-  		<param-value>UTF-8</param-value>
-  	</init-param>
+    <filter-name>charsetEncodingFilter</filter-name>
+    <filter-class>util.CharsetEncodingFilter</filter-class>
+    <init-param>
+      <param-name>CharsetEncoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
-  	<filter-name>charsetEncodingFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
+    <filter-name>charsetEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 </web-app>

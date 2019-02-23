@@ -22,6 +22,9 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import dao.ITeacherDao;
+import dao.impl.TeacherDaoImpl;
+
 /**
  * 上传文件
  */
@@ -52,8 +55,8 @@ public class UploadFileServlet extends HttpServlet {
 		// 控制上传单个文件的大小 20000KB ServletFileUpload
 		upload.setSizeMax(20480000);// 字节B
 
-		// 通过parseRequest解析form中的所有请求字段，并保存到 items集合中（即前台传递的sno sname
-		// 文件就保存在了items中）
+		// 通过parseRequest解析form中的所有请求字段，并保存到 items集合中
+		// 文件就保存在了items中
 		PrintWriter out = response.getWriter();
 		List<FileItem> items;
 		try {
@@ -67,6 +70,7 @@ public class UploadFileServlet extends HttpServlet {
 					String ext = fileName.substring(fileName.indexOf(".") + 1);
 					
 					String path = "D:\\uploadFile";
+					//分不同身份上传文件
 					if(grade.equals("1")) {		//判断用户权限
 						path = path + "\\校管理员";
 						File fileupload = new File(path);
@@ -80,11 +84,28 @@ public class UploadFileServlet extends HttpServlet {
 						File fileupload = new File(path);
 						if (!fileupload.exists()) {
 							fileupload.mkdir();
-							path = path + "\\院管理员";
-							fileupload = new File(path);
-							if(!fileupload.exists()) {
-								fileupload.mkdir();
-							}
+						}
+						path = path + "\\院管理员";
+						fileupload = new File(path);
+						if(!fileupload.exists()) {
+							fileupload.mkdir();
+						}
+						File file = new File(path, fileName);
+						item.write(file);// 上传
+					}else if(grade.equals("3")) {
+						ITeacherDao teacherDao = new TeacherDaoImpl();
+						String Tsn = (String) request.getSession().getAttribute("Tsn");
+						String Tname = teacherDao.getTname(Tsn);
+						String teacherCollege = teacherDao.getTeacherCollege(Tsn);
+						path = path + "\\" + teacherCollege;
+						File fileupload = new File(path);
+						if (!fileupload.exists()) {
+							fileupload.mkdir();				
+						}
+						path = path + "\\" + Tname;
+						fileupload = new File(path);
+						if(!fileupload.exists()) {
+							fileupload.mkdir();
 						}
 						File file = new File(path, fileName);
 						item.write(file);// 上传
@@ -93,6 +114,7 @@ public class UploadFileServlet extends HttpServlet {
 					
 					fileName = java.net.URLEncoder.encode(fileName,"utf-8");
 					path = java.net.URLEncoder.encode(path,"utf-8");
+					//导入excel的接口
 					if (tally != null && tally.equals("1")) {
 						// 判断是不是excel文件如果是则导入数据
 						if (ext.equals("xls") || ext.equals("xlsx")) {

@@ -48,12 +48,7 @@
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
 				<div class="col-md-10 button-div form-inline">
-					<input type="button" value="新建记录" id="addMsg" class="btn btn-success"> 
-					<a href="../servlet/DownloadTemplate?count=1" class="btn btn-success">下载模板</a>
-					<form method="post" enctype="multipart/form-data" action="../servlet/UploadFileServlet?tally=1&count=1&grade=<%=grade %>" class="form-group importform">
-						<input type="file" id="myfile" name="myfile" class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
-						<input type="button" name="" value="导入"  class="btn btn-info" id="importButton">
-					</form>			
+					<input type="button" value="新建记录" id="addMsg" class="btn btn-success"> 		
 					<form action="../servlet/SelectExport"  method="post" id="ProjectForm" class="form-group">
 						<input type="hidden" name="count" value="1">
 						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">

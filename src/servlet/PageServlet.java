@@ -64,55 +64,18 @@ public class PageServlet extends HttpServlet {
 		}
 		IBaseDao baseDao = new BaseDaoImpl();
 		ITeacherDao teacherDao = new TeacherDaoImpl();
-		if (teacher != null) {// 判断是否是管理员
-			if (option.equals("Patent")) {
-				PatentService patentService = new PatentService();
-				ResultSet patentRs = patentService.selectCollegePatent(collegevalue, sdeptValue, starttime, endtime,
-						selectByNameVal, currentPage, pageSize);
-				List<Patent> datalist = patentService.getDataList(patentRs); //获取查询得到的结果集
-				if (datalist.size() > 0) {
-					int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
-					int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
-					@SuppressWarnings("unchecked")
-					Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
-					int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
-					request.setAttribute("pager", pager);
-					request.setAttribute("currentPage", currentPage);
-					request.setAttribute("pageArr", pageArr);
-					request.setAttribute("college", collegevalue);
-					request.setAttribute("sdept", sdeptValue);
-					request.setAttribute("starttime", starttime);
-					request.setAttribute("endtime", endtime);
-					request.setAttribute("Tname", selectByNameVal);
-					request.getRequestDispatcher("/School/Patent/SchoolPatentSelect.jsp").forward(request, response);
-				}
-			} else if (option.equals("Honor")) {
-				HonorService honorservice = new HonorService();
-				ResultSet honorrs = honorservice.selectCollegeHonor(collegevalue, sdeptValue, starttime,
-						selectByNameVal, currentPage, pageSize);
-				List<Honor> datalist = honorservice.getDataList(honorrs);
-				if (datalist.size() > 0) {
-					int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
-					int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
-					@SuppressWarnings("unchecked")
-					Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
-					int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
-					request.setAttribute("pager", pager);
-					request.setAttribute("currentPage", currentPage);
-					request.setAttribute("pageArr", pageArr);
-					request.setAttribute("college", collegevalue);
-					request.setAttribute("sdept", sdeptValue);
-					request.setAttribute("starttime", starttime);
-					request.setAttribute("Tname", selectByNameVal);
-					request.getRequestDispatcher("/School/Honor/SchoolHonorSelect.jsp").forward(request, response);
-				}
-			} else if (option.equals("Project")) {
-				ProjectService projectService = new ProjectService();
-				ResultSet projectRs;
-				try {
-					projectRs = projectService.selectCollegeProject(collegevalue, sdeptValue, starttime, endtime,
-							selectByNameVal, currentPage, pageSize);
-					List<Project> datalist = projectService.getDataList(projectRs);
+		//当前页的第一条记录
+		int m = (currentPage - 1) * pageSize + 1;
+		//当前页的最后一条记录
+		int n = currentPage * pageSize;
+		if(teacher!=null) {
+			if (teacher.equals("admin")) {// 判断是否是管理员
+				//管理员部分
+				if (option.equals("Patent")) {
+					PatentService patentService = new PatentService();
+					ResultSet patentRs = patentService.selectCollegePatent(collegevalue, sdeptValue, starttime, endtime,
+							selectByNameVal, m, n);
+					List<Patent> datalist = patentService.getDataList(patentRs); //获取查询得到的结果集
 					if (datalist.size() > 0) {
 						int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
 						int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
@@ -124,65 +87,15 @@ public class PageServlet extends HttpServlet {
 						request.setAttribute("pageArr", pageArr);
 						request.setAttribute("college", collegevalue);
 						request.setAttribute("sdept", sdeptValue);
+						request.setAttribute("starttime", starttime);
 						request.setAttribute("endtime", endtime);
 						request.setAttribute("Tname", selectByNameVal);
-						request.getRequestDispatcher("/School/Project/SchoolProjectSelect.jsp").forward(request,
-								response);
+						request.getRequestDispatcher("/School/Patent/SchoolPatentSelect.jsp").forward(request, response);
 					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			} else if (option.equals("Paper")) {
-				PaperService paperService = new PaperService();
-				ResultSet paperRs = paperService.selectCollegePaper(collegevalue, sdeptValue, starttime,
-						selectByNameVal, currentPage, pageSize);
-				List<Paper> datalist = paperService.getDataList(paperRs);
-				if (datalist.size() > 0) {
-					int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
-					int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
-					@SuppressWarnings("unchecked")
-					Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
-					int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
-					request.setAttribute("pager", pager);
-					request.setAttribute("currentPage", currentPage);
-					request.setAttribute("pageArr", pageArr);
-					request.setAttribute("college", collegevalue);
-					request.setAttribute("sdept", sdeptValue);
-					request.setAttribute("starttime", starttime);
-					request.setAttribute("Tname", selectByNameVal);
-					request.getRequestDispatcher("/School/Paper/SchoolPaperSelect.jsp").forward(request, response);
-
-				}
-			}
-		} else {
-			// 教师部分
-			String Tsn = (String) request.getSession().getAttribute("Tsn");
-			if (option.equals("Patent")) {
-				PatentService patentService = new PatentService();
-				ResultSet patentRs;
-				try {
-					patentRs = teacherDao.getPatent(Tsn,currentPage,pageSize);
-					List<Patent> datalist = patentService.getDataList(patentRs);
-					if (datalist.size() > 0) {
-						int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
-						int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
-						@SuppressWarnings("unchecked")
-						Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
-						int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
-						request.setAttribute("pager", pager);
-						request.setAttribute("currentPage", currentPage);
-						request.setAttribute("pageArr", pageArr);
-						request.getRequestDispatcher("/Teacher/Patent/TeacherPatent.jsp").forward(request, response);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-
-			} else if (option.equals("Honor")) {
-				HonorService honorservice = new HonorService();
-				ResultSet honorrs;
-				try {
-					honorrs = teacherDao.getHonor(Tsn,currentPage,pageSize);
+				} else if (option.equals("Honor")) {
+					HonorService honorservice = new HonorService();
+					ResultSet honorrs = honorservice.selectCollegeHonor(collegevalue, sdeptValue, starttime,
+							selectByNameVal, currentPage, pageSize);
 					List<Honor> datalist = honorservice.getDataList(honorrs);
 					if (datalist.size() > 0) {
 						int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
@@ -193,37 +106,43 @@ public class PageServlet extends HttpServlet {
 						request.setAttribute("pager", pager);
 						request.setAttribute("currentPage", currentPage);
 						request.setAttribute("pageArr", pageArr);
-						request.getRequestDispatcher("/Teacher/Honor/TeacherHonor.jsp").forward(request, response);
+						request.setAttribute("college", collegevalue);
+						request.setAttribute("sdept", sdeptValue);
+						request.setAttribute("starttime", starttime);
+						request.setAttribute("Tname", selectByNameVal);
+						request.getRequestDispatcher("/School/Honor/SchoolHonorSelect.jsp").forward(request, response);
 					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			} else if (option.equals("Project")) {
-				ProjectService projectService = new ProjectService();
-				ResultSet projectRs;
-				try {
-					projectRs = teacherDao.getProject(Tsn,currentPage,pageSize);
-					List<Project> datalist = projectService.getDataList(projectRs);
-					if (datalist.size() > 0) {
-						int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
-						int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
-						@SuppressWarnings("unchecked")
-						Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
-						int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
-						request.setAttribute("pager", pager);
-						request.setAttribute("currentPage", currentPage);
-						request.setAttribute("pageArr", pageArr);
-						request.getRequestDispatcher("/Teacher/Project/TeacherProject.jsp").forward(request, response);
+				} else if (option.equals("Project")) {
+					ProjectService projectService = new ProjectService();
+					ResultSet projectRs;
+					try {
+						projectRs = projectService.selectCollegeProject(collegevalue, sdeptValue, starttime, endtime,
+								selectByNameVal, m, n);
+						List<Project> datalist = projectService.getDataList(projectRs);
+						if (datalist.size() > 0) {
+							int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
+							int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
+							@SuppressWarnings("unchecked")
+							Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
+							request.setAttribute("pager", pager);
+							request.setAttribute("currentPage", currentPage);
+							request.setAttribute("pageArr", pageArr);
+							request.setAttribute("college", collegevalue);
+							request.setAttribute("sdept", sdeptValue);
+							request.setAttribute("starttime", starttime);
+							request.setAttribute("endtime", endtime);
+							request.setAttribute("Tname", selectByNameVal);
+							request.getRequestDispatcher("/School/Project/SchoolProjectSelect.jsp").forward(request,
+									response);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-
-			} else if (option.equals("Paper")) {
-				PaperService paperService = new PaperService();
-				ResultSet paperRs;
-				try {
-					paperRs = teacherDao.getPaper(Tsn,currentPage,pageSize);
+				} else if (option.equals("Paper")) {
+					PaperService paperService = new PaperService();
+					ResultSet paperRs = paperService.selectCollegePaper(collegevalue, sdeptValue, starttime,
+							selectByNameVal, currentPage, pageSize);
 					List<Paper> datalist = paperService.getDataList(paperRs);
 					if (datalist.size() > 0) {
 						int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
@@ -234,12 +153,101 @@ public class PageServlet extends HttpServlet {
 						request.setAttribute("pager", pager);
 						request.setAttribute("currentPage", currentPage);
 						request.setAttribute("pageArr", pageArr);
-						request.getRequestDispatcher("/Teacher/Paper/TeacherPaper.jsp").forward(request, response);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+						request.setAttribute("college", collegevalue);
+						request.setAttribute("sdept", sdeptValue);
+						request.setAttribute("starttime", starttime);
+						request.setAttribute("Tname", selectByNameVal);
+						request.getRequestDispatcher("/School/Paper/SchoolPaperSelect.jsp").forward(request, response);
 
+					}
+				}
+			} else {
+				// 教师部分
+				String Tsn = (String) request.getSession().getAttribute("Tsn");
+				if (option.equals("Patent")) {
+					PatentService patentService = new PatentService();
+					ResultSet patentRs;
+					try {
+						patentRs = teacherDao.getPatent(Tsn,currentPage,pageSize);
+						List<Patent> datalist = patentService.getDataList(patentRs);
+						if (datalist.size() > 0) {
+							int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
+							int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
+							@SuppressWarnings("unchecked")
+							Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
+							request.setAttribute("pager", pager);
+							request.setAttribute("currentPage", currentPage);
+							request.setAttribute("pageArr", pageArr);
+							request.getRequestDispatcher("/Teacher/Patent/TeacherPatent.jsp").forward(request, response);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+				} else if (option.equals("Honor")) {
+					HonorService honorservice = new HonorService();
+					ResultSet honorrs;
+					try {
+						honorrs = teacherDao.getHonor(Tsn,currentPage,pageSize);
+						List<Honor> datalist = honorservice.getDataList(honorrs);
+						if (datalist.size() > 0) {
+							int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
+							int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
+							@SuppressWarnings("unchecked")
+							Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
+							request.setAttribute("pager", pager);
+							request.setAttribute("currentPage", currentPage);
+							request.setAttribute("pageArr", pageArr);
+							request.getRequestDispatcher("/Teacher/Honor/TeacherHonor.jsp").forward(request, response);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				} else if (option.equals("Project")) {
+					ProjectService projectService = new ProjectService();
+					ResultSet projectRs;
+					try {
+						projectRs = teacherDao.getProject(Tsn,currentPage,pageSize);
+						List<Project> datalist = projectService.getDataList(projectRs);
+						if (datalist.size() > 0) {
+							int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
+							int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
+							@SuppressWarnings("unchecked")
+							Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
+							request.setAttribute("pager", pager);
+							request.setAttribute("currentPage", currentPage);
+							request.setAttribute("pageArr", pageArr);
+							request.getRequestDispatcher("/Teacher/Project/TeacherProject.jsp").forward(request, response);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+				} else if (option.equals("Paper")) {
+					PaperService paperService = new PaperService();
+					ResultSet paperRs;
+					try {
+						paperRs = teacherDao.getPaper(Tsn,currentPage,pageSize);
+						List<Paper> datalist = paperService.getDataList(paperRs);
+						if (datalist.size() > 0) {
+							int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
+							int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
+							@SuppressWarnings("unchecked")
+							Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
+							request.setAttribute("pager", pager);
+							request.setAttribute("currentPage", currentPage);
+							request.setAttribute("pageArr", pageArr);
+							request.getRequestDispatcher("/Teacher/Paper/TeacherPaper.jsp").forward(request, response);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+
+				}
 			}
 		}
 	}

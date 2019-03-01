@@ -28,4 +28,6 @@ public int delProject(String Psn);		//根据项目号删除对应的项目信息
 	
 	
 	public List<Project> getDataList(ResultSet rs);//将结果集转化为集合
+	
+	public int projectAudit(String Psn,String Paudit); //审核
 }

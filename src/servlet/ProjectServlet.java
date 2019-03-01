@@ -88,7 +88,7 @@ public class ProjectServlet extends HttpServlet {
 			int result;
 			Date pstatime = commondao.stringToDate(Pstatime); // 将 string转化为date
 			Date pendtime = commondao.stringToDate(Pendtime); // 将 string转化为date
-			Project Project = new Project(Psn, Pleader, Pname, Pmember, Pgrad, Pkind, Pmoney,pstatime,Pcondition,pendtime,Premarks,Paccessory); // 构造要传入insert和update中的Project对象
+			Project Project = new Project(Psn, Pname, Pleader, Pmember, Pgrad, Pkind, Pmoney,pstatime,Pcondition,pendtime,Premarks); // 构造要传入insert和update中的Project对象
 			PrintWriter out = response.getWriter(); // 通过servlet的doget方法获取response对象，通过getWriter方法获取PrintWriter对象
 			out.flush(); // 清空缓存
 			try {
@@ -103,6 +103,10 @@ public class ProjectServlet extends HttpServlet {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}			
+		}else if(value.equals("4")) {			//审核通过
+			Projectservice.projectAudit(Psn, "1");
+		}else if(value.equals("5")) {			//审核不通过
+			Projectservice.projectAudit(Psn, "2");
 		}
 		try {
 			baseDao.closeCon(); //关闭资源

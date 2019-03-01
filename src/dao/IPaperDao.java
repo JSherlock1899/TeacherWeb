@@ -16,8 +16,10 @@ public interface IPaperDao {
 	
 	public int insertPaper(Paper paper) throws SQLException;		//插入新的论文信息
 	
-	
-	public ResultSet selectCollegePaper(String college,String sdept,String endtime,String Tname,int currentPage,int pageSize) throws SQLException ;		//根据查询条件的改变显示不同的查询结果
+	//根据查询条件的改变显示不同的查询结果
+	public ResultSet selectCollegePaper(String college,String sdept,String endtime,String Tname,int currentPage,int pageSize) throws SQLException ;		
 	
 	public List<Paper> getDataList(ResultSet rs);	//将结果集转化为集合
+	
+	public int paperAudit(String Pasearchnum,String Paudit); //审核
 }

@@ -16,9 +16,9 @@ public interface IHonorDao {
 	public int insertHonor(Honor honor) throws SQLException;		//插入新的荣誉信息
 	
 	
-	public ResultSet selectCollegeHonor(String college,String sdept,String endtime,String Tname,int currentPage,int pageSize) throws SQLException ;		//根据查询条件的改变显示不同的查询结果
+	public ResultSet selectCollegeHonor(String college,String sdept,String starttime,String Tname,int currentPage,int pageSize) throws SQLException ;		//根据查询条件的改变显示不同的查询结果
 	
 	public List<Honor> getDataList(ResultSet rs);	//将结果集转化为集合
 		
-	
+	public int honorAudit(String Hsn,String Paudit); //审核
 }

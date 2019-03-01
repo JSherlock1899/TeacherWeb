@@ -48,11 +48,24 @@
 	    });	
 	    
 	    
-	    //点击导入时打开文件上传选择窗口
+	 
+	    //处理分页页码问题
 	    $(function(){
-	    	$("#importButton").on("click",function(){
-	    	$('#myfile').click()
-	    })
+	    	var totalPage = $('#totalPage').val();
+	    	var currentPage = $('#currentPage').val();
+	    	if(totalPage < 3){
+	    		$('#page3').hide();
+	    	}
+	    	if(totalPage<2){
+	    		$('#page2').hide();
+	    	}
+	    	if(currentPage == 1){					//首页和尾页时分别隐藏对应按钮
+				$('#pre').css("display","none");
+			}
+			
+			if(currentPage == totalPage){
+				$('#next').css("display","none");
+			}
 	    })
 	    
 

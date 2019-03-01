@@ -49,4 +49,9 @@ public class PatentService {
 	public List<Patent> getDataList(ResultSet rs){	//将结果集转化为集合
 		return patentdao.getDataList(rs);
 	}
+	
+	//对未审核的专利进行审核
+	public int patentAudit(String Patsn, String Paudit) {
+		return patentdao.patentAudit(Patsn, Paudit);
+	}
 }

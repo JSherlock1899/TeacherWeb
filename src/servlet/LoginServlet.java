@@ -93,7 +93,7 @@ public class LoginServlet extends HttpServlet {
 			try {
 				int count = teacherDao.TeacherLogin(teacher);
 				if (count == 1) {
-					request.getSession().setAttribute("user", teacher.getTname());
+					request.getSession().setAttribute("user", teacherDao.getTname(name));
 					request.getSession().setAttribute("grade", 3);
 					request.getSession().setAttribute("Tsn", request.getParameter("username"));
 					out.print("<script>window.location='Teacher/Teacher.jsp'</script>");					

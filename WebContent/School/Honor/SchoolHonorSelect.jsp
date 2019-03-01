@@ -54,12 +54,22 @@
 						<input type="file" id="myfile" name="myfile" class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
 						<input type="button" name="" value="导入"  class="btn btn-info" id="importButton">
 					</form>			
-					<form action="../servlet/SelectExport"  method="post" id="HonorForm" class="form-group">
+					<form action="../servlet/ExportServlet?sdept=<%=sdept %>&college=<%=college %>&starttime=<%=starttime %>&endtime=<%=endtime %>&Tname=<%=Tname %>&totalRecord=<%=totalRecord %>&count=3"  method="post" id="PatentForm" class="form-group">
 						<input type="hidden" name="count" value="3">
 						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
 						<a class="btn btn-warning" href="../servlet/SelectExport?all=all&count=3">导出全部数据</a>
 						<input type="file" id="file" name="file"  class="btn btn-info" style="display: none" onchange="submitFile()"> 
 						<input type="button" name="" value="上传文件"  class="btn btn-warning" id="imporFileButton">
+						<input type="file" id="file" name="file"  class="btn btn-info" style="display: none" onchange="submitFile()"> 
+						<input type="hidden" id="college" value="<%=college %>"/>
+						<input type="hidden" id="sdept" value="<%=sdept %>"/>
+						<input type="hidden" id="starttime" value="<%=starttime %>"/>
+						<input type="hidden" id="endtime" value="<%=endtime %>"/>
+						<input type="hidden" id="Tname" value="<%=Tname %>"/>
+						<input type="hidden" id="grade" value="<%=grade %>"/>
+						<input type="hidden" id="totalPage" value="<%=totalPage %>"/>
+						<input type="hidden" id="currentPage" value="<%=currentPage %>"/>
+						<input type="hidden" id="totalRecord" value="<%=totalRecord %>"/>
 				</div>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
@@ -72,6 +82,7 @@
 								<th>级别</th>
 								<th>奖金</th>
 								<th>备注</th>
+								<th>附件</th>
 								<th>操作</th>
 							</tr>
 							<%	
@@ -89,7 +100,10 @@
 								<td class="Hcompany edit"><%=datalist.get(i).getHcompany()%></td>
 								<td class="Hgrad edit"><%=datalist.get(i).getHgrad()%></td>
 								<td class="Hreward edit"><%=datalist.get(i).getHreward()%></td>
-								<td class="Hremarks edit"><%=datalist.get(i).getHremarks()%></td>							
+								<td class="Hremarks edit"><%=datalist.get(i).getHremarks()%></td>
+								<td class="Paccessory edit">
+									<a href="<%=datalist.get(i).getHaccessory()%>">查看附件</a>
+								</td>							
 								<td class=""><a class="delete">删除</a>&nbsp<a class="updata">编辑</a></td>
 							</tr>
 							
@@ -110,39 +124,33 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/PageServlet?option=Honor&currentPage=1" id="homePage">首页</a>
+						<a href="../servlet/PageServlet?option=Honor&currentPage=1&teacher=admin" id="homePage">首页</a>
 					</li>
 					<li>
 						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage - 1%>&pageSize=5
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=5
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>
+					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=5
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"><%=pageArr[0]%></a></li>
-					<li><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=5
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>
+					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=5
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"><%=pageArr[1]%></a></li>
-					<li><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=5
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>
+					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=5
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"><%=pageArr[2]%></a></li>
-					<li><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[3]%>&pageSize=5
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>
-					&selectByNameVal=<%=Tname%>"><%=pageArr[3]%></a></li>
-					<li><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[4]%>&pageSize=5
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>
-					&selectByNameVal=<%=Tname%>"><%=pageArr[4]%></a></li>
 					<li>
 						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=5
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/PageServlet?option=Honor&currentPage=<%=totalPage %>" id="endPage" >尾页</a></li>
-					<li><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
+					<li><a href="../servlet/PageServlet?option=Honor&currentPage=<%=totalPage %>&teacher=admin" id="endPage" >尾页</a></li>
+					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
 			</form>
@@ -155,28 +163,31 @@
 	 </div>
 	</div>
 	<script type="text/javascript">
-		if(<%=currentPage %> == 1){					//首页和尾页时分别隐藏对应按钮
-			$('#pre').css("display","none");
-		}
-		
-		if(<%=currentPage %> == <%=totalPage %>){
-			$('#next').css("display","none");
-		}
+	
 		
 		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
 			var pageSizeSelect = $("#pageSize option:selected").val();
 			var href = "";
 			var a = "../servlet/PageServlet?option=Honor&currentPage=<%=currentPage%>&pageSizeSelect=";
-			var b = "&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>"
+			var b = "&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
 			href = href + a + pageSizeSelect + b;
 			window.location.href = href;
 		})
 		
 		function skipPage(){								//输入页码跳转页面
+			//页码输入框输入的数
 			var pageVal = $('.pageVal').val();
+			//总页数
+			var totalPage = $('#totalPage').val();
+			//一页显示的条数
+			var pageSize = $('#pageSize').val();
+			if(pageVal > totalPage){
+				alert('请输入正确的页码！');
+				return
+			}
 			var path = "";
 			var a = "../servlet/PageServlet?option=Honor&currentPage=";
-			var b = "&pageSizeSelect=<%=pageSize%>&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>"
+			var b = "&pageSizeSelect=<%=pageSize%>&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
 			path = path + a + pageVal + b;
 			window.location.href = path;
 		}

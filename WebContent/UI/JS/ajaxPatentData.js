@@ -74,32 +74,15 @@ $(document).on("click",".save",function(){
 });
 
 //新建信息
-//新建表格行
-$(document).on("click","#addMsg",function(){
-	alert('312421412412412412412412')
-		var tr = "<tr><td><input type='checkbox' name = 'select'></td>"+
-		"<td class=Patname><input type='text' class='Patname' style='width:50px'></td>" +
-		"<td class=Pleader><input type='text' class='Pleader' style='width:50px'></td>" +
-		"<td class=Patsn><input type='text' class='Patsn' style='width:50px'></td>" +
-		"<td class=Patapdate><input type='date' class='Patapdate' style='width:80px'></td>" +
-		"<td class=Patemdate><input type='date' class='Patemdate' style='width:80px'></td>"+ 
-		"<td class=Patgrad><input type='text' class='Patgrad' style='width:50px'></td>"+ 
-		"<td class=Patremarks><input type='text' class='Patremarks' style='width:50px'></td>" +
-		"<td class=Paccessory><input type='file' class='Paccessory' style='width:50px'></td>"+
-		"<td><a class='delete'>删除</a><a class='saveNewMsg' >保存</a></td>"
-		"</tr>";
-		$("table").append(tr);//向table中追加tr
-	});
-
 //获取新建行当前每个表格单元的信息
 $(document).on("click",".saveNewMsg",function(){
-	var Patname = $(this).closest("tr").find("input[class='Patname']").val();
-	var Pleader = $(this).closest("tr").find("input[class='Pleader']").val();
-	var Patsn = $(this).closest("tr").find("input[class='Patsn']").val();
-	var Patapdate = $(this).closest("tr").find("input[class='Patapdate']").val();
-	var Patemdate = $(this).closest("tr").find("input[class='Patemdate']").val();
-	var Patgrad = $(this).closest("tr").find("input[class='Patgrad']").val();
-	var Patremarks = $(this).closest("tr").find("input[class='Patremarks']").val();
+	var Patname = $('#Patname').val();
+	var Pleader = $('#Pleader').val();
+	var Patsn = $('#Patsn').val();
+	var Patapdate = $('#Patapdate').val();
+	var Patemdate = $('#Patemdate').val();
+	var Patgrad = $('#Patgrad').val();
+	var Patremarks = $('#Patremarks').val();
 	$.ajax({
         url:"../servlet/PatentServlet?value=3",
         type:"post",
@@ -124,78 +107,115 @@ $(document).on("click",".saveNewMsg",function(){
     });
 });
 
-//$(document).on("click","#homePage",function(e,url){
-//	var collegevalue = $('#college option:selected').val();// 选中的学院值
-//	var sdeptValue = $('#sdept option:selected').val();// 选中的学院值
-//	var starttime = $('#starttime').val();
-//	var endtime = $('#endtime').val();
-//	var selectByNameVal = $("#selectByNameVal").val();
-//	var pageSize = $("#pageSize").val();
-//	var currentPage = $("#currentPage").text();
-//	alert(pageSize)
-//	alert(currentPage)
-//    $.ajax({
-//    	url:"../../servlet/PageServlet?value=4&count=1",	
-//        type:"post",
-//        datatype:"json",
-//        data:{
-//            "collegevalue" : collegevalue,
-//            "sdeptValue" : sdeptValue,
-//            "starttime" : starttime,
-//            "endtime" : endtime,
-//            "selectByNameVal" : selectByNameVal,
-//            "pageSizeSelect" : pageSizeSelect,
-//            "currentPage" : currentPage,
-//        },
-//        error:function(msg){  
-//            alert('请求出现错误...');  
-//        }
-//    });
-//});
+//审核通过
+$(document).on("click","#pass",function(){
+	var Patsn = $(this).closest("tr").find(".Patsn").text();
+	$.ajax({
+		url:"../servlet/PatentServlet?value=4",
+        type:"post",
+        datatype:"json",
+        data:{
+        	"Patsn" : Patsn,
+        },
+        success : function(result){
+                alert("操作成功");
+                location.reload();
+        },
+        error:function(result){  
+            alert('请求出现错误...');  
+        }
+	})
+})
 
-
-//$(document).on("click","#submitChecked",function(){
-//	obj = document.getElementsByName("submitChecked");
-//    check_val = [];
-//    for(k in obj){
-//        if(obj[k].checked)
-//            check_val.push(obj[k].value);
-//    }
-//    alert(check_val);
-//	$.ajax({
-//		url:"../../servlet/SelectExport?value=4",
-//		type:"post",
-//		datatype:"json",
-//		data:{
-//			"check_val":check_val,
-//		},
-//		success:function(result){
-//			alert("导出成功！");
-//		},
-//		error:function(result){
-//			alert("请求出现错误");
-//		}
-//		})
-//	
-//})
-
-
-
-//给选中的checkbox赋对应的Patsn值
-//var checkedValue =  [];  //用来储存选择的专利的授权号
-//$(".checkedGroup").on("click",function(){
-//	if (this.checked){
-//		var Patsn = $(this).closest("tr").find(".Patsn").text();
-//		checkedValue.push($(this).closest("tr").find(".Patsn").text());
-//		//url = "/TeacherWeb/SelectExport?checkedValue =" + checkedValue;
-//	}
-//});
-//
-//
+//审核不通过
+$(document).on("click","#nopass",function(){
+	var Patsn = $(this).closest("tr").find(".Patsn").text();
+	$.ajax({
+		url:"../servlet/PatentServlet?value=5",
+        type:"post",
+        datatype:"json",
+        data:{
+        	"Patsn" : Patsn,
+        },
+        success : function(result){
+                alert("操作成功");
+                location.reload();
+        },
+        error:function(result){  
+            alert('请求出现错误...');  
+        }
+	})
+})
 
 	
+	   
+	    
+	    //新建按钮的事件
+		 $("#btn_add").click(function () {
+		 $("#myModalLabel").text("新建专利");
+		 $('#myModal').modal();
+		 });
 
+		function skipPage(){								//输入页码跳转页面
+			//页码输入框输入的数
+			var pageVal = $('.pageVal').val();
+			//总页数
+			var totalPage = $('#totalPage').val();
+			//一页显示的条数
+			var pageSize = $('#pageSize').val();
+			if(pageVal > totalPage){
+				alert('请输入正确的页码！');
+				return
+			}
+			var path = "";
+			var a = "../servlet/PageServlet?option=Patent&currentPage=";
+			var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher"
+			path = path + a + pageVal + b;
+			window.location.href = path;
+		}
+		
+		
+		//上传文件	    
+//		$(document).on("click",".imporFileButton",function(){
+//			 //点击上传文件时打开文件上传选择窗口
+//			$('#file').click()
+//	    	//对应的项目名
+//	    	var Proname = $(this).closest("tr").find(".Patname").text();
+//	    	$('#PatentForm').attr("enctype","multipart/form-data");
+//		    $('#PatentForm').attr("action","../servlet/UploadFileServlet");
+//		    $('#PatentForm').submit();
+//	    })
 
-
-
-	
+//		$(document).on("click","#submitChecked",function(){
+//
+//			var sdept = $('#sdept').val();
+//			var college = $('#college').val();
+//			var starttime = $('#starttime').val();
+//			var endtime = $('#endtime').val();
+//			var Tname = $('#Tname').val();
+//			alert(college);
+//			alert(sdept);
+//			alert(endtime);
+//			alert(starttime);
+//			alert(Tname);
+//			$.ajax({
+//		        url:"../servlet/ExportServlet",
+//		        type:"post",
+//		        datatype:"json",
+//		        data:{
+//		            "sdept" : sdept,
+//		            "college" : college,
+//		            "starttime" :starttime,
+//		            "endtime" : endtime,
+//		            "Tname" : Tname,
+//		        },
+//		        success : function(result){
+//		                alert("修改成功");
+//		                location.reload();
+//		                //window.location.href = "";
+//		        },
+//		        error:function(result){  
+//		            alert('请求出现错误...');  
+//		        }
+//		    });
+//		});

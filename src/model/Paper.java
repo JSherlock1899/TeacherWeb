@@ -11,6 +11,42 @@ public class Paper {
 	private Date Padate;
 	private String Paremarks;
 	private int totalRecord;
+	private String Paccessory; //附件
+	private String message;//留言
+	private String Pdisvol; //期/卷/页
+	
+	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
+			String paremarks, int totalRecord, String pdisvol) {
+		super();
+		Pasearchnum = pasearchnum;
+		Paname = paname;
+		Pawriter = pawriter;
+		Papublish = papublish;
+		Pagrad = pagrad;
+		Padate = padate;
+		Paremarks = paremarks;
+		this.totalRecord = totalRecord;
+		Pdisvol = pdisvol;
+	}
+
+	
+
+
+
+	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
+			String paremarks, String pdisvol) {
+		super();
+		Pasearchnum = pasearchnum;
+		Paname = paname;
+		Pawriter = pawriter;
+		Papublish = papublish;
+		Pagrad = pagrad;
+		Padate = padate;
+		Paremarks = paremarks;
+		Pdisvol = pdisvol;
+	}
+
+
 	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
 			String paremarks, int totalRecord) {
 		super();
@@ -23,6 +59,7 @@ public class Paper {
 		Paremarks = paremarks;
 		this.totalRecord = totalRecord;
 	}
+	
 	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
 			String paremarks) {
 		super();
@@ -33,6 +70,13 @@ public class Paper {
 		Pagrad = pagrad;
 		Padate = padate;
 		Paremarks = paremarks;
+	}
+	
+	public String getPdisvol() {
+		return Pdisvol;
+	}
+	public void setPdisvol(String pdisvol) {
+		Pdisvol = pdisvol;
 	}
 	public String getPasearchnum() {
 		return Pasearchnum;
@@ -58,6 +102,17 @@ public class Paper {
 	public void setPapublish(String papublish) {
 		Papublish = papublish;
 	}
+	
+	public String getPaccessory() {
+		return Paccessory;
+	}
+
+
+	public void setPaccessory(String paccessory) {
+		Paccessory = paccessory;
+	}
+
+
 	public String getPagrad() {
 		return Pagrad;
 	}
@@ -81,6 +136,16 @@ public class Paper {
 	}
 	public void setTotalRecord(int totalRecord) {
 		this.totalRecord = totalRecord;
+	}
+
+
+	public String getMessage() {
+		return message;
+	}
+
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 	

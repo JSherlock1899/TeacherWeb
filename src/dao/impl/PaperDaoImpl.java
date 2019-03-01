@@ -40,21 +40,21 @@ public class PaperDaoImpl implements IPaperDao{
 	@Override
 	public int alterPaper(Paper paper) throws SQLException {
 		String Tsn = teacherdao.getTsn(paper.getPawriter().trim());			//获取该论文作者对应的教师号
-		String sql = "update paper set Paname = ?,Pawriter = ?,Padate = ?,Papublish = ? ,Pagrad = ?,Paremarks = ?,Tsn = ? "
+		String sql = "update paper set Paname = ?,Pawriter = ?,Padate = ?,Papublish = ? ,Pagrad = ?,Paremarks = ?,Pdisvol = ?,Tsn = ? "
 				+ "where Pasearchnum = ?";
 		Date Padate = commondao.utilToSql(paper.getPadate());
 		List params = Arrays.asList(paper.getPaname(),paper.getPawriter(),Padate,paper.getPapublish(),paper.getPagrad(),
-				paper.getParemarks(),Tsn,paper.getPasearchnum());
+				paper.getParemarks(),paper.getPdisvol(),Tsn,paper.getPasearchnum());
 		return dbUtil.getUpdateResult(sql, params);
 	}
 
 	@Override
 	public int insertPaper(Paper paper) throws SQLException {
 		String Tsn = teacherdao.getTsn(paper.getPawriter().trim());			//获取该论文作者对应的教师号
-		String sql = "insert into paper (Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Tsn) Values(?,?,?,?,?,?,?,?)";
+		String sql = "insert into paper (Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Tsn,Paudit) Values(?,?,?,?,?,?,?,?,?,?)";
 		Date Padate = commondao.utilToSql(paper.getPadate());
 		List params = Arrays.asList(paper.getPasearchnum(),paper.getPaname(),paper.getPawriter(),paper.getPapublish(),Padate,paper.getPagrad(),paper.getParemarks(),
-						Tsn);
+				paper.getPdisvol(),Tsn,0);
 		return dbUtil.getUpdateResult(sql, params);
 	}
 	
@@ -79,52 +79,52 @@ public class PaperDaoImpl implements IPaperDao{
 		System.out.println("endtime = " + endtime);
 		System.out.println("Tname = " + Tname);
 		//什么都没有设置
-		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks "
+		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol "
 				+ ",ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn ) as pp where pp.r "
 				+ "between ? and ?";
 		//设置了要查询的学院
-		String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname ," + 
+		String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname ," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p  left join Teacher t on p.Tsn = t.Tsn "
 				+ "join College c on t.Csn = c.Csn where c.Cname = ?) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业
-		String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Dname ," 
+		String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Dname ," 
 				+ "ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join Sdept s "
 				+ "on t.Dsn = s.Dsn join College c on t.Csn = c.Csn where Cname = ? and Dname = ?) as pp where pp.r between ? and ?";	
 		//设置了要查询的起止时间
-		String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks  ," + 
+		String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Pdisvol,Paremarks  ," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn  where Padate <= ? ) "
 				+ "as pp where pp.r between ? and ?";
 		//设置了要查询的学院和起止时间
-		String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname ,"
+		String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname ,"
 				+	"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ 	"on t.Csn = c.Csn where c.Cname = ? and Padate <= ? ) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业和起止时间
-		String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Dname ,"
+		String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Dname,Pdisvol ,"
 				+	"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Dname = ? and Padate <= ? ) as pp where pp.r between ? and ?";	
 		//没有设置要查询的教师名
-		String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks  ," + 
+		String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol  ," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn where Tname = ?) "
 				+ "as pp where pp.r between ? and ?";
 		//设置了要查询的学院和教师名
-		String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname  ," + 
+		String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname  ," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn where c.Cname = ? and Tname = ?) as pp where pp.r between ? and ?";
 		//没有设置要查询的学院和专业和教师名
-		String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Dname" + 
+		String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Dname" + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where c.Cname = ? and  Dname = ? and Tname = ?) as pp where pp.r between ? and ?";
 		//设置了要查询的起止时间和教师名
-		String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks," + 
+		String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn "
 				+ "where  Padate <= ?  and Tname = ?) as pp where pp.r between ? and ?";
 		//设置了要查询的学院和起止时间和教师名
-		String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname ," + 
+		String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname,Pdisvol ," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 				+ " where  c.Cname = ? and Padate <= ?  and Tname = ?) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业和起止时间和教师名
-		String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname,Dname" + 
-				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
+		String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname,Dname" + 
+				",ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 				+ " join Sdept s on t.Dsn = s.Dsn  where  c.Cname = ? and Dname = ? and Padate <= ? and Tname = ?) as pp where pp.r between ? and ?"; ;	
 		try {
 		if(Tname == null || Tname.equals("")) {		//判断是否进行了精确查询
@@ -190,7 +190,8 @@ public class PaperDaoImpl implements IPaperDao{
 		return null;
 	}
 	
-
+	
+	//将结果集转化为集合
 	@Override
 	public List<Paper> getDataList(ResultSet rs) {
 		List<Paper> datalist = new ArrayList<Paper>();
@@ -204,6 +205,22 @@ public class PaperDaoImpl implements IPaperDao{
 			e.printStackTrace();
 		}
 		return datalist;
+	}
+	
+	//对未审核的论文进行审核
+	@Override
+	public int paperAudit(String Pasearchnum,String Paudit) {
+		String sql = "update Paper set Paudit = ? where Pasearchnum = ?";
+		try {
+			stmt = dbUtil.getConnection().prepareStatement(sql);
+			stmt.setString(1, Paudit);
+			stmt.setString(2, Pasearchnum);
+			int result = stmt.executeUpdate();
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		return 0;
 	}
 
 }

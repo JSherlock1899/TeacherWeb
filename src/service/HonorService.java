@@ -32,9 +32,9 @@ public class HonorService {
 	
 	
 	
-	public ResultSet selectCollegeHonor(String college,String sdept,String endtime,String Tname,int currentPage,int pageSize) {		//根据查询条件的改变显示不同的查询结果
+	public ResultSet selectCollegeHonor(String college,String sdept,String starttime,String Tname,int currentPage,int pageSize) {		//根据查询条件的改变显示不同的查询结果
 		try {
-			return honordao.selectCollegeHonor(college, sdept, endtime, Tname, currentPage, pageSize);
+			return honordao.selectCollegeHonor(college, sdept, starttime, Tname, currentPage, pageSize);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,5 +45,10 @@ public class HonorService {
 	
 	public List<Honor> getDataList(ResultSet rs){	//将结果集转化为集合
 		return honordao.getDataList(rs);
+	}
+	
+	//对未审核的荣誉进行审核
+	public int honorAudit(String Hsn,String Paudit) {
+		return honordao.honorAudit(Hsn, Paudit);
 	}
 }

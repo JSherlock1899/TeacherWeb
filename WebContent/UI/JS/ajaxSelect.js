@@ -11,29 +11,35 @@ function ajaxSelect(option) {
 			var currentPage = $("#currentPage").val();
 			document.getElementById("select_frame").src="../servlet/PageServlet?sdeptValue=" +sdeptValue 
 			+ "&collegevalue=" +collegevalue + "&starttime=" + starttime + "&endtime=" + endtime + "&selectByNameVal=" + selectByNameVal
-			+ "&pageSizeSelect=" + pageSizeSelect + "&currentPage=" + currentPage + "&option=" + option;
+			+ "&pageSizeSelect=" + pageSizeSelect + "&currentPage=" + currentPage + "&option=" + option + "&teacher=admin";
 		}
 		
 		//当用户选择查询内容时，iframe跳转到对应页面
 		//也是为了设定一个参数来区分四个页面
 		function Projectchange(){
 			ajaxSelect("Project")
+			resetSelect()
 		    }
 			
 
 
 		function Paperchange(){
+			
 			ajaxSelect("Paper")
+			resetSelect()
 			
 		}
 
 		function Honorchange(){
+			resetSelect()
 			ajaxSelect("Honor")
 
 		}
 
 		function Patentchange(){	
+			resetSelect()
 			ajaxSelect("Patent")
+			
 		}
 
 		//获取iframe中的src
@@ -79,22 +85,30 @@ function ajaxSelect(option) {
 		}
 		
 		function ProjectStatistics(){
+			resetSelect();
 			goStatistics("Project")
 		    }
 			
 
 
 		function PaperStatistics(){
+			resetSelect();
 			goStatistics("Paper")
 			
 		}
 
 		function HonorStatistics(){
+			resetSelect();
 			goStatistics("Honor")
 
 		}
 
 		function PatentStatistics(){	
+			resetSelect();
 			goStatistics("Patent")
 		}
 		
+		//重置下拉框
+		function resetSelect(){
+			$("select").find("option:first").prop("selected",true);
+		}

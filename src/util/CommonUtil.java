@@ -14,14 +14,18 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class CommonUtil {
 	
 	//将字符串型的数据转化为日期型
-	public Date stringToDate(String str) {					
+	public Date stringToDate(String str) {		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
 		// String转Date
@@ -104,6 +108,15 @@ public class CommonUtil {
 		return map;
 	}
 	
+	public Map<String,Integer> collegeCountRsToMap(ResultSet rs) throws SQLException{
+		Map<String,Integer> map = new HashMap<String,Integer>();
+		while(rs.next()) {
+			map.put(rs.getString("Dname"), rs.getInt("count"));
+		}
+		return map;
+	}
+	
+	//各院的经费统计
 	public Map<String,Integer> moneyRsToMap(ResultSet rs) throws SQLException{
 		Map<String,Integer> map = new HashMap<String,Integer>();
 		while(rs.next()) {
@@ -111,6 +124,17 @@ public class CommonUtil {
 		}
 		return map;
 	}
+	
+	//各专业的经费统计
+		public Map<String,Integer> countMoneyRsToMap(ResultSet rs) throws SQLException{
+			Map<String,Integer> map = new HashMap<String,Integer>();
+			while(rs.next()) {
+				map.put(rs.getString("Dname"), rs.getInt("Pmoney"));
+			}
+			return map;
+		}
+	
+	
 	public static void main(String[] args) {
 	
 	}

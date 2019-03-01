@@ -4,6 +4,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" href="/TeacherWeb/UI/CSS/login.css">
+<script type="text/javascript" src="/TeacherWeb/UI/JS/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="/TeacherWeb/UI/JS/layui.js"></script>
+<script type="text/javascript" src="/TeacherWeb/UI/JS/login.js"></script>
 <title>登录界面</title>
 </head>
 <body>
@@ -14,23 +18,38 @@
 			out.print("<script>alert('用户名或密码错误！')</script>");
 		}
 	%>
-    <center>
-        <h1 style="color:red">登录</h1>
             <form id="indexform" name="indexForm" action="LoginServlet" method="post">
-                <table border="0">
-                    <tr>
-                        <td>用户名：</td>
-                        <td><input type="text" name="username"></td>
-                    </tr>
-                    <tr>
-                        <td>密码：</td>
-                        <td><input type="password" name="password">
-                        </td>
-                    </tr>
-                </table>
-            <br>
-                <input type="submit" value="登录" style="color:#BC8F8F">
-            </form>
-    </center>
+			<div class="layui-canvs"></div>
+			<div class="logo">
+				<a href="http://www.slxy.cn/"><img src="UI/images/logo.png"></a>
+			</div>
+			<div class="layui-layout layui-layout-login">
+				<h1>
+					<strong>教师科研信息管理系统</strong> <em>Teacher Management System</em>
+				</h1>
+				<div class="layui-user-icon larry-login">
+					<input type="text" placeholder="账号" class="login_txtbx"
+						name="username" />
+				</div>
+				<div class="layui-pwd-icon larry-login">
+					<input type="password" placeholder="密码" class="login_txtbx"
+						name="password" />
+				</div>
+				<div class="layui-submit larry-login">
+					<input type="submit" value="立即登陆"
+						class="submit_btn" /></a>
+				</div>
+				<div class="layui-login-text">
+					<p>© 2018-2019&nbsp;商洛学院812实验室&nbsp;版权所有</p>
+				</div>
+			</div>
+			<div class="screenbg">
+				<ul>
+					<li><a href="javascript:;"><img src="UI/images/2.png"></a></li>
+					<li><a href="javascript:;"><img src="UI/images/3.png"></a></li>
+					<li><a href="javascript:;"><img src="UI/images/4.png"></a></li>
+				</ul>
+			</div>
+		</form>
 </body>
 </html>

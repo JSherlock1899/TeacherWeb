@@ -88,11 +88,14 @@ public class PatentServlet extends HttpServlet {
 			}else{
 				out.print("<script>alert('系统错误！')");
 			}
+		}else if(value.equals("4")) {			//审核通过
+			patentservice.patentAudit(Patsn, "1");
+		}else if(value.equals("5")) {			//审核不通过
+			patentservice.patentAudit(Patsn, "2");
 		}
 		try {
 			baseDao.closeCon(); //关闭资源
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

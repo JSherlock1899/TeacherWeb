@@ -11,7 +11,24 @@ public class Honor {
 	private String Hgrad;
 	private String Hreward;
 	private String Hremarks;
+	private String Haccessory;
+	private String message;//留言
 	private int totalRecord; //记录总条数
+	public Honor(String hsn, String hname, String hwinner, Date hdate, String hcompany, String hgrad, String hreward,
+			String hremarks, String haccessory, int totalRecord) {
+		super();
+		Hsn = hsn;
+		Hname = hname;
+		Hwinner = hwinner;
+		Hdate = hdate;
+		Hcompany = hcompany;
+		Hgrad = hgrad;
+		Hreward = hreward;
+		Hremarks = hremarks;
+		Haccessory = haccessory;
+		this.totalRecord = totalRecord;
+	}
+
 	public Honor(String hsn, String hname, String hwinner, Date hdate, String hcompany, String hgrad, String hreward,
 			String hremarks, int totalRecord) {
 		super();
@@ -94,4 +111,21 @@ public class Honor {
 	public void setHremarks(String hremarks) {
 		Hremarks = hremarks;
 	}
+
+	public String getHaccessory() {
+		return Haccessory;
+	}
+
+	public void setHaccessory(String haccessory) {
+		Haccessory = haccessory;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
 }

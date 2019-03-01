@@ -45,4 +45,9 @@ public class PaperService {
 	public List<Paper> getDataList(ResultSet rs){	//将结果集转化为集合
 		return Paperdao.getDataList(rs);
 	}
+	
+	//对未审核的论文进行审核
+	public int paperAudit(String Pasearchnum,String Paudit) {
+		return Paperdao.paperAudit(Pasearchnum, Paudit);
+	}
 }

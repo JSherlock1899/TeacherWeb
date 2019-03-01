@@ -58,15 +58,13 @@ public class PatentDaoImpl implements IPatentDao{
 	@Override
 	public int insertPatent(Patent patent) {						//插入新的专利信息
 		try {
-			String Tsn = teacherdao.getTsn(patent.getPatsn().trim());		//获取该专利第一所有者的教师号
-			String sql = "insert into Patent (Patname,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Tsn) Values(?,?,?,?,?,?,?)";
+			String Tsn = teacherdao.getTsn(patent.getPleader().trim());		//获取该专利第一所有者的教师号
+			String sql = "insert into Patent (Patname,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Tsn,Paudit) Values(?,?,?,?,?,?,?,?)";
 			Date Patapdate = commondao.utilToSql(patent.getPatapdate());
-			stmt.setDate(3,Patapdate);
 			java.sql.Date Patendate = new java.sql.Date(patent.getPatemdate().getTime());
-			List params = Arrays.asList(patent.getPatname().trim(),patent.getPatsn().trim(),Patapdate,Patendate,patent.getPatgrad().trim(),patent.getPatremarks().trim(),Tsn);
+			List params = Arrays.asList(patent.getPatname().trim(),patent.getPatsn().trim(),Patapdate,Patendate,patent.getPatgrad().trim(),patent.getPatremarks().trim(),Tsn,0);
 			return dbUtil.getUpdateResult(sql, params);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
@@ -77,22 +75,18 @@ public class PatentDaoImpl implements IPatentDao{
 	//currentPage：当前页（页码），pageSize：每页显示数据条数
 	//college：所属学院，sdept：所属系，starttime：开始时间，endtime：结束时间，Tname：搜索的教师名
 	@Override
-	public ResultSet selectCollegePatent(String college,String sdept,String starttime,String endtime,String Tname,int currentPage,int pageSize) throws SQLException {		//根据查询条件的改变显示不同的查询结果
-		//当前页的第一条记录
-		int m = (currentPage - 1) * pageSize + 1;
-		//当前页的最后一条记录
-		int n = currentPage * pageSize;
+	public ResultSet selectCollegePatent(String college,String sdept,String starttime,String endtime,String Tname,int m,int n) throws SQLException {		//根据查询条件的改变显示不同的查询结果
 		college = CommonUtil.disposePageValue(college);
 		sdept = CommonUtil.disposePageValue(sdept);		//处理sdept的值问题(第二次点击时)
 		sdept = CommonUtil.disposeSdeptValue(sdept);
 		starttime = CommonUtil.disposePageValue(starttime);
 		endtime = CommonUtil.disposePageValue(endtime);
 		Tname = CommonUtil.disposePageValue(Tname);
-		System.out.println("college =" + college);
-		System.out.println("sdept =" + sdept);
-		System.out.println("starttime =" + starttime);
-		System.out.println("endtime =" + endtime);
-		System.out.println("Tname =" + Tname);
+//		System.out.println("college =" + college);
+//		System.out.println("sdept =" + sdept);
+//		System.out.println("starttime =" + starttime);
+//		System.out.println("endtime =" + endtime);
+//		System.out.println("Tname =" + Tname);
 		//什么都没有设置
 		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ," + 
 		"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn ) as pp where pp.r between ? and ?";
@@ -194,7 +188,7 @@ public class PatentDaoImpl implements IPatentDao{
 				return dbUtil.getResultSet(sql12, params);
 			}
 			System.out.println("0");
-		}
+			}
 		} catch (NullPointerException | SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -210,8 +204,8 @@ public class PatentDaoImpl implements IPatentDao{
 		List<Patent> datalist = new ArrayList<Patent>();
 		try {
 			while(rs.next()) {
-				datalist.add(new Patent(rs.getString("Patname"),rs.getString("Tname"), rs.getString("Patsn"),rs.getDate("Patendate"),
-						rs.getDate("Patapdate"), rs.getString("Patgrad"),rs.getString("Patremarks"),rs.getString("Paccessory"),rs.getInt("totalRecord")));
+				datalist.add(new Patent(rs.getString("Patname"),rs.getString("Tname"), rs.getString("Patsn"),rs.getDate("Patapdate"),
+						rs.getDate("Patendate"), rs.getString("Patgrad"),rs.getString("Patremarks"),rs.getString("Paccessory"),rs.getInt("totalRecord")));
 			}
 			return datalist;
 		} catch (SQLException e) {
@@ -221,10 +215,21 @@ public class PatentDaoImpl implements IPatentDao{
 	}
 	
 	
-	public static void main(String[] args) {
-
-	}
-
+		//对未审核的专利进行审核
+		@Override
+		public int patentAudit(String Patsn, String Paudit) {
+			String sql = "update Patent set Paudit = ? where Patsn = ?";
+			try {
+				stmt = dbUtil.getConnection().prepareStatement(sql);
+				stmt.setString(1, Paudit);
+				stmt.setString(2, Patsn);
+				int result = stmt.executeUpdate();
+				return result;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}	
+			return 0;
+		}
 
 
 }

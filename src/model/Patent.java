@@ -12,7 +12,7 @@ public class Patent {
 	private String Patremarks;
 	private String Paccessory;
 	private int TotalRecord; //数据总条数
-
+	private String message;//留言
 	
 	
 	//	public Patent(Map <String,Object> map) {
@@ -37,7 +37,20 @@ public class Patent {
 		Patgrad = patgrad;
 		Patremarks = patremarks;
 	}
-	
+
+	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
+			String patremarks, int totalRecord) {
+		super();
+		Patname = patname;
+		Pleader = pleader;
+		Patsn = patsn;
+		Patapdate = patapdate;
+		Patemdate = patemdate;
+		Patgrad = patgrad;
+		Patremarks = patremarks;
+		TotalRecord = totalRecord;
+	}
+
 	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
 			String patremarks, String paccessory, int totalRecord) {
 		super();
@@ -51,6 +64,7 @@ public class Patent {
 		Paccessory = paccessory;
 		TotalRecord = totalRecord;
 	}
+	
 	public Patent() {
 		// TODO Auto-generated constructor stub
 	}
@@ -108,6 +122,14 @@ public class Patent {
 	}
 	public void setPatremarks(String patremarks) {
 		Patremarks = patremarks;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }

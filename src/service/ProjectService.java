@@ -34,4 +34,9 @@ public class ProjectService {
 		return projectdao.getDataList(rs);
 	}
 	
+		//对未审核的项目进行审核
+		public int projectAudit(String Psn, String Paudit) {
+			return projectdao.projectAudit(Psn, Paudit);
+		}
+	
 }

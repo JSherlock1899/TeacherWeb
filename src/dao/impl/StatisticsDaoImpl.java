@@ -3,6 +3,9 @@ package dao.impl;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import dao.IBaseDao;
 import dao.IStatisticsDao;
@@ -16,94 +19,32 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
 	IBaseDao baseDao = new BaseDaoImpl();
 	CommonUtil commonUtil = new CommonUtil();
-
-	@Override
-	public int createPie(String Cname, String option) { // 返回值为-1则系统错误
-		String sql;
-		if (option != null) {
-			if (option.equals("Project")) {
-				sql = "select COUNT(*) from Project p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where c.Cname = ?";
-				int result = -1;
-				try {
-					stmt = dbUtil.getConnection().prepareStatement(sql);
-					stmt.setString(1, Cname);
-					ResultSet rs = stmt.executeQuery();
-					if (rs.next()) {
-						result = rs.getInt(1);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				return result;
-			} else if (option.equals("Paper")) {
-				sql = "select COUNT(*) from Paper p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where c.Cname = ?";
-				int result = -1;
-				try {
-					stmt = dbUtil.getConnection().prepareStatement(sql);
-					stmt.setString(1, Cname);
-					ResultSet rs = stmt.executeQuery();
-					if (rs.next()) {
-						result = rs.getInt(1);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				return result;
-			} else if (option.equals("Honor")) {
-				sql = "select COUNT(*) from Honor h join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn where c.Cname = ?";
-				int result = -1;
-				try {
-					stmt = dbUtil.getConnection().prepareStatement(sql);
-					stmt.setString(1, Cname);
-					ResultSet rs = stmt.executeQuery();
-					if (rs.next()) {
-						result = rs.getInt(1);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				return result;
-			} else if (option.equals("Patent")) {
-				sql = "select COUNT(*) from  Patent p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where c.Cname = ?";
-				int result = -1;
-				try {
-					stmt = dbUtil.getConnection().prepareStatement(sql);
-					stmt.setString(1, Cname);
-					ResultSet rs = stmt.executeQuery();
-					if (rs.next()) {
-						result = rs.getInt(1);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				return result;
-			}
-
-		}
-		return -1;
-
-	}
 	
 	//获取各学院的各项目的数目
+	@Override
 	public ResultSet getCollegeCount(String option) throws SQLException {
 		if(option!=null) {
 			if(option.equals("Project")) {
-				String sql = "select c.Cname,COUNT(*) as count from Project p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn group by c.Cname";
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Project p "
+						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}else if(option.equals("Paper")) {
-				String sql = "select c.Cname,COUNT(*) as count from Paper p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn group by c.Cname";
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Paper p "
+						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}else if(option.equals("Honor")) {
-				String sql = "select c.Cname,COUNT(*) as count from Honor h join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn group by c.Cname";
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Honor h "
+						+ "join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}else if(option.equals("Patent")) {
-				String sql = "select c.Cname,COUNT(*) as count from Patent p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn group by c.Cname"; 
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Patent p "
+						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname"; 
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
@@ -114,30 +55,43 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 	
 	
 	//获取各专业的各项目的数目
+	@Override
 	public ResultSet getSdeptCount(String option, String collegevalue) throws SQLException {
 		if(option!=null) {
 			if(option.equals("Project")) {
-				String sql = "select Dname,COUNT(*) as count from Project p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn join Sdept s on c.Csn = s.Csn where c.Cname = ? group by s.Dname ";
+				String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+						+ "where Cname = ?) as a  left join (select Dname from Project p join Teacher t on p.Tsn = t.Tsn join College c "
+						+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ?) as b on a.Dname = b.Dname group by a.Dname ";
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				stmt.setString(1, collegevalue);
+				stmt.setString(2, collegevalue);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}else if(option.equals("Paper")) {
-				String sql = "select Dname,COUNT(*) as count from Paper p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn join Sdept s on c.Csn = s.Csn where c.Cname = ? group by s.Dname ";
+				String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+						+ "where Cname = ?) as a  left join (select Dname from Paper p join Teacher t on p.Tsn = t.Tsn join College c "
+						+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ?) as b on a.Dname = b.Dname group by a.Dname ";
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				stmt.setString(1, collegevalue);
+				stmt.setString(2, collegevalue);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}else if(option.equals("Honor")) {
-				String sql = "select Dname,COUNT(*) as count from Honor h join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn  join Sdept s on c.Csn = s.Csn where c.Cname = ? group by s.Dname ";
+				String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+						+ "where Cname = ?) as a  left join (select Dname from Honor h join Teacher t on h.Tsn = t.Tsn join College c "
+						+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ?) as b on a.Dname = b.Dname group by a.Dname ";
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				stmt.setString(1, collegevalue);
+				stmt.setString(2, collegevalue);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}else if(option.equals("Patent")) {
-				String sql = "select Dname,COUNT(*) as count from Patent p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn join Sdept s on c.Csn = s.Csn where c.Cname = ? group by s.Dname "; 
+				String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+						+ "where Cname = ?) as a  left join (select Dname from Patent p join Teacher t on p.Tsn = t.Tsn join College c "
+						+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ?) as b on a.Dname = b.Dname group by a.Dname "; 
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				stmt.setString(1, collegevalue);
+				stmt.setString(2, collegevalue);
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}
@@ -145,11 +99,159 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 		return null;
 	}
 	
-	//获取各学院的项目之和
+	//获取各学院的项目经费之和
+	@Override
 	public ResultSet getProjectMoney() throws SQLException {
-		String sql = "select SUM(Pmoney) as Pmoney,Cname from Project p join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn group by Cname";
+		String sql = "select SUM(b.Pmoney) as Pmoney,a.Cname from (select Cname from College) a left join "
+				+ "(select Cname,Pmoney from Project p join Teacher t on p.Tsn = t.Tsn join College c on c.Csn = t.Csn) b on a.Cname = b.Cname "
+				+ "group by a.Cname";
 		stmt = dbUtil.getConnection().prepareStatement(sql);
 		ResultSet rs = stmt.executeQuery();
 		return rs;
 	}
+	
+	
+	//获取各专业的项目经费之和
+	@Override
+	public ResultSet getSdeptProjectMoney(String collegevalue)throws SQLException{
+		String sql = "select SUM(b.Pmoney) as Pmoney,a.Dname from (select Dname from Sdept s join College c on s.Csn = c.Csn where Cname = ?)"
+				+ " a left join (select Dname,Pmoney from Project p join Teacher t on p.Tsn = t.Tsn join College c on c.Csn = t.Csn "
+				+ "join Sdept s on s.Dsn = t.Dsn where Cname = ?) b on a.Dname = b.Dname group by a.Dname";
+		stmt = dbUtil.getConnection().prepareStatement(sql);
+		stmt.setString(1, collegevalue);
+		stmt.setString(2, collegevalue);
+		ResultSet rs = stmt.executeQuery();
+		return rs;
+	}
+
+	//获取近5年各学院项目数量
+	@Override
+	public List getRecentYearsCount(String option) throws SQLException {
+		if(option!=null) {
+			String[] yearsArr = {"2015","2016","2017","2018","2019","2020"}; 
+			ArrayList list = new ArrayList();
+			if(option.equals("Project")) {
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Project p "
+						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Pstatime >? and "
+						+ "Pstatime < ?) b on a.Cname = b.Cname group by a.Cname";
+				stmt = dbUtil.getConnection().prepareStatement(sql);
+				for(int i=0;i<5;i++) {
+					stmt.setString(1, yearsArr[i]);
+					stmt.setString(2, yearsArr[i+1]);
+					ResultSet rs = stmt.executeQuery();
+					Map<String,Integer> map = commonUtil.countRsToMap(rs);
+					list.add(map);
+				}
+				return list;
+			}else if(option.equals("Paper")) {
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Paper p "
+						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Padate > ? and Padate < ?) b on a.Cname = b.Cname group by a.Cname";
+				stmt = dbUtil.getConnection().prepareStatement(sql);
+				for(int i=0;i<5;i++) {
+					stmt.setString(1, yearsArr[i]);
+					stmt.setString(2, yearsArr[i+1]);
+					ResultSet rs = stmt.executeQuery();
+					Map<String,Integer> map = commonUtil.countRsToMap(rs);
+					list.add(map);
+				}
+				return list;
+			}else if(option.equals("Honor")) {
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Honor h "
+						+ "join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn where Hdate > ? and Hdate < ?) b on a.Cname = b.Cname group by a.Cname";
+				stmt = dbUtil.getConnection().prepareStatement(sql);
+				for(int i=0;i<5;i++) {
+					stmt.setString(1, yearsArr[i]);
+					stmt.setString(2, yearsArr[i+1]);
+					ResultSet rs = stmt.executeQuery();
+					Map<String,Integer> map = commonUtil.countRsToMap(rs);
+					list.add(map);
+				}
+				return list;
+			}else if(option.equals("Patent")) {
+				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Patent p "
+						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Patendate > ? and Patendate < ?) b on a.Cname = b.Cname group by a.Cname"; 
+				stmt = dbUtil.getConnection().prepareStatement(sql);
+				for(int i=0;i<5;i++) {
+					stmt.setString(1, yearsArr[i]);
+					stmt.setString(2, yearsArr[i+1]);
+					ResultSet rs = stmt.executeQuery();
+					Map<String,Integer> map = commonUtil.countRsToMap(rs);
+					list.add(map);
+				}
+				return list;
+			}
+		}
+		return null;
+	}
+	
+	//获取各专业的各项目的数目
+		@Override
+		public List getRecentYearsSdeptCount(String option, String collegevalue) throws SQLException {
+			if(option!=null) {
+				String[] yearsArr = {"2015","2016","2017","2018","2019","2020"}; 
+				ArrayList list = new ArrayList();
+				if(option.equals("Project")) {
+					String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+							+ "where Cname = ?) as a  left join (select Dname from Project p join Teacher t on p.Tsn = t.Tsn join College c "
+							+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Pstatime >? and Pstatime < ?) as b on a.Dname = b.Dname group by a.Dname ";
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					for(int i=0;i<5;i++) {
+						stmt.setString(1, collegevalue);
+						stmt.setString(2, collegevalue);
+						stmt.setString(3, yearsArr[i]);
+						stmt.setString(4, yearsArr[i+1]);
+						ResultSet rs = stmt.executeQuery();
+						Map<String,Integer> map = commonUtil.collegeCountRsToMap(rs);
+						list.add(map);
+					}
+					return list;
+				}else if(option.equals("Paper")) {
+					String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+							+ "where Cname = ?) as a  left join (select Dname from Paper p join Teacher t on p.Tsn = t.Tsn join College c "
+							+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Padate > ? and Padate < ?) as b on a.Dname = b.Dname group by a.Dname ";
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					for(int i=0;i<5;i++) {
+						stmt.setString(1, collegevalue);
+						stmt.setString(2, collegevalue);
+						stmt.setString(3, yearsArr[i]);
+						stmt.setString(4, yearsArr[i+1]);
+						ResultSet rs = stmt.executeQuery();
+						Map<String,Integer> map = commonUtil.collegeCountRsToMap(rs);
+						list.add(map);
+					}
+					return list;
+				}else if(option.equals("Honor")) {
+					String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+							+ "where Cname = ?) as a  left join (select Dname from Honor h join Teacher t on h.Tsn = t.Tsn join College c "
+							+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Hdate > ? and Hdate < ?) as b on a.Dname = b.Dname group by a.Dname ";
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					for(int i=0;i<5;i++) {
+						stmt.setString(1, collegevalue);
+						stmt.setString(2, collegevalue);
+						stmt.setString(3, yearsArr[i]);
+						stmt.setString(4, yearsArr[i+1]);
+						ResultSet rs = stmt.executeQuery();
+						Map<String,Integer> map = commonUtil.collegeCountRsToMap(rs);
+						list.add(map);
+					}
+					return list;
+				}else if(option.equals("Patent")) {
+					String sql = "select a.Dname,COUNT(b.Dname) as count from (select Dname from Sdept s  join College c on c.Csn = s.Csn "
+							+ "where Cname = ?) as a  left join (select Dname from Patent p join Teacher t on p.Tsn = t.Tsn join College c "
+							+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Patendate > ? and Patendate < ?) as b on a.Dname = b.Dname group by a.Dname "; 
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					for(int i=0;i<5;i++) {
+						stmt.setString(1, collegevalue);
+						stmt.setString(2, collegevalue);
+						stmt.setString(3, yearsArr[i]);
+						stmt.setString(4, yearsArr[i+1]);
+						ResultSet rs = stmt.executeQuery();
+						Map<String,Integer> map = commonUtil.collegeCountRsToMap(rs);
+						list.add(map);
+					}
+					return list;
+				}
+			}
+			return null;
+		}
 }

@@ -30,6 +30,7 @@ public interface IPatentDao {
 	
 	public List<Patent> getDataList(ResultSet rs);//将结果集转化为集合
 	
+	public int patentAudit(String Patsn,String Paudit); //审核
 	
 
 }

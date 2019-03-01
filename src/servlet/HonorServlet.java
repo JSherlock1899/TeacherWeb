@@ -90,6 +90,10 @@ public class HonorServlet extends HttpServlet {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
+				}else if(value.equals("4")) {			//审核通过
+					honorservice.honorAudit(Hsn, "1");
+				}else if(value.equals("5")) {			//审核不通过
+					honorservice.honorAudit(Hsn, "2");
 				}
 				try {
 					baseDao.closeCon(); //关闭资源

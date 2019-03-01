@@ -28,8 +28,10 @@
 			response.sendRedirect("../login.jsp");
 		}
 		String college = (String) session.getAttribute("Cname");	//获取用户的所属学院
+		int grade = (int)session.getAttribute("grade");	//获取用户的权限等级
 	%>
 	<input type="hidden" id="Cname" value="<%=college %>"/>
+	<input type="hidden" id="grade" value="<%=grade %>"/>
 	<nav class="navbar-default navbar-fixed-top">
 	<div class="navbar-header">
 		<a class="navbar-brand mystyle-brand"><span
@@ -64,28 +66,28 @@
 					<ul class="navContent" style="display: block">
 						<li>
 							<div class="showtitle" style="width: 100px;">项目查询</div> <a
-							href="../servlet/PageServlet?option=Project&college=<%=college %>"
+							href="../servlet/PageServlet?option=Project&college=<%=college %>&teacher=admin"
 							onclick="Projectchange()" class="active3" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">项目查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">论文查询</div> <a
-							href="../servlet/PageServlet?option=Paper&college=<%=college %>"
+							href="../servlet/PageServlet?option=Paper&college=<%=college %>&teacher=admin"
 							onclick="Paperchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">论文查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">荣誉查询</div> <a
-							href="../servlet/PageServlet?option=Honor&college=<%=college %>"
+							href="../servlet/PageServlet?option=Honor&college=<%=college %>&teacher=admin"
 							onclick="Honorchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">荣誉查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">专利查询</div> <a
-							href="../servlet/PageServlet?option=Patent&college=<%=college %>"
+							href="../servlet/PageServlet?option=Patent&college=<%=college %>&teacher=admin"
 							onclick="Patentchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">专利查询</span></a>
@@ -100,31 +102,67 @@
 					<ul class="navContent" style="display: none">
 						<li>
 							<div class="showtitle" style="width: 100px;">项目统计</div> <a
-							href="../servlet/StatisticsServlet?option=Project&college=<%=college %>" 
+							href="../servlet/StatisticsServlet?option=Project&college=<%=college %>&grade=<%=grade %>" 
 							onclick="ProjectStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon  glyphicon-align-justify"></span><span
 								class="sub-title">项目统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">论文统计</div> <a
-							href="../servlet/StatisticsServlet?option=Paper&college=<%=college %>" 
+							href="../servlet/StatisticsServlet?option=Paper&college=<%=college %>&grade=<%=grade %>" 
 							onclick="PaperStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
 								class="sub-title">论文统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">荣誉统计</div> <a
-							href="../servlet/StatisticsServlet?option=Honor&college=<%=college %>" 
+							href="../servlet/StatisticsServlet?option=Honor&college=<%=college %>&grade=<%=grade %>" 
 							onclick="HonorStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
 								class="sub-title">荣誉统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">专利统计</div> <a
-							href="../servlet/StatisticsServlet?option=Patent&college=<%=college %>" 
+							href="../servlet/StatisticsServlet?option=Patent&college=<%=college %>&grade=<%=grade %>" 
 							onclick="PatentStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
 								class="sub-title">专利统计</span></a>
+						</li>
+					</ul>
+				</div>
+				<div class="sBox audit">
+					<div class="subNav sublist-up">
+						<span class="title-icon glyphicon glyphicon-chevron-up"></span><span
+							class="sublist-title" style="font-size:15px;">审核</span>
+					</div>
+					<ul class="navContent" style="display: none">
+						<li>
+							<div class="showtitle" style="width: 100px;">项目审核</div> <a
+							href="../servlet/AuditServlet?option=Project&college=<%=college %>" 
+							onclick="ProjectStatistics()" target="select_frame"><span
+								class="sublist-icon glyphicon glyphicon-check"></span><span
+								class="sub-title">项目审核</span></a>
+						</li>
+						<li>
+							<div class="showtitle" style="width: 100px;">论文审核</div> <a
+							href="../servlet/AuditServlet?option=Paper&college=<%=college %>" 
+							onclick="PaperStatistics()" target="select_frame"><span
+								class="sublist-icon glyphicon glyphicon-check"></span><span
+								class="sub-title">论文审核</span></a>
+						</li>
+						<li>
+							<div class="showtitle" style="width: 100px;">荣誉审核</div> <a
+							href="../servlet/AuditServlet?option=Honor&college=<%=college %>" 
+							onclick="HonorStatistics()" target="select_frame"><span
+								class="sublist-icon glyphicon glyphicon-check"></span><span
+								class="sub-title">荣誉审核</span></a>
+						</li>
+						<li>
+							<div class="showtitle" style="width: 100px;">专利审核</div> <a
+							href="../servlet/AuditServlet?option=Patent&college=<%=college %>" 
+							onclick="PatentStatistics()" target="select_frame"><span
+								class="sublist-icon glyphicon glyphicon-check"></span><span
+								class="sub-title">专利审核</span></a>
 						</li>
 					</ul>
 				</div>
@@ -201,8 +239,7 @@
 
 				<iframe src="" frameborder="1" class="qaq" id="select_frame"
 					name="select_frame" frameborder="0" scrolling="no" width="1200px"
-					height="800px" style="border: 0"></iframe>
-
+					height="1800px" style="border: 0"></iframe>
 			</div>
 
 		</div>

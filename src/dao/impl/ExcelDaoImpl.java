@@ -17,7 +17,8 @@ public class ExcelDaoImpl extends BaseDaoImpl implements IExcelDao {
 	IBaseDao baseDao = new BaseDaoImpl();
 	CommonUtil unit = new CommonUtil();
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
-
+	
+	@Override
 	public int insertPatentValues(List datalist) {
 		try {
 			String sql = "insert into Patent (Patname,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Tsn) Values(?,?,?,?,?,?,?)";
@@ -50,7 +51,8 @@ public class ExcelDaoImpl extends BaseDaoImpl implements IExcelDao {
 		return 0;
 
 	}
-
+	
+	@Override
 	public int insertHonorValues(List datalist) {
 		try {
 			String sql = "insert into Honor (Hsn,Hname,Hwinner,Hdate,Hcompany,Hgrad,Hreward,Hremarks,Tsn) Values(?,?,?,?,?,?,?,?,?)";

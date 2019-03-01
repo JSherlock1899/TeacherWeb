@@ -16,6 +16,7 @@ import dao.IPaperDao;
 import dao.impl.BaseDaoImpl;
 import dao.impl.PaperDaoImpl;
 import model.Patent;
+import service.PaperService;
 import util.CommonUtil;
 
 /**
@@ -33,7 +34,6 @@ public class PaperServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// 根据不同的value值来分发到不同的操作
 		String value = request.getParameter("value");
-		System.out.println(value);
 		// 解决中文乱码
 		response.setContentType("text/html;charset=utf-8");
 		// 请求解决乱码
@@ -47,12 +47,14 @@ public class PaperServlet extends HttpServlet {
 		String Paname = request.getParameter("Paname"); 
 		String Pawriter = request.getParameter("Pawriter");
 		String Papublish = request.getParameter("Papublish");
+		String Pdisvol = request.getParameter("Pdisvol");		//期/卷/页
 		String Padate = request.getParameter("Padate");
 		String Pagrad = request.getParameter("Pagrad");
 		String Paremarks = request.getParameter("Paremarks");
+		PaperService paperService = new PaperService();
 		if (value.equals("1")) { // 删除对应的论文信息
 			try {
-				int result = paperDao.delPaper(Pasearchnum);
+				int result = paperService.delPaper(Pasearchnum);
 				PrintWriter out = response.getWriter();
 				out.flush();
 				if (result > 0) {
@@ -69,11 +71,11 @@ public class PaperServlet extends HttpServlet {
 		} else if (value.equals("2")) { // 修改对应的论文信息
 			int result;
 			Date padate = commondao.stringToDate(Padate); // 将 string转化为date
-			model.Paper paper = new model.Paper(Pasearchnum, Paname, Pawriter, Papublish, Pagrad, padate, Paremarks); // 构造要传入insert和update中的paper对象
+			model.Paper paper = new model.Paper(Pasearchnum, Paname, Pawriter, Papublish, Pagrad, padate, Paremarks,Pdisvol); // 构造要传入insert和update中的paper对象
 			PrintWriter out = response.getWriter(); // 获取response对象，通过getWriter方法获取PrintWriter对象
 			out.flush(); // 清空缓存
 			try {
-				result = paperDao.alterPaper(paper);
+				result = paperService.alterPaper(paper);
 				if (result > 0) {
 					out.print("<script>alert('操作成功！')");
 				} else {
@@ -86,21 +88,24 @@ public class PaperServlet extends HttpServlet {
 		} else if (value.equals("3")) {
 			int result;
 			Date padate = commondao.stringToDate(Padate); // 将 string转化为date
-			model.Paper paper = new model.Paper(Pasearchnum, Paname, Pawriter, Papublish, Pagrad, padate, Paremarks);// 构造要传入insert和update中的patent对象
+			model.Paper paper = new model.Paper(Pasearchnum, Paname, Pawriter, Papublish, Pagrad, padate, Paremarks,Pdisvol);// 构造要传入insert和update中的patent对象
 			PrintWriter out = response.getWriter(); // 通过servlet的doget方法获取response对象，通过getWriter方法获取PrintWriter对象
 			out.flush(); // 清空缓存
 			try {
-				result = paperDao.insertPaper(paper);
+				result = paperService.insertPaper(paper);
 				if (result > 0) {
 					out.print("<script>alert('操作成功！')");
 				} else {
 					out.print("<script>alert('操作失败！')");
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
+		}else if(value.equals("4")) {
+			paperService.paperAudit(Pasearchnum, "1");	//审核通过
+		}else if(value.equals("5")) {
+			paperService.paperAudit(Pasearchnum, "2");	//审核不通过
 		}
 		try {
 			baseDao.closeCon(); //关闭资源

@@ -33,6 +33,8 @@ $(document).on("click",".save",function(){
 	var Paname = $(this).closest("tr").find(".Paname").text();
 	var Pawriter = $(this).closest("tr").find(".Pawriter").text();
 	var Papublish = $(this).closest("tr").find(".Papublish").text();
+	var Pdisvol = $(this).closest("tr").find(".Pdisvol").text();
+	console.log(Pdisvol)
 	var Padate = $(this).closest("tr").find(".Padate").text();
 	var Pagrad = $(this).closest("tr").find(".Pagrad").text();
 	var Paremarks = $(this).closest("tr").find(".Paremarks").text();
@@ -45,6 +47,7 @@ $(document).on("click",".save",function(){
             "Paname" : Paname,
             "Pawriter" :Pawriter,
             "Papublish" : Papublish,
+            "Pdisvol" : Pdisvol,
             "Padate" : Padate,
             "Pagrad" : Pagrad,
             "Paremarks" :Paremarks,
@@ -61,30 +64,16 @@ $(document).on("click",".save",function(){
 });
 
 //新建信息
-//新建表格行
-$(document).on("click","#addMsg",function(){
-		var tr = "<tr><td><input type='checkbox' name = 'select'></td>"+
-		"<td class=Pasearchnum><input type='text' class='Pasearchnum' style='width:50px'></td>" +
-		"<td class=Paname><input type='text' class='Paname' style='width:50px'></td>" +
-		"<td class=Pawriter><input type='text' class='Pawriter' style='width:50px'></td>" +
-		"<td class=Papublish><input type='text' class='Papublish' style='width:50px'></td>" +
-		"<td class=Padate><input type='date' class='Padate' style='width:50px'></td>"+ 
-		"<td class=Pagrad><input type='text' class='Pagrad' style='width:50px'></td>"+ 
-		"<td class=Paremarks><input type='text' class='Paremarks' style='width:50px'></td>" +
-		"<td><a class='delete'>删除</a><a class='saveNewMsg' >保存</a></td>"
-		"</tr>";
-		$("table").append(tr);//向table中追加tr
-	});
-
 //获取新建行当前每个表格单元的信息
 $(document).on("click",".saveNewMsg",function(){
-	var Pasearchnum = $(this).closest("tr").find("input[class='Pasearchnum']").val();
-	var Paname = $(this).closest("tr").find("input[class='Paname']").val();
-	var Pawriter = $(this).closest("tr").find("input[class='Pawriter']").val();
-	var Papublish = $(this).closest("tr").find("input[class='Papublish']").val();
-	var Padate = $(this).closest("tr").find("input[class='Padate']").val();
-	var Pagrad = $(this).closest("tr").find("input[class='Pagrad']").val();
-	var Paremarks = $(this).closest("tr").find("input[class='Paremarks']").val();
+	var Pasearchnum = $('#Pasearchnum').val();
+	var Paname = $('#Paname').val();
+	var Pawriter = $('#Pawriter').val();
+	var Papublish = $('#Papublish').val();
+	var Pdisvol = $('#Pdisvol').val();
+	var Padate = $('#Padate').val();
+	var Pagrad = $('#Pagrad').val();
+	var Paremarks = $('#Paremarks').val();
 	$.ajax({
         url:"../servlet/PaperServlet?value=3",
         type:"post",
@@ -94,6 +83,7 @@ $(document).on("click",".saveNewMsg",function(){
             "Paname" : Paname,
             "Pawriter" :Pawriter,
             "Papublish" : Papublish,
+            "Pdisvol" : Pdisvol,
             "Padate" : Padate,
             "Pagrad" : Pagrad,
             "Paremarks" :Paremarks,
@@ -119,3 +109,69 @@ $(document).on("click",".updata",function(e){
 		$(this).addClass('save');
 	}
 })
+
+
+	//审核通过
+	$(document).on("click","#pass",function(){
+		var Pasearchnum = $(this).closest("tr").find(".Pasearchnum").text();
+		$.ajax({
+			url:"../servlet/PaperServlet?value=4",
+	        type:"post",
+	        datatype:"json",
+	        data:{
+	        	"Pasearchnum" : Pasearchnum,
+	        },
+	        success : function(result){
+	                alert("操作成功");
+	                location.reload();
+	        },
+	        error:function(result){  
+	            alert('请求出现错误...');  
+	        }
+		})
+	})
+	
+	//审核不通过
+	$(document).on("click","#nopass",function(){
+		var Pasearchnum = $(this).closest("tr").find(".Pasearchnum").text();
+		$.ajax({
+			url:"../servlet/PaperServlet?value=5",
+	        type:"post",
+	        datatype:"json",
+	        data:{
+	        	"Pasearchnum" : Pasearchnum,
+	        },
+	        success : function(result){
+	                alert("操作成功");
+	                location.reload();
+	        },
+	        error:function(result){  
+	            alert('请求出现错误...');  
+	        }
+		})
+	})
+
+	
+		//新建按钮的事件
+		$("#btn_add").click(function () {
+		$("#myModalLabel").text("新建论文信息");
+		$('#myModal').modal();
+		});
+
+function skipPage(){								//输入页码跳转页面
+	//页码输入框输入的数
+	var pageVal = $('.pageVal').val();
+	//总页数
+	var totalPage = $('#totalPage').val();
+	//一页显示的条数
+	var pageSize = $('#pageSize').val();
+	if(pageVal > totalPage){
+		alert('请输入正确的页码！');
+		return
+	}
+	var path = "";
+	var a = "../servlet/PageServlet?option=Paper&currentPage=";
+	var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher"
+	path = path + a + pageVal + b;
+	window.location.href = path;
+}

@@ -19,6 +19,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements IAdminDao{
 	static PreparedStatement stmt = null;
 	DbUtil util = new DbUtil(); 
 	
+	@Override
 	public int AdminLogin(Admin admin) throws SQLException{	
 		try {
 			String sql = "select count(*) from Admin where Apsw=? and Aname=?";
@@ -40,6 +41,7 @@ public class AdminDaoImpl extends BaseDaoImpl implements IAdminDao{
 		return 0;
 	}
 	
+	@Override
 	public int AdminJudge(String adminName)throws SQLException{
 		try {
 			int count = 0;//count为返回值，0为院管理员，1为校管理员,-1为程序异常

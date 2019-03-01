@@ -16,6 +16,7 @@ public class Project {
 	private String Premarks;
 	private int totalRecord;
 	private String Paccessory;
+	private String message;//留言
 	public Project(String psn, String pname, String pleader, String pmember, String pgrad, String pkind, int pmoney,
 			Date pstatime, String pcondition, Date pendtime, String premarks, int totalRecord) {
 		super();
@@ -147,6 +148,12 @@ public class Project {
 
 	public void setPaccessory(String paccessory) {
 		Paccessory = paccessory;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }

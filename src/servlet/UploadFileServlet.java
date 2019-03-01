@@ -63,36 +63,16 @@ public class UploadFileServlet extends HttpServlet {
 			items = upload.parseRequest(request);
 			// 遍历items中的数据
 			Iterator<FileItem> iter = items.iterator();
+			//存放文件的主目录
+			String path = "D:\\uploadFile"; 
 			while (iter.hasNext()) {
 				FileItem item = iter.next();
 				if (!item.isFormField()) {
 					String fileName = item.getName();
-					String ext = fileName.substring(fileName.indexOf(".") + 1);
-					
-					String path = "D:\\uploadFile";
-					//分不同身份上传文件
-					if(grade.equals("1")) {		//判断用户权限
-						path = path + "\\校管理员";
-						File fileupload = new File(path);
-						if (!fileupload.exists()) {
-							fileupload.mkdir();
-						}
-						File file = new File(path, fileName);
-						item.write(file);// 上传
-					}else if(grade.equals("2")) {
-						path = path + "\\" + college;
-						File fileupload = new File(path);
-						if (!fileupload.exists()) {
-							fileupload.mkdir();
-						}
-						path = path + "\\院管理员";
-						fileupload = new File(path);
-						if(!fileupload.exists()) {
-							fileupload.mkdir();
-						}
-						File file = new File(path, fileName);
-						item.write(file);// 上传
-					}else if(grade.equals("3")) {
+					System.out.println("filename = " + fileName);
+					//获取文件后缀名
+					String ext = fileName.substring(fileName.indexOf(".") + 1);{
+						//教师上传文件至对应的项目文件夹
 						ITeacherDao teacherDao = new TeacherDaoImpl();
 						String Tsn = (String) request.getSession().getAttribute("Tsn");
 						String Tname = teacherDao.getTname(Tsn);
@@ -102,7 +82,8 @@ public class UploadFileServlet extends HttpServlet {
 						if (!fileupload.exists()) {
 							fileupload.mkdir();				
 						}
-						path = path + "\\" + Tname;
+						path = path + "\\" + Tname;	
+						System.out.println(path);
 						fileupload = new File(path);
 						if(!fileupload.exists()) {
 							fileupload.mkdir();
@@ -111,9 +92,6 @@ public class UploadFileServlet extends HttpServlet {
 						item.write(file);// 上传
 					}
 					
-					
-					fileName = java.net.URLEncoder.encode(fileName,"utf-8");
-					path = java.net.URLEncoder.encode(path,"utf-8");
 					//导入excel的接口
 					if (tally != null && tally.equals("1")) {
 						// 判断是不是excel文件如果是则导入数据

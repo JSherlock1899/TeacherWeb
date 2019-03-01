@@ -23,6 +23,7 @@ private PreparedStatement stmt = null;
 	/**
 	 * 查询数据函数
 	 */
+	@Override
 	public ResultSet select(String sql)throws SQLException, NullPointerException, ClassNotFoundException{
 		ResultSet rs = null;
 	    try {
@@ -39,6 +40,7 @@ private PreparedStatement stmt = null;
 	/**
 	 *更新数据函数
 	 */
+	@Override
 	public int update(String sql)throws SQLException, NullPointerException, ClassNotFoundException{
 	    try {
 	    	PreparedStatement stmt = dbUtil.getConnection().prepareStatement(sql);

@@ -39,6 +39,7 @@ public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 	/*
 	 * 查询教师号
 	 */
+	@Override
 	public String getTsn(String Tname) throws SQLException {
 		String sql = "select Tsn from Teacher where Tname =?";
 		stmt = dbUtil.getConnection().prepareStatement(sql);
@@ -52,7 +53,8 @@ public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 		return Tsn;
 		
 	}
-
+	
+	@Override
 	public String getTname(String Tsn) throws SQLException {
 		String sql = "select Tname from Teacher where Tsn = ?";
 		stmt = dbUtil.getConnection().prepareStatement(sql);
@@ -68,6 +70,7 @@ public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 	
 	
 	//查询教师的项目
+	@Override
 	public ResultSet getProject(String Tsn,int currentPage,int pageSize) throws SQLException {
 		//当前页的第一条记录
 		int m = (currentPage - 1) * pageSize + 1;
@@ -86,6 +89,7 @@ public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 	
 	
 	//查询教师的论文
+	@Override
 	public ResultSet getPaper(String Tsn,int currentPage,int pageSize) throws SQLException {
 		//当前页的第一条记录
 		int m = (currentPage - 1) * pageSize + 1;
@@ -104,6 +108,7 @@ public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 	
 	
 	//查询教师的荣誉
+	@Override
 	public ResultSet getHonor(String Tsn,int currentPage,int pageSize) throws SQLException {
 		//当前页的第一条记录
 		int m = (currentPage - 1) * pageSize + 1;
@@ -122,6 +127,7 @@ public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 	
 	
 	//查询教师的专利
+	@Override
 	public ResultSet getPatent(String Tsn,int currentPage,int pageSize) throws SQLException {
 		//当前页的第一条记录
 		int m = (currentPage - 1) * pageSize + 1;
@@ -140,6 +146,7 @@ public class TeacherDaoImpl extends BaseDaoImpl implements ITeacherDao{
 	
 	
 	//获取教师所属学院
+	@Override
 		public String getTeacherCollege(String Tsn)throws SQLException{
 			String sql = "select Cname from college c join Teacher t on c.Csn = t.Csn where t.Tsn = ?";
 			stmt = dbUtil.getConnection().prepareStatement(sql);

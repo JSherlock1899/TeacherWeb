@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import model.Paper;
+import model.Patent;
 
 public interface IPaperDao {
 	
@@ -22,4 +23,6 @@ public interface IPaperDao {
 	public List<Paper> getDataList(ResultSet rs);	//将结果集转化为集合
 	
 	public int paperAudit(String Pasearchnum,String Paudit); //审核
+	
+	public List<Paper> getExcelDataList(ResultSet rs);//获取导出excel的集合
 }

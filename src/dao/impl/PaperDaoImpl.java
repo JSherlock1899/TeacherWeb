@@ -129,57 +129,44 @@ public class PaperDaoImpl implements IPaperDao{
 		try {
 		if(Tname == null || Tname.equals("")) {		//判断是否进行了精确查询
 			if(college ==  null && sdept == null && endtime == null || college.equals("") && sdept.equals("") && endtime.equals("") ) {							//此时刚跳转到该jsp,页面刚刷新，所有参数均为null，输出所有专利信息
-				System.out.println("1");
 				List params = Arrays.asList(m,n);
 				return dbUtil.getResultSet(sql1, params);
 			}else if(!college.equals("") && sdept == null && endtime == null ||!college.equals("") && sdept.equals("") && endtime.equals("")) {	//只选了学院
-				System.out.println("2");
 				List params = Arrays.asList(college,m,n);
 				return dbUtil.getResultSet(sql2, params);
 			}else if(!college.equals("") && !sdept.equals("") && endtime.equals("")) {			//选了学院和专业
-				System.out.println("3");
 				List params = Arrays.asList(college,sdept,m,n);
 				return dbUtil.getResultSet(sql3, params);
 			}else if(college.equals("") && sdept.equals("") && !endtime.equals("")) {		//只选了起止时间
-				System.out.println("4");
 				List params = Arrays.asList(endtime,m,n);
 				return dbUtil.getResultSet(sql4, params);
 			}else if(!college.equals("") && sdept.equals("") && !endtime.equals("")) {	//选了学院和起止时间
-				System.out.println("5");
 				List params = Arrays.asList(college,endtime,m,n);
 				return dbUtil.getResultSet(sql5, params);
 			}else if(!college.equals("") && !sdept.equals("") && !endtime.equals("")) {	//选了学院和专业和起止时间
-				System.out.println("6");
 				List params = Arrays.asList(college,sdept,endtime,m,n);
 				return dbUtil.getResultSet(sql6, params);
 			}
 		}else {
 			if(college.equals("") && sdept == null && endtime == null || college.equals("") && sdept.equals("") && endtime.equals("")) {							//选了教师名				
-				System.out.println("7");
 				List params = Arrays.asList(Tname,m,n);
 				return dbUtil.getResultSet(sql7, params);
 			}else if(!college.equals("") && sdept.equals("") && endtime.equals("")) {	//只选了学院和教师名
-				System.out.println("8");
 				List params = Arrays.asList(college,Tname,m,n);
 				return dbUtil.getResultSet(sql8, params);
 			}else if(!college.equals("") && !sdept.equals("") && endtime.equals("")) {			//选了学院和专业和教师名
-				System.out.println("9");
 				List params = Arrays.asList(college,sdept,Tname,m,n);
 				return dbUtil.getResultSet(sql9, params);
 			}else if(college.equals("") && sdept.equals("") && !endtime.equals("")) {		//只选了起止时间和教师名
-				System.out.println("10");
 				List params = Arrays.asList(endtime,Tname,m,n);
 				return dbUtil.getResultSet(sql10, params);
 			}else if(!college.equals("") && sdept.equals("") && !endtime.equals("")) {	//选了学院和起止时间和教师名
-				System.out.println("11");
 				List params = Arrays.asList(college,endtime,Tname,m,n);
 				return dbUtil.getResultSet(sql11, params);
 			}else if(!college.equals("") && !sdept.equals("") && !endtime.equals("")) {	//选了学院和专业和起止时间和教师名
-				System.out.println("12");
 				List params = Arrays.asList(college,sdept,endtime,Tname,m,n);
 				return dbUtil.getResultSet(sql12, params);
 			}
-			System.out.println("0");
 		}
 		} catch (NullPointerException | SQLException e) {
 			e.printStackTrace();
@@ -199,6 +186,22 @@ public class PaperDaoImpl implements IPaperDao{
 			while(rs.next()) {
 				datalist.add(new Paper(rs.getString("Pasearchnum"),rs.getString("Paname"), rs.getString("Pawriter"),rs.getString("Papublish"),
 						rs.getString("Pagrad"),rs.getDate("Padate"),rs.getString("Paremarks"),rs.getInt("totalRecord")));
+			}
+			return datalist;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return datalist;
+	}
+	
+	//获取导出excel的集合
+	@Override
+	public List<Paper> getExcelDataList(ResultSet rs) {
+		List<Paper> datalist = new ArrayList<Paper>();
+		try {
+			while(rs.next()) {
+				datalist.add(new Paper(rs.getString("Pasearchnum"),rs.getString("Paname"), rs.getString("Pawriter"),rs.getString("Papublish"),
+						rs.getString("Pagrad"),rs.getDate("Padate"),rs.getString("Paremarks")));
 			}
 			return datalist;
 		} catch (SQLException e) {

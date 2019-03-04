@@ -13,19 +13,39 @@ public class Patent {
 	private String Paccessory;
 	private int TotalRecord; //数据总条数
 	private String message;//留言
+	private String Paudit; //审核情况
 	
 	
-	//	public Patent(Map <String,Object> map) {
-//		Patname = (String) map.get("Patname");
-//		Pleader = (String) map.get("Pleader");
-//		Patsn = (String) map.get("Patsn");
-//		Patapdate = (Date) map.get("Patapdate");
-//		Patemdate = (Date) map.get("Patemdate");
-//		Patgrad = (String) map.get("Patgrad");
-//		Patremarks = (String) map.get("Patremarks");
-//	}
-	
-	
+	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
+			String patremarks, String paccessory, int totalRecord) {
+		super();
+		Patname = patname;
+		Pleader = pleader;
+		Patsn = patsn;
+		Patapdate = patapdate;
+		Patemdate = patemdate;
+		Patgrad = patgrad;
+		Patremarks = patremarks;
+		Paccessory = paccessory;
+		TotalRecord = totalRecord;
+	}
+
+	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
+			String patremarks, String paccessory, int totalRecord, String message, String paudit) {
+		super();
+		Patname = patname;
+		Pleader = pleader;
+		Patsn = patsn;
+		Patapdate = patapdate;
+		Patemdate = patemdate;
+		Patgrad = patgrad;
+		Patremarks = patremarks;
+		Paccessory = paccessory;
+		TotalRecord = totalRecord;
+		this.message = message;
+		Paudit = paudit;
+	}
+
 	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
 			String patremarks) {
 		super();
@@ -48,20 +68,6 @@ public class Patent {
 		Patemdate = patemdate;
 		Patgrad = patgrad;
 		Patremarks = patremarks;
-		TotalRecord = totalRecord;
-	}
-
-	public Patent(String patname, String pleader, String patsn, Date patapdate, Date patemdate, String patgrad,
-			String patremarks, String paccessory, int totalRecord) {
-		super();
-		Patname = patname;
-		Pleader = pleader;
-		Patsn = patsn;
-		Patapdate = patapdate;
-		Patemdate = patemdate;
-		Patgrad = patgrad;
-		Patremarks = patremarks;
-		Paccessory = paccessory;
 		TotalRecord = totalRecord;
 	}
 	
@@ -131,5 +137,14 @@ public class Patent {
 	public void setMessage(String message) {
 		this.message = message;
 	}
+
+	public String getPaudit() {
+		return Paudit;
+	}
+
+	public void setPaudit(String paudit) {
+		Paudit = paudit;
+	}
+	
 	
 }

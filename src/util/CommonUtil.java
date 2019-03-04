@@ -46,6 +46,13 @@ public class CommonUtil {
 		
 	}
 	
+	//util.Date转化为sql.Date
+		public java.util.Date sqlToUtil(java.sql.Date sqldate) {			
+			java.util.Date utilDate=new java.util.Date(sqldate.getTime());
+			return utilDate;
+			
+		}
+	
 	public void download(String path, HttpServletResponse response) {
 		try {
 			// path是指欲下载的文件的路径。
@@ -134,8 +141,32 @@ public class CommonUtil {
 			return map;
 		}
 	
+	public String disposeAuditValue(String audit) {
+		if(audit!=null) {
+			if(audit.equals("0")) {
+				return "未审核";
+			}else if(audit.equals("1")) {
+				return "审核通过";
+			}else if(audit.equals("2")) {
+				return "审核未通过";
+			}
+		}
+		return "系统出错！";
+	}
 	
+	public String disposeMessageValue(String message) {
+		if(message == null) {
+			return "无";
+		}
+		return message;
+	}
 	public static void main(String[] args) {
 	
 	}
+
+
+
+
+
+	
 }

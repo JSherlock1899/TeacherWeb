@@ -7,7 +7,7 @@ import java.util.List;
 public interface IStatisticsDao {
 		
 	//获取各学院的各项目的数目
-	ResultSet getCollegeCount(String option) throws SQLException;
+	ResultSet getCollegeCount(String option,String starttime,String endtime) throws SQLException;
 
 	//获取各专业的各项目的数目
 	public ResultSet getSdeptCount(String option, String collegevalue)throws SQLException;

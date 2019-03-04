@@ -24,7 +24,6 @@ function ajaxSelect(option) {
 
 
 		function Paperchange(){
-			
 			ajaxSelect("Paper")
 			resetSelect()
 			
@@ -39,6 +38,11 @@ function ajaxSelect(option) {
 		function Patentchange(){	
 			resetSelect()
 			ajaxSelect("Patent")
+			
+		}
+		function Teacherchange(){	
+			resetSelect()
+			ajaxSelect("Teacher")
 			
 		}
 
@@ -62,10 +66,11 @@ function ajaxSelect(option) {
 		    var firsturl = result.split('option='); //通过字符串分割得到option
 		    //根据url中是否含Page来判断是查询还是统计
 		    var judge = result.indexOf("PageServlet");			
+		    var judge1 = result.indexOf("StatusticsServlet");
 		    var option = firsturl[1];
 		    if(judge!=-1){
 		    	ajaxSelect(option);
-		    }else{
+		    }else if(judge1=-1){
 		    	goStatistics(option);
 		    }  
 		}
@@ -108,7 +113,8 @@ function ajaxSelect(option) {
 			goStatistics("Patent")
 		}
 		
-		//重置下拉框
+		//重置下拉框和文本框
 		function resetSelect(){
 			$("select").find("option:first").prop("selected",true);
+			$('input').val("");
 		}

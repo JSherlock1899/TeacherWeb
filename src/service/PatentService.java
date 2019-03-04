@@ -51,7 +51,15 @@ public class PatentService {
 	}
 	
 	//对未审核的专利进行审核
-	public int patentAudit(String Patsn, String Paudit) {
-		return patentdao.patentAudit(Patsn, Paudit);
+	public int patentAudit(String Patsn, String Paudit,String message) {
+		return patentdao.patentAudit(Patsn, Paudit,message);
+	}
+	
+	public void saveFilePath(String path,String patsn) { //保存上传的附件的路径
+		 patentdao.saveFilePath(path, patsn);
+	}; 
+	
+	public List<Patent> getlist(Patent patent){
+		return patentdao.getlist(patent);
 	}
 }

@@ -3,6 +3,8 @@ package dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+
+import model.Patent;
 import model.Project;
 
 public interface IProjectDao {
@@ -24,7 +26,7 @@ public int delProject(String Psn);		//根据项目号删除对应的项目信息
 		
 
 	
-	
+	public List<Project> getExcelDataList(ResultSet rs);//获取导出excel的集合
 	
 	
 	public List<Project> getDataList(ResultSet rs);//将结果集转化为集合

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import model.Honor;
+import model.Patent;
 
 public interface IHonorDao {
 	public int delHonor(String Hsn);			//根据荣誉号删除对应的荣誉信息
@@ -21,4 +22,8 @@ public interface IHonorDao {
 	public List<Honor> getDataList(ResultSet rs);	//将结果集转化为集合
 		
 	public int honorAudit(String Hsn,String Paudit); //审核
+	
+	public List<Honor> getExcelDataList(ResultSet rs);//获取导出excel的集合
+	
+	public List<Honor> getlist(Honor honor);
 }

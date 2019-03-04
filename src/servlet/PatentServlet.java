@@ -32,6 +32,8 @@ public class PatentServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// 根据不同的value值来分发到不同的操作
 		String value = request.getParameter("value");
+		//审核意见
+		String message = request.getParameter("message");
 		IBaseDao baseDao = new BaseDaoImpl();
 		CommonUtil commondao = new CommonUtil();
 		PatentService patentservice = new PatentService();
@@ -89,9 +91,9 @@ public class PatentServlet extends HttpServlet {
 				out.print("<script>alert('系统错误！')");
 			}
 		}else if(value.equals("4")) {			//审核通过
-			patentservice.patentAudit(Patsn, "1");
+			patentservice.patentAudit(Patsn, "1",message);
 		}else if(value.equals("5")) {			//审核不通过
-			patentservice.patentAudit(Patsn, "2");
+			patentservice.patentAudit(Patsn, "2",message);
 		}
 		try {
 			baseDao.closeCon(); //关闭资源

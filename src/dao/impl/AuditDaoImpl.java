@@ -29,7 +29,7 @@ public class AuditDaoImpl implements IAuditDao {
 		int m = (currentPage - 1) * pageSize + 1;
 		// 当前页的最后一条记录
 		int n = currentPage * pageSize;
-		String sql = "select * from (select Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,"
+		String sql = "select * from (select Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,message,Paudit,"
 				+ "COUNT(*)OVER() AS totalRecord,ROW_NUMBER() over (order by Psn desc) as r from Project p join Teacher t on p.Tsn = t.Tsn "
 				+ "join College c on t.Csn = c.Csn where Paudit = ? and c.Cname = ? ) as pp where pp.r between ? and ?";
 		List params = Arrays.asList(auditNum, college, m, n);
@@ -50,7 +50,7 @@ public class AuditDaoImpl implements IAuditDao {
 			int m = (currentPage - 1) * pageSize + 1;
 			// 当前页的最后一条记录
 			int n = currentPage * pageSize;
-			String sql = "select * from (select Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,"
+			String sql = "select * from (select Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,message,Paudit,"
 					+ "COUNT(*)OVER() AS totalRecord,ROW_NUMBER() over (order by Pasearchnum desc) as r from Paper p join Teacher t on p.Tsn = t.Tsn "
 					+ "join College c on t.Csn = c.Csn where Paudit = ? and c.Cname = ? ) as pp where pp.r between ? and ?";
 			List params = Arrays.asList(auditNum, college, m, n);
@@ -71,7 +71,7 @@ public class AuditDaoImpl implements IAuditDao {
 			int m = (currentPage - 1) * pageSize + 1;
 			// 当前页的最后一条记录
 			int n = currentPage * pageSize;
-			String sql = "select * from (select Hsn,Hname,Hwinner,Hdate,Hcompany,Hgrad,Hreward,Hremarks,"
+			String sql = "select * from (select Hsn,Hname,Hwinner,Hdate,Hcompany,Hgrad,Hreward,Hremarks,Haccessory,message,Haudit,"
 					+ "COUNT(*)OVER() AS totalRecord,ROW_NUMBER() over (order by Hsn desc) as r from Honor h join Teacher t on h.Tsn = t.Tsn "
 					+ "join College c on t.Csn = c.Csn where Haudit = ? and c.Cname = ? ) as pp where pp.r between ? and ?";
 			List params = Arrays.asList(auditNum, college, m, n);
@@ -86,14 +86,13 @@ public class AuditDaoImpl implements IAuditDao {
 			return null;
 		}
 		
-		
 		// 获取该学院所有未审核的专利
 		public List<Patent> getAllUnauditedPatent(int auditNum, String college, int currentPage, int pageSize) {
 			// 当前页的第一条记录
 			int m = (currentPage - 1) * pageSize + 1;
 			// 当前页的最后一条记录
 			int n = currentPage * pageSize;
-			String sql = "select * from (select Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,"
+			String sql = "select * from (select Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,message,Paudit,"
 					+ "COUNT(*)OVER() AS totalRecord,ROW_NUMBER() over (order by Patsn desc) as r from Patent p join Teacher t on p.Tsn = t.Tsn "
 					+ "join College c on t.Csn = c.Csn where Paudit = ? and c.Cname = ? ) as pp where pp.r between ? and ?";
 			List params = Arrays.asList(auditNum, college, m, n);

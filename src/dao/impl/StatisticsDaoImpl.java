@@ -22,7 +22,9 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 	
 	//获取各学院的各项目的数目
 	@Override
-	public ResultSet getCollegeCount(String option) throws SQLException {
+	public ResultSet getCollegeCount(String option,String starttime,String endtime) throws SQLException {
+		System.out.println(starttime);
+		System.out.println(endtime);
 		if(option!=null) {
 			if(option.equals("Project")) {
 				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Project p "
@@ -43,11 +45,21 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 				ResultSet rs = stmt.executeQuery();
 				return rs;
 			}else if(option.equals("Patent")) {
-				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Patent p "
-						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname"; 
-				stmt = dbUtil.getConnection().prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery();
-				return rs;
+				if(starttime == null) {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Patent p "
+							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname"; 
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}else {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Patent p "
+							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Patendate < ? and Patendate > ?) b on a.Cname = b.Cname group by a.Cname"; 
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					stmt.setString(1, starttime);
+					stmt.setString(1, endtime);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}
 			}
 		}
 		return null;

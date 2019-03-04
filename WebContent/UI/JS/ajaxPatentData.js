@@ -109,13 +109,15 @@ $(document).on("click",".saveNewMsg",function(){
 
 //审核通过
 $(document).on("click","#pass",function(){
-	var Patsn = $(this).closest("tr").find(".Patsn").text();
+	var Patsn = $('.Patsn').text();
+	var message  = $('#message').val();
 	$.ajax({
 		url:"../servlet/PatentServlet?value=4",
         type:"post",
         datatype:"json",
         data:{
         	"Patsn" : Patsn,
+        	"message" : message,
         },
         success : function(result){
                 alert("操作成功");
@@ -129,13 +131,15 @@ $(document).on("click","#pass",function(){
 
 //审核不通过
 $(document).on("click","#nopass",function(){
-	var Patsn = $(this).closest("tr").find(".Patsn").text();
+	var Patsn = $('.Patsn').text();
+	var message  = $('#message').val();
 	$.ajax({
 		url:"../servlet/PatentServlet?value=5",
         type:"post",
         datatype:"json",
         data:{
         	"Patsn" : Patsn,
+        	"message" : message,
         },
         success : function(result){
                 alert("操作成功");
@@ -150,72 +154,42 @@ $(document).on("click","#nopass",function(){
 	
 	   
 	    
-	    //新建按钮的事件
-		 $("#btn_add").click(function () {
-		 $("#myModalLabel").text("新建专利");
-		 $('#myModal').modal();
-		 });
-
-		function skipPage(){								//输入页码跳转页面
+	    
+		//输入页码跳转页面
+		$(document).on("click","#pageGo",function(){
 			//页码输入框输入的数
 			var pageVal = $('.pageVal').val();
 			//总页数
 			var totalPage = $('#totalPage').val();
 			//一页显示的条数
 			var pageSize = $('#pageSize').val();
+			console.log(pageVal)
+			console.log(totalPage)
+			console.log(pageSize)
+			var college = $('#college').val();
 			if(pageVal > totalPage){
 				alert('请输入正确的页码！');
 				return
 			}
 			var path = "";
 			var a = "../servlet/PageServlet?option=Patent&currentPage=";
-			var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher"
+			var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher&count=0&college=" + college
 			path = path + a + pageVal + b;
+			alert(path)
 			window.location.href = path;
-		}
+		})								
+			
 		
 		
-		//上传文件	    
-//		$(document).on("click",".imporFileButton",function(){
-//			 //点击上传文件时打开文件上传选择窗口
-//			$('#file').click()
-//	    	//对应的项目名
-//	    	var Proname = $(this).closest("tr").find(".Patname").text();
-//	    	$('#PatentForm').attr("enctype","multipart/form-data");
-//		    $('#PatentForm').attr("action","../servlet/UploadFileServlet");
-//		    $('#PatentForm').submit();
-//	    })
-
-//		$(document).on("click","#submitChecked",function(){
-//
-//			var sdept = $('#sdept').val();
-//			var college = $('#college').val();
-//			var starttime = $('#starttime').val();
-//			var endtime = $('#endtime').val();
-//			var Tname = $('#Tname').val();
-//			alert(college);
-//			alert(sdept);
-//			alert(endtime);
-//			alert(starttime);
-//			alert(Tname);
-//			$.ajax({
-//		        url:"../servlet/ExportServlet",
-//		        type:"post",
-//		        datatype:"json",
-//		        data:{
-//		            "sdept" : sdept,
-//		            "college" : college,
-//		            "starttime" :starttime,
-//		            "endtime" : endtime,
-//		            "Tname" : Tname,
-//		        },
-//		        success : function(result){
-//		                alert("修改成功");
-//		                location.reload();
-//		                //window.location.href = "";
-//		        },
-//		        error:function(result){  
-//		            alert('请求出现错误...');  
-//		        }
-//		    });
-//		});
+		$(function(){
+			var totalPage = $('#totalPage').val();
+			var currentPage = $('#currentPage').val();
+			if(currentPage == 1){					//首页和尾页时分别隐藏对应按钮
+				$('#pre').css("display","none");
+			}
+			
+			if(currentPage == totalPage ){
+				$('#next').css("display","none");
+			}
+		})
+		

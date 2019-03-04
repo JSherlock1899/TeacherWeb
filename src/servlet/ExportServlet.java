@@ -64,7 +64,7 @@ public class ExportServlet extends HttpServlet {
 				// 分别导出所选的数据
 			try {	
 					ResultSet rs = patentService.selectCollegePatent(college, sdept, starttime, endtime,Tname, 1, Record);
-					dataset = dao.getDataList(rs);
+					dataset = dao.getExcelDataList(rs);
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				}
@@ -83,7 +83,7 @@ public class ExportServlet extends HttpServlet {
 				// 分别导出所选的数据
 			try {		
 					ResultSet rs = honorService.selectCollegeHonor(college, sdept, starttime,Tname, 1, Record);
-					dataset = dao.getDataList(rs);
+					dataset = dao.getExcelDataList(rs);
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				}
@@ -102,7 +102,7 @@ public class ExportServlet extends HttpServlet {
 				// 分别导出所选的数据
 			try {		
 					ResultSet rs = paperService.selectCollegePaper(college, sdept, starttime,Tname, 1, Record);
-					dataset = dao.getDataList(rs);
+					dataset = dao.getExcelDataList(rs);
 				} catch (NullPointerException e) {
 					e.printStackTrace();
 				}
@@ -121,7 +121,7 @@ public class ExportServlet extends HttpServlet {
 					// 分别导出所选的数据
 				try {		
 						ResultSet rs = projectService.selectCollegeProject(college, sdept, starttime,endtime,Tname, 1, Record);
-						dataset = dao.getDataList(rs);
+						dataset = dao.getExcelDataList(rs);
 					} catch (NullPointerException e) {
 						e.printStackTrace();
 					} catch (SQLException e) {

@@ -133,57 +133,44 @@ public class ProjectDaoImpl implements IProjectDao{
 				try {
 				if(Tname == null || Tname.equals("")) {		//判断是否进行了精确查询
 					if(college ==  null && sdept == null && starttime == null || college.equals("") && sdept.equals("") && starttime.equals("") ) {							//此时刚跳转到该jsp,页面刚刷新，所有参数均为null，输出所有专利信息
-						System.out.println("1");
 						List params = Arrays.asList(m,n);
 						return dbUtil.getResultSet(sql1, params);
 					}else if(!college.equals("") && sdept == null && starttime == null ||!college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院
-						System.out.println("2");
 						List params = Arrays.asList(college,m,n);
 						return dbUtil.getResultSet(sql2, params);
 					}else if(!college.equals("") && !sdept.equals("") && starttime.equals("")) {			//选了学院和专业
-						System.out.println("3");
 						List params = Arrays.asList(college,sdept,m,n);
 						return dbUtil.getResultSet(sql3, params);
 					}else if(college.equals("") && sdept.equals("") && !starttime.equals("")) {		//只选了起止时间
-						System.out.println("4");
 						List params = Arrays.asList(starttime,endtime,m,n);
 						return dbUtil.getResultSet(sql4, params);
 					}else if(!college.equals("") && sdept.equals("") && !starttime.equals("")) {	//选了学院和起止时间
-						System.out.println("5");
 						List params = Arrays.asList(college,starttime,endtime,m,n);
 						return dbUtil.getResultSet(sql5, params);
 					}else if(!college.equals("") && !sdept.equals("") && !starttime.equals("")) {	//选了学院和专业和起止时间
-						System.out.println("6");
 						List params = Arrays.asList(college,sdept,starttime,endtime,m,n);
 						return dbUtil.getResultSet(sql6, params);
 					}
 				}else {
 					if(college.equals("") && sdept == null && starttime == null || college.equals("") && sdept.equals("") && starttime.equals("")) {							//选了教师名				
-						System.out.println("7");
 						List params = Arrays.asList(Tname,m,n);
 						return dbUtil.getResultSet(sql7, params);
 					}else if(!college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院和教师名
-						System.out.println("8");
 						List params = Arrays.asList(college,Tname,m,n);
 						return dbUtil.getResultSet(sql8, params);
 					}else if(!college.equals("") && !sdept.equals("") && starttime.equals("")) {			//选了学院和专业和教师名
-						System.out.println("9");
 						List params = Arrays.asList(college,sdept,Tname,m,n);
 						return dbUtil.getResultSet(sql9, params);
 					}else if(college.equals("") && sdept.equals("") && !starttime.equals("")) {		//只选了起止时间和教师名
-						System.out.println("10");
 						List params = Arrays.asList(starttime,endtime,Tname,m,n);
 						return dbUtil.getResultSet(sql10, params);
 					}else if(!college.equals("") && sdept.equals("") && !starttime.equals("")) {	//选了学院和起止时间和教师名
-						System.out.println("11");
 						List params = Arrays.asList(college,starttime,endtime,Tname,m,n);
 						return dbUtil.getResultSet(sql11, params);
 					}else if(!college.equals("") && !sdept.equals("") && !starttime.equals("")) {	//选了学院和专业和起止时间和教师名
-						System.out.println("12");
 						List params = Arrays.asList(college,sdept,starttime,endtime,Tname,m,n);
 						return dbUtil.getResultSet(sql12, params);
 					}
-					System.out.println("0");
 				}
 				} catch (NullPointerException | SQLException e) {
 					e.printStackTrace();
@@ -192,7 +179,9 @@ public class ProjectDaoImpl implements IProjectDao{
 				}
 				return null;
 	}
-
+	
+	
+	//获取分页的结果的集合
 	@Override
 	public List<Project> getDataList(ResultSet rs) {
 		List<Project> datalist = new ArrayList<Project>();
@@ -200,6 +189,22 @@ public class ProjectDaoImpl implements IProjectDao{
 			while(rs.next()) {
 				datalist.add(new Project(rs.getString("Psn"),rs.getString("Pname"),rs.getString("Pleader"), rs.getString("Pmember"),rs.getString("Pgrad"),rs.getString("Pkind"),rs.getInt("Pmoney"),
 						rs.getDate("Pstatime"), rs.getString("Pcondition"),rs.getDate("Pendtime"),rs.getString("Premarks"),rs.getInt("totalRecord")));
+			}
+			return datalist;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return datalist;
+	}
+	
+	//获取导出excel的集合
+	@Override
+	public List<Project> getExcelDataList(ResultSet rs) {
+		List<Project> datalist = new ArrayList<Project>();
+		try {
+			while(rs.next()) {
+				datalist.add(new Project(rs.getString("Psn"),rs.getString("Pname"),rs.getString("Pleader"), rs.getString("Pmember"),rs.getString("Pgrad"),rs.getString("Pkind"),rs.getInt("Pmoney"),
+						rs.getDate("Pstatime"), rs.getString("Pcondition"),rs.getDate("Pendtime"),rs.getString("Premarks")));
 			}
 			return datalist;
 		} catch (SQLException e) {

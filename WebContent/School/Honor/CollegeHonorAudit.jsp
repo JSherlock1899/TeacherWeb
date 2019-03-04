@@ -40,6 +40,9 @@
 		    <li><a href="#">审核</a></li>
 		    <li class="active">荣誉审核</li>
 		  </ol>
+		   <input id="college" value=<%=college%> type="hidden">
+		   <input id="currentPage" value=<%=currentPage%> type="hidden">
+		   <input id="totalPage" value=<%=totalPage%> type="hidden">
 		</div>
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
@@ -93,31 +96,27 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/AuditServlet?option=Honor&currentPage=1&college=<%=college %>" id="homePage">首页</a>
+						<a href="../servlet/AuditServlet?option=Honor&currentPage=1&college=<%=college %>&pageSize=<%=pageSize%>" id="homePage">首页</a>
 					</li>
 					<li>
-						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/AuditServlet?option=Honor&college=<%=college %>&currentPage=<%=currentPage - 1%>&pageSize=5
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/AuditServlet?option=Honor&college=<%=college %>&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
 					"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=5&college=<%=college %>
+					<li id="page1"><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&college=<%=college %>
 					"><%=pageArr[0]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=5&college=<%=college %>
+					<li id="page2"><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&college=<%=college %>
 					"><%=pageArr[1]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=5&college=<%=college %>
+					<li id="page3"><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&college=<%=college %>
 					"><%=pageArr[2]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[3]%>&pageSize=5&college=<%=college %>
-					"><%=pageArr[3]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Honor&currentPage=<%=pageArr[4]%>&pageSize=5&college=<%=college %>
-					"><%=pageArr[4]%></a></li>
 					<li>
-						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/AuditServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=5&college=<%=college %>
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/AuditServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>&college=<%=college %>
 					"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/AuditServlet?option=Honor&currentPage=<%=totalPage %>&college=<%=college %>" id="endPage" >尾页</a></li>
+					<li><a href="../servlet/AuditServlet?option=Honor&currentPage=<%=totalPage %>&college=<%=college %>&pageSize=<%=pageSize%>" id="endPage" >尾页</a></li>
 					<li><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
@@ -125,7 +124,7 @@
 			<div class="form-group pull-right">
 			  	共<%=totalPage %>页
 			  <input type="text" class="pageVal" style="width:100px;">
-			  <button type="submit" class="btn btn-default " onclick="skipPage()">GO</button>
+			  <button type="submit" class="btn btn-default " id="pageGo">GO</button>
 			</div>
 		</div>
 	 </div>
@@ -147,27 +146,7 @@
 			window.location.href = href;
 		})
 		
-		function skipPage(){								//输入页码跳转页面
-			var pageVal = $('.pageVal').val();
-			var path = "";
-			var a = "../servlet/AuditServlet?option=Honor&college=<%=college %>&currentPage=";
-			var b = "&pageSizeSelect=<%=pageSize%>"
-			path = path + a + pageVal + b;
-			window.location.href = path;
-		}
 		
-		//点击上传文件时打开文件上传选择窗口
-	    $(function(){
-	    	$('#imporFileButton').on("click",function(){
-	    		$('#file').click();
-	    	})
-	    })
-	    
-	    function submitFile(){
-		    $('#HonorForm').attr("action","../servlet/UploadFileServlet?&count=4&grade=<%=grade%>");
-		    $('#HonorForm').attr("enctype","multipart/form-data");
-		    $('#HonorForm').submit();
-	    }
 	</script>
 </body>
 </html>

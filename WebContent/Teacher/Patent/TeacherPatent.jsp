@@ -13,12 +13,14 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>专利查询</title>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/bootstrap.css">
+<link rel="stylesheet" href="/TeacherWeb/UI/CSS/fileinput.min.css">
 <script type="text/javascript" src="/TeacherWeb/UI/JS/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxPatentData.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/bootstrap.min.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/commonUse.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/bootstrap-table.js"></script>
-<script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxSelect.js"></script>
+<script type="text/javascript" src="/TeacherWeb/UI/JS/fileinput.min.js"></script>
+<script type="text/javascript" src="/TeacherWeb/UI/JS/zh.js"></script>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/style.css">
 </head>
 <body>
@@ -26,6 +28,7 @@
 							IBaseDao basedao = new BaseDaoImpl();
 							Pager pager = (Pager) request.getAttribute("pager");
 							List<Patent> datalist =  pager.getDataList();	//要显示的数据集合
+							request.setAttribute("datalist", datalist);
 							int currentPage =  pager.getCurrentPage();		//获取当前页码
 							int pageSize = pager.getPageSize();			//获取每页显示多少条数据
 							int totalRecord = pager.getTotalRecord();		//获取数据总条数
@@ -47,49 +50,37 @@
 				<div class="col-md-10 button-div form-inline">
 					<input type="button" value="新建记录" id="btn_add" class="btn btn-success"> 								
 					<form action="../servlet/SelectExport"  method="post" id="PatentForm" class="form-group">
-						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
-						<input type="file" id="file" style="display: none"> 
 						<input type="hidden" name="count" value="4">
+						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
+						<input type="file" id="file"style="display: none"> 
 						<input type="hidden" id="totalPage" value="<%=totalPage %>"/>
 						<input type="hidden" id="currentPage" value="<%=currentPage %>"/>
 						<input type="hidden" id="pageSize" value="<%=pageSize %>"/>
 						<input type="hidden" id="totalRecord" value="<%=totalRecord %>"/>
 						<input type="hidden" id="grade" value="<%=grade %>"/>
-					</form>	
 				</div>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
-								<th><input type="checkbox" id="checkAll" /></th>
 								<th>名称</th>
 								<th>第一作者</th>
 								<th>授权号</th>
 								<th>申请时间</th>
 								<th>授权时间</th>
 								<th>级别</th>
-								<th>备注</th>
-								<th>附件</th>
-								<th>操作</th>
 							</tr>
-							<%	
+							<% 
 								for(int i=0; i<datalist.size(); i++){
 									String Patsn = datalist.get(i).getPatsn();
 									
 							%>
 							<tr>
-								<% //导出为excel时的单选框，Pastn用于唯一标识各专利信息
-								out.print("<td><input type='checkbox' value = " + Patsn + " name='select'  class='select'></td>"); %>
-								<td class="Patname edit"><%=datalist.get(i).getPatname()%></td>
+								<td class="Patname edit"><a href="../servlet/PageServlet?option=Patent&teacher=teacher&count=1&Proname=
+								<%=datalist.get(i).getPatname()%>&Patsn=<%=Patsn%>&order=<%=i%>&pageSize=<%=pageSize%>&currentPage=<%=currentPage%>"><%=datalist.get(i).getPatname()%></a></td>
 								<td class="Pleader edit"><%=datalist.get(i).getPleader()%></td>
 								<td class="Patsn edit"><%=Patsn%></td>
 								<td class="Patapdate edit"><%=datalist.get(i).getPatemdate()%></td>
 								<td class="Patemdate edit"><%=datalist.get(i).getPatapdate()%></td>
 								<td class="Patgrad edit"><%=datalist.get(i).getPatgrad()%></td>
-								<td class="Patremarks edit"><%=datalist.get(i).getPatremarks()%></td>
-								<td class="Paccessory edit">
-									<a href="<%=datalist.get(i).getPaccessory()%>">查看附件</a>
-									<a class="text-primary imporFileButton">上传文件</a>
-								</td>
-								<td class=""><a class="delete">删除</a>&nbsp<a class="updata">编辑</a></td>
 							</tr>
 							
 							<% } 
@@ -109,30 +100,31 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/PageServlet?option=Patent&currentPage=1&teacher=teacher" id="homePage">首页</a>
+						<a href="../servlet/PageServlet?option=Patent&currentPage=1&teacher=teacher&count=0" id="homePage">首页</a>
 					</li>
 					<li>
-						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Patent&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize %>
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Patent&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize %>&count=0
 					&teacher=teacher"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[0]%>&pageSize=5&teacher=teacher
+					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[0]%></a></li>
-					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[1]%>&pageSize=5&teacher=teacher
+					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[1]%></a></li>
-					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[2]%>&pageSize=5&teacher=teacher
+					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[2]%></a></li>
 					<li>
-						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Patent&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize %>
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Patent&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize %>&count=0
 					&teacher=teacher"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/PageServlet?option=Patent&currentPage=<%=totalPage %>&teacher=teacher" id="endPage" >尾页</a></li>
+					<li><a href="../servlet/PageServlet?option=Patent&currentPage=<%=totalPage %>&teacher=teacher&count=0" id="endPage" >尾页</a></li>
 					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
+			</form>
 			<div class="form-group pull-right">
 			  	共<%=totalPage %>页
 			  <input type="text" class="pageVal" style="width:100px;">
@@ -202,10 +194,20 @@
 		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
 			var pageSizeSelect = $("#pageSize option:selected").val();
 			var href = "";
-			var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
+			var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&count=0&pageSizeSelect=";
 			href = href + a + pageSizeSelect + "&teacher=teacher"
 			window.location.href = href;
 		})    
+		
+		//新建按钮的事件
+		 $("#btn_add").click(function () {
+		 $("#myModalLabel").text("新建专利");
+		 $('#myModal').modal();
+		 });
+		
+			
+			
+		
 	</script>
 </body>
 </html>

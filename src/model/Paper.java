@@ -6,14 +6,14 @@ public class Paper {
 	private String Pasearchnum;
 	private String Paname;
 	private String Pawriter;
-	private String Papublish;
+	private String Papublish;//期/卷/页
 	private String Pagrad;
 	private Date Padate;
 	private String Paremarks;
 	private int totalRecord;
 	private String Paccessory; //附件
 	private String message;//留言
-	private String Pdisvol; //期/卷/页
+	private String Pdisvol; 
 	
 	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
 			String paremarks, int totalRecord, String pdisvol) {

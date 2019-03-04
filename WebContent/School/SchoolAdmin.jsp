@@ -104,28 +104,28 @@
 							<div class="showtitle" style="width: 100px;">项目统计</div> <a
 							href="../servlet/StatisticsServlet?option=Project&college=<%=college %>&grade=<%=grade %>" 
 							onclick="ProjectStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon  glyphicon-align-justify"></span><span
+								class="sublist-icon glyphicon  glyphicon-stats"></span><span
 								class="sub-title">项目统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">论文统计</div> <a
 							href="../servlet/StatisticsServlet?option=Paper&college=<%=college %>&grade=<%=grade %>" 
 							onclick="PaperStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
+								class="sublist-icon glyphicon glyphicon-stats"></span><span
 								class="sub-title">论文统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">荣誉统计</div> <a
 							href="../servlet/StatisticsServlet?option=Honor&college=<%=college %>&grade=<%=grade %>" 
 							onclick="HonorStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
+								class="sublist-icon glyphicon glyphicon-stats"></span><span
 								class="sub-title">荣誉统计</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">专利统计</div> <a
 							href="../servlet/StatisticsServlet?option=Patent&college=<%=college %>&grade=<%=grade %>" 
 							onclick="PatentStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
+								class="sublist-icon glyphicon glyphicon-stats"></span><span
 								class="sub-title">专利统计</span></a>
 						</li>
 					</ul>
@@ -163,6 +163,35 @@
 							onclick="PatentStatistics()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-check"></span><span
 								class="sub-title">专利审核</span></a>
+						</li>
+					</ul>
+				</div>
+				<div class="sBox otherAction">
+					<div class="subNav sublist-up">
+						<span class="title-icon glyphicon glyphicon-chevron-up"></span><span
+							class="sublist-title" style="font-size:15px;">其他</span>
+					</div>
+					<ul class="navContent" style="display: none">
+						<li>
+							<div class="showtitle" style="width: 100px;">教师管理</div> <a
+							href="../servlet/PageServlet?option=Teacher&college=<%=college %>&teacher=admin" 
+							onclick="Teacherchange()" target="select_frame"><span
+								class="sublist-icon glyphicon glyphicon-user"></span><span
+								class="sub-title">教师管理</span></a>
+						</li>
+						<li class="permissions">
+							<div class="showtitle" style="width: 100px;">权限管理</div> <a
+							href="" 
+							onclick="PaperStatistics()" target="select_frame"><span
+								class="sublist-icon glyphicon glyphicon-th"></span><span
+								class="sub-title">权限管理</span></a>
+						</li>
+						<li>
+							<div class="showtitle" style="width: 100px;">密码管理</div> <a
+							href="../School/Other/alterPassword.jsp" 
+							onclick="HonorStatistics()" target="select_frame"><span
+								class="sublist-icon glyphicon  glyphicon-asterisk"></span><span
+								class="sub-title">密码管理</span></a>
 						</li>
 					</ul>
 				</div>
@@ -237,8 +266,8 @@
 			</div>
 			<div class="table" class="col-md-12">
 
-				<iframe src="" frameborder="1" class="qaq" id="select_frame"
-					name="select_frame" frameborder="0" scrolling="no" width="1200px"
+				<iframe src="../servlet/StatisticsServlet?option=Project&college=<%=college %>&grade=<%=grade %>" 
+				frameborder="1" class="qaq" id="select_frame" name="select_frame" frameborder="0" scrolling="no" width="1200px"
 					height="1800px" style="border: 0"></iframe>
 			</div>
 

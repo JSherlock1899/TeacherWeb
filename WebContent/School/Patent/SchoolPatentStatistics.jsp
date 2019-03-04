@@ -18,8 +18,7 @@
 	<%
 		JSONObject json = (JSONObject)request.getAttribute("json");
 		JSONArray jsonList = (JSONArray)request.getAttribute("jsonList");
-		int grade = (int)session.getAttribute("grade");	//获取用户的权限等级	
-
+		String grade = (String)request.getAttribute("grade");	//获取用户的权限等级	
 	%>
 	<ol class="breadcrumb">
 		    <li><a href="#">主页</a></li>

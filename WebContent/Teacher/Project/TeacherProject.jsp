@@ -128,21 +128,21 @@
 						href="../servlet/PageServlet?option=Project&currentPage=1&teacher=teacher"
 						id="homePage">首页</a></li>
 					<li><a aria-label="Previous" id="pre" class="prenextpage"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=5
+						href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
 					&teacher=teacher">
 							<span>&laquo;</span>
 					</a></li>
 					<li id="page1"><a class="page"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=5&teacher=teacher
+						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[0]%></a></li>
 					<li id="page2"><a class="page"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=5&teacher=teacher
+						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[1]%></a></li>
 					<li id="page3"><a class="page"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=5&teacher=teacher
+						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[2]%></a></li>
 					<li><a id="next" aria-label="Next" class="prenextpage"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=5
+						href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
 					">
 							<span>&raquo;</span>
 					</a></li>
@@ -193,15 +193,26 @@
 							<div class="form-group">
 								<label for="Pgrad">级别</label> <input type="text" name="Pgrad"
 									class="form-control" id="Pgrad" placeholder="级别">
+									<select name="Pgrad"
+									class="form-control" id="Pgrad">
+									<option value="校级">校级</option>
+									<option value="市级">市级</option>
+									<option value="省级">省级</option>
+									<option value="部级">部级</option>
+								</select>
 							</div>
 							<div class="form-group">
-								<label for="Pkind">类型</label> <input type="text" name="Pkind"
-									class="form-control" id="Pkind" placeholder="类型">
+								<label for="Pkind">类型</label> 
+								<select name="Pkind"
+									class="form-control" id="Pkind">
+									<option value="横向">横向</option>
+									<option value="纵向">纵向</option>
+								</select>
 							</div>
 							<div class="form-group">
-								<label for="Pcondition">科研状态</label> <select name="Pcondition"
+								<label for="Pcondition">科研状态</label> 
+								<select name="Pcondition"
 									class="form-control" id="Pcondition">
-									<option value="请选择科研状态">请选择科研状态</option>
 									<option value="未结题">未结题</option>
 									<option value="已结题">已结题</option>
 								</select>

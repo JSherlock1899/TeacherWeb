@@ -19,14 +19,17 @@ import model.Pager;
 import model.Paper;
 import model.Patent;
 import model.Project;
+import model.Teacher;
 import service.HonorService;
 import service.PaperService;
 import service.PatentService;
 import service.ProjectService;
+import service.TeacherService;
 import util.PageUtil;
 
 /**
  * 处理分页请求
+ * 对分页进行预处理
  */
 @WebServlet("/servlet/PageServlet")
 public class PageServlet extends HttpServlet {
@@ -36,6 +39,10 @@ public class PageServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// 根据不同的option值来分发到不同的jsp
 		String option = request.getParameter("option");
+		//来判断是否是显示详细信息
+		String count = request.getParameter("count");
+		//用来确定是datalist中的第几个项目
+		String order = request.getParameter("order");
 		String collegevalue = request.getParameter("collegevalue");// select下拉框中的学院
 		String college = request.getParameter("college");// session中的学院
 		String teacher = request.getParameter("teacher");
@@ -160,6 +167,29 @@ public class PageServlet extends HttpServlet {
 						request.getRequestDispatcher("/School/Paper/SchoolPaperSelect.jsp").forward(request, response);
 
 					}
+				}else if (option.equals("Teacher")) {
+					TeacherService teacherService = new TeacherService();
+					ResultSet teacherrRs;
+					try {
+						teacherrRs = teacherService.selectTeacher(college, sdeptValue, selectByNameVal, m, n);
+						List<Teacher> datalist = teacherService.getDataList(teacherrRs);
+						if (datalist.size() > 0) {
+							int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
+							int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
+							@SuppressWarnings("unchecked")
+							Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
+							request.setAttribute("pager", pager);
+							request.setAttribute("currentPage", currentPage);
+							request.setAttribute("pageArr", pageArr);
+							request.setAttribute("college", collegevalue);
+							request.setAttribute("sdept", sdeptValue);
+							request.setAttribute("Tname", selectByNameVal);
+							request.getRequestDispatcher("/School/Teacher/SchoolTeacherSelect.jsp").forward(request, response);
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			} else {
 				// 教师部分
@@ -179,7 +209,22 @@ public class PageServlet extends HttpServlet {
 							request.setAttribute("pager", pager);
 							request.setAttribute("currentPage", currentPage);
 							request.setAttribute("pageArr", pageArr);
-							request.getRequestDispatcher("/Teacher/Patent/TeacherPatent.jsp").forward(request, response);
+							if(count.equals("1")) {
+								if(order!=null) {
+									int number = Integer.parseInt(order);
+									//获取要获取详细信息的那个patent对象
+									Patent patent = datalist.get(number);
+									//将patent对象转化为List
+									datalist = patentService.getlist(patent);
+									//覆盖原先的pager
+									pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+									request.setAttribute("pager", pager);
+								}	
+								request.getRequestDispatcher("/Teacher/Patent/TeacherDetailPatent.jsp").forward(request, response);
+							}else {
+								request.getRequestDispatcher("/Teacher/Patent/TeacherPatent.jsp").forward(request, response);
+							}
+							
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();

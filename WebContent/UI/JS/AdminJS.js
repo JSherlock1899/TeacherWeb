@@ -78,8 +78,9 @@
 		})
 		
 		function move(){								//实现各院系的两级联动
+			//院管理员所属学院
 			var college = $('#Cname').val();
-			if(college == "null"){
+			if(college == "null" || college == ""){
 				collegeName = $('#college option:selected').val();
 			}else{
 				collegeName = college;
@@ -124,6 +125,7 @@
 			var grade = $('#grade').val();
 			if(grade == "1"){
 				$('.audit').hide();
+				$('.permissions').hide();
 			}
 		})
 		

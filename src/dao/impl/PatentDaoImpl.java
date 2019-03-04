@@ -24,7 +24,7 @@ public class PatentDaoImpl implements IPatentDao{
 	protected DbUtil dbUtil = new DbUtil();
 	private PreparedStatement stmt = null;
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
-	CommonUtil commondao = new CommonUtil();
+	CommonUtil util = new CommonUtil();
 	IBaseDao baseDao = new BaseDaoImpl();
 	
 	@Override
@@ -48,7 +48,7 @@ public class PatentDaoImpl implements IPatentDao{
 		String Tsn = teacherdao.getTsn(patent.getPleader().trim());			//获取该专利第一所有者的教师号
 		String sql = "update Patent set Patname = ?,Patapdate = ?,Patendate = ?,Patgrad = ?,Patremarks = ?,Tsn = ? "
 				+ "where Patsn = ?";
-		Date Patapdate = commondao.utilToSql(patent.getPatapdate());
+		Date Patapdate = util.utilToSql(patent.getPatapdate());
 		java.sql.Date Patendate = new java.sql.Date(patent.getPatemdate().getTime());
 		List params = Arrays.asList(patent.getPatname().trim(),Patapdate,Patendate,patent.getPatgrad().trim(),patent.getPatremarks().trim(),Tsn,patent.getPatsn().trim());
 		return dbUtil.getUpdateResult(sql, params);
@@ -60,7 +60,7 @@ public class PatentDaoImpl implements IPatentDao{
 		try {
 			String Tsn = teacherdao.getTsn(patent.getPleader().trim());		//获取该专利第一所有者的教师号
 			String sql = "insert into Patent (Patname,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Tsn,Paudit) Values(?,?,?,?,?,?,?,?)";
-			Date Patapdate = commondao.utilToSql(patent.getPatapdate());
+			Date Patapdate = util.utilToSql(patent.getPatapdate());
 			java.sql.Date Patendate = new java.sql.Date(patent.getPatemdate().getTime());
 			List params = Arrays.asList(patent.getPatname().trim(),patent.getPatsn().trim(),Patapdate,Patendate,patent.getPatgrad().trim(),patent.getPatremarks().trim(),Tsn,0);
 			return dbUtil.getUpdateResult(sql, params);
@@ -88,106 +88,93 @@ public class PatentDaoImpl implements IPatentDao{
 //		System.out.println("endtime =" + endtime);
 //		System.out.println("Tname =" + Tname);
 		//什么都没有设置
-		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ," + 
+		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,message,Paudit," + 
 		"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn ) as pp where pp.r between ? and ?";
 		//设置了要查询的学院
-		String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Cname," + 
+		String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Cname,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p  left join Teacher t on p.Tsn = t.Tsn "
 				+ "join College c on t.Csn = c.Csn where c.Cname = ?) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业
-		String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ,Cname,Dname," 
+		String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ,Cname,Dname,message,Paudit," 
 				+ "ROW_NUMBER() over (order by Patnum desc) as r from Patent p left join Teacher t on p.Tsn = t.Tsn join Sdept s "
 				+ "on t.Dsn = s.Dsn join College c on t.Csn = c.Csn where Cname = ? and Dname = ?) as pp where pp.r between ? and ?";	
 		//设置了要查询的起止时间
-		String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ," + 
+		String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn  where Patapdate >= ? and Patendate <= ?) "
 				+ "as pp where pp.r between ? and ?";
 		//设置了要查询的学院和起止时间
-		String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,"
+		String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,message,Paudit,"
 				+	"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ 	"on t.Csn = c.Csn where c.Cname = ? and Patapdate >= ? and Patendate <= ?) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业和起止时间
-		String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Dname,"
+		String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Dname,message,Paudit,"
 				+	"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Dname = ? and Patapdate >= ? and Patendate <= ?) as pp where pp.r between ? and ?";	
 		//没有设置要查询的教师名
-		String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ," + 
+		String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn where Tname = ?) "
 				+ "as pp where pp.r between ? and ?";
 		//设置了要查询的学院和教师名
-		String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Cname ," + 
+		String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Cname ,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn where c.Cname = ? and Tname = ?) as pp where pp.r between ? and ?";
 		//没有设置要查询的学院和专业和教师名
-		String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Dname ," + 
+		String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Dname ,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where c.Cname = ? and  Dname = ? and Tname = ?) as pp where pp.r between ? and ?";
 		//设置了要查询的起止时间和教师名
-		String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ," + 
+		String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn "
 				+ "where  Patapdate >= ? and Patendate <= ? and Tname = ?) as pp where pp.r between ? and ?";
 		//设置了要查询的学院和起止时间和教师名
-		String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ," + 
+		String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname ,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 				+ " where  c.Cname = ? and Patapdate >= ? and Patendate <= ? and Tname = ?) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业和起止时间和教师名
-		String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Cname,Dname ," + 
+		String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,Cname,Dname ,message,Paudit," + 
 				"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 				+ " join Sdept s on t.Dsn = s.Dsn  where  c.Cname = ? and Dname = ? and Patapdate >= ? and Patendate <= ? and Tname = ?) as pp where pp.r between ? and ?"; ;	
 		try {
 		if(Tname == null || Tname.equals("")) {		//判断是否进行了精确查询
 			if(college ==  null && sdept == null && starttime == null || college.equals("") && sdept.equals("") && starttime.equals("") ) {							//此时刚跳转到该jsp,页面刚刷新，所有参数均为null，输出所有专利信息
-				System.out.println("1");
 				List params = Arrays.asList(m,n);
 				return dbUtil.getResultSet(sql1, params);
 			}else if(!college.equals("") && sdept == null && starttime == null || !college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院
-				System.out.println("2");
 				List params = Arrays.asList(college,m,n);
 				return dbUtil.getResultSet(sql2, params);
 			}else if(!college.equals("") && !sdept.equals("") && starttime.equals("")) {			//选了学院和专业
-				System.out.println("3");
 				List params = Arrays.asList(college,sdept,m,n);
 				return dbUtil.getResultSet(sql3, params);
 			}else if(college.equals("") && sdept.equals("") && !starttime.equals("")) {		//只选了起止时间
-				System.out.println("4");
 				List params = Arrays.asList(starttime,endtime,m,n);
 				return dbUtil.getResultSet(sql4, params);
 			}else if(!college.equals("") && sdept.equals("") && !starttime.equals("")) {	//选了学院和起止时间
-				System.out.println("5");
 				List params = Arrays.asList(college,starttime,endtime,m,n);
 				return dbUtil.getResultSet(sql5, params);
 			}else if(!college.equals("") && !sdept.equals("") && !starttime.equals("")) {	//选了学院和专业和起止时间
-				System.out.println("6");
 				List params = Arrays.asList(college,sdept,starttime,endtime,m,n);
 				return dbUtil.getResultSet(sql6, params);
 			}
 		}else {
 			if(college.equals("") && sdept == null && starttime == null || college.equals("") && sdept.equals("") && starttime.equals("")) {							//选了教师名				
-				System.out.println("7");
 				List params = Arrays.asList(Tname,m,n);
 				return dbUtil.getResultSet(sql7, params);
 			}else if(!college.equals("") && sdept.equals("") && starttime.equals("")) {	//只选了学院和教师名
-				System.out.println("8");
 				List params = Arrays.asList(college,Tname,m,n);
 				return dbUtil.getResultSet(sql8, params);
 			}else if(!college.equals("") && !sdept.equals("") && starttime.equals("")) {			//选了学院和专业和教师名
-				System.out.println("9");
 				List params = Arrays.asList(college,sdept,Tname,m,n);
 				return dbUtil.getResultSet(sql9, params);
 			}else if(college.equals("") && sdept.equals("") && !starttime.equals("")) {		//只选了起止时间和教师名
-				System.out.println("10");
 				List params = Arrays.asList(starttime,endtime,Tname,m,n);
 				return dbUtil.getResultSet(sql10, params);
 			}else if(!college.equals("") && sdept.equals("") && !starttime.equals("")) {	//选了学院和起止时间和教师名
-				System.out.println("11");
 				List params = Arrays.asList(college,starttime,endtime,Tname,m,n);
 				return dbUtil.getResultSet(sql11, params);
 			}else if(!college.equals("") && !sdept.equals("") && !starttime.equals("")) {	//选了学院和专业和起止时间和教师名
-				System.out.println("12");
 				List params = Arrays.asList(college,sdept,starttime,endtime,Tname,m,n);
 				return dbUtil.getResultSet(sql12, params);
 			}
-			System.out.println("0");
 			}
 		} catch (NullPointerException | SQLException e) {
 			e.printStackTrace();
@@ -205,7 +192,25 @@ public class PatentDaoImpl implements IPatentDao{
 		try {
 			while(rs.next()) {
 				datalist.add(new Patent(rs.getString("Patname"),rs.getString("Tname"), rs.getString("Patsn"),rs.getDate("Patapdate"),
-						rs.getDate("Patendate"), rs.getString("Patgrad"),rs.getString("Patremarks"),rs.getString("Paccessory"),rs.getInt("totalRecord")));
+						rs.getDate("Patendate"), rs.getString("Patgrad"),rs.getString("Patremarks"),rs.getString("Paccessory"),rs.getInt("totalRecord")
+						,rs.getString("message"),rs.getString("Paudit")));
+			}
+			return datalist;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return datalist;
+	}
+	
+	//获取导出excel的集合
+	@Override	
+	public List<Patent> getExcelDataList(ResultSet rs){	
+		List<Patent> datalist = new ArrayList<Patent>();
+		try {
+			while(rs.next()) {
+				datalist.add(new Patent(rs.getString("Patname"),rs.getString("Tname"), rs.getString("Patsn"),rs.getDate("Patapdate"),
+						rs.getDate("Patendate"), rs.getString("Patgrad"),rs.getString("Patremarks")
+						));
 			}
 			return datalist;
 		} catch (SQLException e) {
@@ -217,12 +222,13 @@ public class PatentDaoImpl implements IPatentDao{
 	
 		//对未审核的专利进行审核
 		@Override
-		public int patentAudit(String Patsn, String Paudit) {
-			String sql = "update Patent set Paudit = ? where Patsn = ?";
+		public int patentAudit(String Patsn, String Paudit,String message) {
+			String sql = "update Patent set Paudit = ?,message = ? where Patsn = ?";
 			try {
 				stmt = dbUtil.getConnection().prepareStatement(sql);
 				stmt.setString(1, Paudit);
-				stmt.setString(2, Patsn);
+				stmt.setString(2, message);				
+				stmt.setString(3, Patsn);
 				int result = stmt.executeUpdate();
 				return result;
 			} catch (SQLException e) {
@@ -230,6 +236,32 @@ public class PatentDaoImpl implements IPatentDao{
 			}	
 			return 0;
 		}
-
-
+		
+		
+		//保存上传的附件的路径
+		@Override
+		public void saveFilePath(String path,String patsn) {
+			String sql = "update Patent set Paccessory = ? where Patsn = ?";
+			try {
+				stmt = dbUtil.getConnection().prepareStatement(sql);
+				stmt.setString(1, path);
+				stmt.setString(2, patsn);
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		//获取单个专利的详细信息
+		@Override
+		public List<Patent> getlist(Patent patent) {
+			String Paudit = util.disposeAuditValue(patent.getPaudit());
+			String Message = util.disposeMessageValue(patent.getMessage());
+			List<Patent> datalist = new ArrayList<Patent>();
+			datalist.add(new Patent(patent.getPatname(),patent.getPleader(),patent.getPatsn(),patent.getPatapdate(),
+					patent.getPatemdate(),patent.getPatgrad(),patent.getPatremarks(),patent.getPaccessory(),patent.getTotalRecord(),Message
+					,Paudit));
+			return datalist;
+		}
 }

@@ -14,8 +14,8 @@ public class StatisticsService {
 	IStatisticsDao statisticDao = new StatisticsDaoImpl();
 	
 	
-	public ResultSet getCollegeCount(String option) throws SQLException { //获取各学院的各项目的数目
-		return statisticDao.getCollegeCount(option);
+	public ResultSet getCollegeCount(String option,String starttime,String endtime) throws SQLException { //获取各学院的各项目的数目
+		return statisticDao.getCollegeCount(option,starttime,endtime);
 	}
 
 	public ResultSet getSdeptCount(String option, String collegevalue) throws SQLException { //获取各专业的各项目的数目

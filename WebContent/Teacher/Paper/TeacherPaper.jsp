@@ -111,19 +111,19 @@
 						<a href="../servlet/PageServlet?option=Paper&currentPage=1&teacher=teacher" id="homePage">首页</a>
 					</li>
 					<li>
-						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Paper&currentPage=<%=currentPage - 1%>&pageSize=5
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Paper&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
 					&teacher=teacher"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[0]%>&pageSize=5&teacher=teacher
+					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[0]%></a></li>
-					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[1]%>&pageSize=5&teacher=teacher
+					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[1]%></a></li>
-					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[2]%>&pageSize=5&teacher=teacher
+					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[2]%></a></li>
 					<li>
-						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Paper&currentPage=<%=currentPage + 1%>&pageSize=5
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Paper&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
 					"> 
 							<span>&raquo;</span>
 						</a>
@@ -204,13 +204,32 @@
 	 </div>
 	</div>
 	<script type="text/javascript">	
-		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
-			var pageSizeSelect = $("#pageSize option:selected").val();
-			var href = "";
-			var a = "../servlet/PageServlet?option=Paper&currentPage=<%=currentPage%>&pageSizeSelect=";
-			href = href + a + pageSizeSelect + "&teacher=teacher"
-			window.location.href = href;
-		})
+	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
+		var pageSizeSelect = $("#pageSize option:selected").val();
+		var href = "";
+		var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
+		var b = "&selectByNameVal=<%=Tname%>&teacher=admin"
+		href = href + a + pageSizeSelect + b;
+		window.location.href = href;
+	})
+		
+		function skipPage(){								//输入页码跳转页面
+			//页码输入框输入的数
+			var pageVal = $('.pageVal').val();
+			//总页数
+			var totalPage = $('#totalPage').val();
+			//一页显示的条数
+			var pageSize = $('#pageSize').val();
+			if(pageVal > totalPage){
+				alert('请输入正确的页码！');
+				return
+			}
+			var path = "";0
+			var a = "../servlet/PageServlet?option=Project&currentPage=";
+			var b = "&selectByNameVal=<%=Tname%>&teacher=admin"
+			path = path + a + pageVal + b;
+			window.location.href = path;
+		}
 		
 		//点击上传文件时打开文件上传选择窗口
 	    $(function(){

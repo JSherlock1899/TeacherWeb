@@ -156,20 +156,34 @@ $(document).on("click",".updata",function(e){
 		 $('#myModal').modal();
 		 });
 
-	function skipPage(){								//输入页码跳转页面
-		//页码输入框输入的数
-		var pageVal = $('.pageVal').val();
-		//总页数
-		var totalPage = $('#totalPage').val();
-		//一页显示的条数
-		var pageSize = $('#pageSize').val();
-		if(pageVal > totalPage){
-			alert('请输入正确的页码！');
-			return
-		}
-		var path = "";
-		var a = "../servlet/PageServlet?option=Honor&currentPage=";
-		var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher"
-		path = path + a + pageVal + b;
-		window.location.href = path;
+function skipPage(){								//输入页码跳转页面
+	//页码输入框输入的数
+	var pageVal = $('.pageVal').val();
+	//总页数
+	var totalPage = $('#totalPage').val();
+	//一页显示的条数
+	var pageSize = $('#pageSize').val();
+	var college = $('#college').val();
+	alert(college)
+	if(pageVal > totalPage){
+		alert('请输入正确的页码！');
+		return
 	}
+	var path = "";
+	var a = "../servlet/PageServlet?option=Honor&currentPage=";
+	var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher&count=0&college=" + college
+	path = path + a + pageVal + b;
+	window.location.href = path;
+}
+
+$(function(){
+	var totalPage = $('#totalPage').val();
+	var currentPage = $('#currentPage').val();
+	if(currentPage == 1){					//首页和尾页时分别隐藏对应按钮
+		$('#pre').css("display","none");
+	}
+	
+	if(currentPage == totalPage ){
+		$('#next').css("display","none");
+	}
+})

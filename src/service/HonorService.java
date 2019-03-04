@@ -7,6 +7,7 @@ import java.util.List;
 import dao.IHonorDao;
 import dao.impl.HonorDaoImpl;
 import model.Honor;
+import model.Patent;
 
 
 public class HonorService {
@@ -50,5 +51,9 @@ public class HonorService {
 	//对未审核的荣誉进行审核
 	public int honorAudit(String Hsn,String Paudit) {
 		return honordao.honorAudit(Hsn, Paudit);
+	}
+	
+	public List<Honor> getlist(Honor honor){
+		return honordao.getlist(honor);
 	}
 }

@@ -114,19 +114,19 @@
 						<a href="../servlet/PageServlet?option=Honor&currentPage=1&teacher=teacher" id="homePage">首页</a>
 					</li>
 					<li>
-						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage - 1%>&pageSize=5
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
 					&teacher=teacher"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=5&teacher=teacher
+					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[0]%></a></li>
-					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=5&teacher=teacher
+					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[1]%></a></li>
-					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=5&teacher=teacher
+					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher
 					"><%=pageArr[2]%></a></li>
 					<li>
-						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=5
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
 					"> 
 							<span>&raquo;</span>
 						</a>

@@ -40,13 +40,16 @@
 		    <li><a href="#">审核</a></li>
 		    <li class="active">项目审核</li>
 		  </ol>
+		   <input id="college" value=<%=college%> type="hidden">
+		   <input id="currentPage" value=<%=currentPage%> type="hidden">
+		   <input id="totalPage" value=<%=totalPage%> type="hidden">
+		   <input id="pageSize" value=<%=pageSize%> type="hidden">
 		</div>
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
 				<div class="col-md-10 button-div form-inline">
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
-								<th><input type="checkbox" id="checkAll" /></th>
 								<th>项目编号</th>
 								<th>项目名称</th>
 								<th>负责人</th>
@@ -67,8 +70,6 @@
 									
 							%>
 							<tr>
-								<% //导出为excel时的单选框，Pastn用于唯一标识各项目信息
-								out.print("<td><input type='checkbox' value = " + Psn + " name='select'  class='select'></td>"); %>
 								<td class="Psn edit"><%=Psn%></td>
 								<td class="Pname edit"><%=datalist.get(i).getPname()%></td>
 								<td class="Pleader edit"><%=datalist.get(i).getPleader()%></td>
@@ -100,31 +101,27 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/AuditServlet?option=Project&currentPage=1" id="homePage">首页</a>
+						<a href="../servlet/AuditServlet?option=Project&currentPage=1&pageSize=<%=pageSize%>" id="homePage">首页</a>
 					</li>
 					<li>
-						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/AuditServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=5
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/AuditServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
 					"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=5
+					<li id="page1"><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>
 					"><%=pageArr[0]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=5
+					<li id="page2"><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>
 					"><%=pageArr[1]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=5
+					<li id="page3"><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>
 					"><%=pageArr[2]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[3]%>&pageSize=5
-					"><%=pageArr[3]%></a></li>
-					<li><a class="page" href="../servlet/AuditServlet?option=Project&currentPage=<%=pageArr[4]%>&pageSize=5
-					"><%=pageArr[4]%></a></li>
 					<li>
-						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/AuditServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=5
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/AuditServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
 					"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/AuditServlet?option=Project&currentPage=<%=totalPage %>" id="endPage" >尾页</a></li>
+					<li><a href="../servlet/AuditServlet?option=Project&currentPage=<%=totalPage %>&pageSize=<%=pageSize%>" id="endPage" >尾页</a></li>
 					<li><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
@@ -132,19 +129,13 @@
 			<div class="form-group pull-right">
 			  	共<%=totalPage %>页
 			  <input type="text" class="pageVal" style="width:100px;">
-			  <button type="submit" class="btn btn-default " onclick="skipPage()">GO</button>
+			  <button type="submit" class="btn btn-default" id="pageGo">GO</button>
 			</div>
 		</div>
 	 </div>
 	</div>
 	<script type="text/javascript">
-		if(<%=currentPage %> == 1){					//首页和尾页时分别隐藏对应按钮
-			$('#pre').css("display","none");
-		}
 		
-		if(<%=currentPage %> == <%=totalPage %>){
-			$('#next').css("display","none");
-		}
 		
 		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
 			var pageSizeSelect = $("#pageSize option:selected").val();
@@ -154,27 +145,7 @@
 			window.location.href = href;
 		})
 		
-		function skipPage(){								//输入页码跳转页面
-			var pageVal = $('.pageVal').val();
-			var path = "";
-			var a = "../servlet/AuditServlet?option=Project&currentPage=";
-			var b = "&pageSizeSelect=<%=pageSize%>"
-			path = path + a + pageVal + b;
-			window.location.href = path;
-		}
-		
-		//点击上传文件时打开文件上传选择窗口
-	    $(function(){
-	    	$('#imporFileButton').on("click",function(){
-	    		$('#file').click();
-	    	})
-	    })
-	    
-	    function submitFile(){
-		    $('#ProjectForm').attr("action","../servlet/UploadFileServlet?&count=4&grade=<%=grade%>");
-		    $('#ProjectForm').attr("enctype","multipart/form-data");
-		    $('#ProjectForm').submit();
-	    }
+	
 	</script>
 </body>
 </html>

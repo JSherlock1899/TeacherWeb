@@ -199,7 +199,23 @@ public class HonorDaoImpl implements IHonorDao{
 			try {
 				while(rs.next()) {
 					datalist.add(new Honor(rs.getString("Hsn"),rs.getString("Hname"), rs.getString("Hwinner"),rs.getDate("Hdate"),
-							rs.getString("Hcompany"),rs.getString("Hgrad"),rs.getString("Hremarks"),rs.getString("Hremarks"),rs.getString("Haccessory"),rs.getInt("totalRecord")));
+							rs.getString("Hcompany"),rs.getString("Hgrad"),rs.getString("Hreward"),rs.getString("Hremarks"),rs.getString("Haccessory"),rs.getInt("totalRecord")));
+				}
+				return datalist;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return datalist;
+		}
+		
+		//获取导出excel的集合
+		@Override
+		public List<Honor> getExcelDataList(ResultSet rs){	//将结果集转化为集合
+			List<Honor> datalist = new ArrayList<Honor>();
+			try {
+				while(rs.next()) {
+					datalist.add(new Honor(rs.getString("Hsn"),rs.getString("Hname"), rs.getString("Hwinner"),rs.getDate("Hdate"),
+							rs.getString("Hcompany"),rs.getString("Hgrad"),rs.getString("Hreward"),rs.getString("Hremarks")));
 				}
 				return datalist;
 			} catch (SQLException e) {
@@ -223,5 +239,12 @@ public class HonorDaoImpl implements IHonorDao{
 				e.printStackTrace();
 			}	
 			return 0;
+		}
+
+
+		@Override
+		public List<Honor> getlist(Honor honor) {
+			
+			return null;
 		}
 }

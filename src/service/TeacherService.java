@@ -2,6 +2,8 @@ package service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import dao.ITeacherDao;
 import dao.impl.TeacherDaoImpl;
@@ -44,5 +46,15 @@ public class TeacherService {
 		//查询教师的专利
 		public ResultSet getPatent(String Tsn,int currentPage,int pageSize)throws SQLException{
 			return teacherDao.getPatent(Tsn,currentPage,pageSize);
+		}
+		
+		//按院、系、人名来查找教师
+		public ResultSet selectTeacher(String college, String sdept, String Tname,int m,int n) throws SQLException {
+			return teacherDao.selectTeacher(college, sdept, Tname, m, n);
+		}
+		
+		//将得到的教师信息结果集转化为集合
+		public List<Teacher> getDataList(ResultSet rs) {
+			return teacherDao.getDataList(rs);
 		}
 }

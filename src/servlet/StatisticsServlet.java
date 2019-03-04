@@ -37,6 +37,9 @@ public class StatisticsServlet extends HttpServlet {
 		// 根据不同的option值来分发到不同的操作
 		String option = request.getParameter("option");
 		String grade = request.getParameter("grade");
+		//起止时间
+		String starttime = request.getParameter("starttime");
+		String endtime = request.getParameter("endtime");
 		String collegevalue = request.getParameter("collegevalue");// select下拉框中的学院
 		String college = request.getParameter("college");// session中的学院
 		if (college != null) { // 判断是否是院管理员
@@ -66,7 +69,8 @@ public class StatisticsServlet extends HttpServlet {
 			}
 		} else {
 			try {
-				rs = statisticService.getCollegeCount(option);
+				//整个学校的项目总数
+				rs = statisticService.getCollegeCount(option,starttime,endtime);
 				map = util.countRsToMap(rs);
 				JSONObject json = new JSONObject(map);
 				request.setAttribute("json", json);

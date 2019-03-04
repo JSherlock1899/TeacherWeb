@@ -71,77 +71,42 @@
 					<ul class="navContent" style="display: block">
 						<li>
 							<div class="showtitle" style="width: 100px;">项目查询</div> <a
-							href="../servlet/PageServlet?option=Project&teacher=teacher&option=Project"
+							href="../servlet/PageServlet?option=Project&teacher=teacher&option=Project&count=0"
 							onclick="Projectchange()" class="active3" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">项目查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">论文查询</div> <a
-							href="../servlet/PageServlet?option=Paper&teacher=teacher&option=Paper"
+							href="../servlet/PageServlet?option=Paper&teacher=teacher&option=Paper&count=0"
 							onclick="Paperchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">论文查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">荣誉查询</div> <a
-							href="../servlet/PageServlet?option=Honor&teacher=teacher&option=Honor"
+							href="../servlet/PageServlet?option=Honor&teacher=teacher&option=Honor&count=0"
 							onclick="Honorchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">荣誉查询</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">专利查询</div> <a
-							href="../servlet/PageServlet?option=Patent&teacher=teacher&option=Patent"
+							href="../servlet/PageServlet?option=Patent&teacher=teacher&option=Patent&count=0"
 							onclick="Patentchange()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-search"></span><span
 								class="sub-title">专利查询</span></a>
 						</li>
 					</ul>
 				</div>
-				<div class="sBox">
-					<div class="subNav sublist-up">
-						<span class="title-icon glyphicon glyphicon-chevron-up"></span><span
-							class="sublist-title" style="font-size: 15px;">统计</span>
-					</div>
-					<ul class="navContent" style="display: none">
-						<li>
-							<div class="showtitle" style="width: 100px;">项目统计</div> <a
-							href="../servlet/StatisticsServlet?option=Project&college=<%=college%>>&teacher=teacher"
-							onclick="ProjectStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon  glyphicon-align-justify"></span><span
-								class="sub-title">项目统计</span></a>
-						</li>
-						<li>
-							<div class="showtitle" style="width: 100px;">论文统计</div> <a
-							href="../servlet/StatisticsServlet?option=Paper&college=<%=college%>>&teacher=teacher"
-							onclick="PaperStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
-								class="sub-title">论文统计</span></a>
-						</li>
-						<li>
-							<div class="showtitle" style="width: 100px;">荣誉统计</div> <a
-							href="../servlet/StatisticsServlet?option=Honor&college=<%=college%>>&teacher=teacher"
-							onclick="HonorStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
-								class="sub-title">荣誉统计</span></a>
-						</li>
-						<li>
-							<div class="showtitle" style="width: 100px;">专利统计</div> <a
-							href="../servlet/StatisticsServlet?option=Patent&college=<%=college%>>&teacher=teacher"
-							onclick="PatentStatistics()" target="select_frame"><span
-								class="sublist-icon glyphicon glyphicon-align-justify"></span><span
-								class="sub-title">专利统计</span></a>
-						</li>
-					</ul>
-				</div>
+				
 			</div>
 		</div>
 		<div class="table" class="col-md-12">
 
 			<iframe src="" frameborder="1" class="qaq" id="select_frame"
 				name="select_frame" frameborder="0" scrolling="no" width="1200px"
-				height="800px" style="border: 0;"></iframe>
+				height="1500px" style="border: 0;"></iframe>
 
 		</div>
 

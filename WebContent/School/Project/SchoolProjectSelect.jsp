@@ -32,7 +32,6 @@
 							String college = (String) request.getAttribute("college");	//搜索的条件
 							String sdept = (String) request.getAttribute("sdept");
 							String starttime = (String) request.getAttribute("starttime");
-							System.out.println("starttime = " + starttime);
 							String endtime = (String) request.getAttribute("endtime");
 							String Tname = (String) request.getAttribute("Tname");
 							int[] pageArr = (int[]) request.getAttribute("pageArr"); 
@@ -58,16 +57,14 @@
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
 				<div class="col-md-10 button-div form-inline">
-					<input type="button" value="新建记录" id="addMsg" class="btn btn-success"> 		
 					<form action="../servlet/ExportServlet?sdept=<%=sdept %>&college=<%=college %>&starttime=<%=starttime %>&endtime=<%=endtime %>&Tname=<%=Tname %>&totalRecord=<%=totalRecord %>&count=1"  method="post" id="PatentForm" class="form-group">						<input type="hidden" name="count" value="1">
+						<a href="../servlet/DownloadTemplate?count=2" class="btn btn-success">下载模板</a>
+						<input type="file" id="myfile" name="myfile" class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
+						<input type="button" name="" value="导入"  class="btn btn-info" id="importButton">
 						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
-						<input type="file" id="file" name="file"  class="btn btn-info" style="display: none" onchange="submitFile()"> 
-						<input type="button" name="" value="上传文件"  class="btn btn-warning" id="imporFileButton">
-						<input type="file" id="file" name="file"  class="btn btn-info" style="display: none" onchange="submitFile()"> 
 				</div>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
-								<th><input type="checkbox" id="checkAll" /></th>
 								<th>项目编号</th>
 								<th>项目名称</th>
 								<th>负责人</th>
@@ -88,8 +85,6 @@
 									
 							%>
 							<tr>
-								<% //导出为excel时的单选框，Pastn用于唯一标识各专利信息
-								out.print("<td><input type='checkbox' value = " + Psn + " name='select'  class='select'></td>"); %>
 								<td class="Psn edit"><%=Psn%></td>
 								<td class="Pname edit"><%=datalist.get(i).getPname()%></td>
 								<td class="Pleader edit"><%=datalist.get(i).getPleader()%></td>
@@ -125,23 +120,23 @@
 						<a href="../servlet/PageServlet?option=Project&currentPage=1&teacher=admin" id="homePage">首页</a>
 					</li>
 					<li>
-						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=5
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
 					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=5
+					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>
 					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"><%=pageArr[0]%></a></li>
-					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=5
+					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>
 					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"><%=pageArr[1]%></a></li>
-					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=5
+					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>
 					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"><%=pageArr[2]%></a></li>
 					<li>
-						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=5
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
 					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"> 
 							<span>&raquo;</span>
@@ -163,14 +158,14 @@
 	<script type="text/javascript">
 	
 		
-		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
-			var pageSizeSelect = $("#pageSize option:selected").val();
-			var href = "";
-			var a = "../servlet/PageServlet?option=Project&currentPage=<%=currentPage%>&pageSizeSelect=";
-			var b = "&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
-			href = href + a + pageSizeSelect + b;
-			window.location.href = href;
-		})
+	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
+		var pageSizeSelect = $("#pageSize option:selected").val();
+		var href = "";
+		var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
+		var b = "&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
+		href = href + a + pageSizeSelect + b;
+		window.location.href = href;
+	})
 		
 		function skipPage(){								//输入页码跳转页面
 			//页码输入框输入的数
@@ -190,18 +185,7 @@
 			window.location.href = path;
 		}
 		
-		//点击上传文件时打开文件上传选择窗口
-	    $(function(){
-	    	$('#imporFileButton').on("click",function(){
-	    		$('#file').click();
-	    	})
-	    })
-	    
-	    function submitFile(){
-		    $('#ProjectForm').attr("action","../servlet/UploadFileServlet?&count=4&grade=<%=grade%>");
-		    $('#ProjectForm').attr("enctype","multipart/form-data");
-		    $('#ProjectForm').submit();
-	    }
+	
 	</script>
 </body>
 </html>

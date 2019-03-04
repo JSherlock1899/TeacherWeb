@@ -8,6 +8,11 @@ public class Teacher {
 	private String Tsex;
 	private String Ttel;
 	private String Tmail;
+	private String Cname; //所属学院
+	private String Dname; //所属系
+	private int TotalRecord;
+	private String TID; //教师身份证
+	
 	public Teacher(String tpsw, String tname) {
 		this.Tpsw = tpsw;
 		this.Tname = tname;
@@ -17,6 +22,62 @@ public class Teacher {
 	public int getTnum() {
 		return Tnum;
 	}
+	
+	
+
+	public Teacher(String tsn, String tname, String tsex, String ttel, String tmail, String cname, String dname,
+			int totalRecord, String tID) {
+		super();
+		Tsn = tsn;
+		Tname = tname;
+		Tsex = tsex;
+		Ttel = ttel;
+		Tmail = tmail;
+		Cname = cname;
+		Dname = dname;
+		TotalRecord = totalRecord;
+		TID = tID;
+	}
+
+
+
+	public Teacher(String tsn, String tname, String tsex, String ttel, String tmail, String cname, String dname) {
+		super();
+		Tsn = tsn;
+		Tname = tname;
+		Tsex = tsex;
+		Ttel = ttel;
+		Tmail = tmail;
+		Cname = cname;
+		Dname = dname;
+	}
+	public String getTID() {
+		return TID;
+	}
+	public void setTID(String tID) {
+		TID = tID;
+	}
+	public int getTotalRecord() {
+		return TotalRecord;
+	}
+
+	public void setTotalRecord(int totalRecord) {
+		TotalRecord = totalRecord;
+	}
+
+	public String getCname() {
+		return Cname;
+	}
+	public void setCname(String cname) {
+		Cname = cname;
+	}
+	public String getDname() {
+		return Dname;
+	}
+	public void setDname(String dname) {
+		Dname = dname;
+	}
+
 	public void setTnum(int tnum) {
 		Tnum = tnum;
 	}

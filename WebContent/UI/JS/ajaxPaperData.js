@@ -29,15 +29,21 @@ $(document).on("click",".delete",function(e,url){
 // 改
 // 获取该行当前每个表格单元的信息并提交到servlet进行修改
 $(document).on("click",".save",function(){
-	var Pasearchnum = $(this).closest("tr").find(".Pasearchnum").text();
-	var Paname = $(this).closest("tr").find(".Paname").text();
-	var Pawriter = $(this).closest("tr").find(".Pawriter").text();
-	var Papublish = $(this).closest("tr").find(".Papublish").text();
-	var Pdisvol = $(this).closest("tr").find(".Pdisvol").text();
-	console.log(Pdisvol)
-	var Padate = $(this).closest("tr").find(".Padate").text();
-	var Pagrad = $(this).closest("tr").find(".Pagrad").text();
-	var Paremarks = $(this).closest("tr").find(".Paremarks").text();
+	if(function check(){
+		var check = checkPawriter() && checkPaname() && checkPasearchnum();
+		return check;
+        }){
+	alert('输入不合法！')
+	return;
+}
+	var Pasearchnum = $("#Pasearchnum").val();
+	var Paname = $("#Paname").val();
+	var Pawriter = $("#Pawriter").val();
+	var Papublish = $("#Papublish").val();
+	var Pdisvol = $("#Pdisvol").val();
+	var Padate = $("Padate").val();
+	var Pagrad = $('#Pagrad option:selected').val();
+	var Paremarks = $("#Paremarks").val();
 	$.ajax({
         url:"../servlet/PaperServlet?value=2",
         type:"post",
@@ -66,13 +72,20 @@ $(document).on("click",".save",function(){
 // 新建信息
 // 获取新建行当前每个表格单元的信息
 $(document).on("click",".saveNewMsg",function(){
+	if(function check(){
+		var check = checkPawriter() && checkPaname() && checkPasearchnum();
+		return check;
+        }){
+	alert('输入不合法！')
+	return;
+}
 	var Pasearchnum = $('#Pasearchnum').val();
 	var Paname = $('#Paname').val();
 	var Pawriter = $('#Pawriter').val();
 	var Papublish = $('#Papublish').val();
 	var Pdisvol = $('#Pdisvol').val();
 	var Padate = $('#Padate').val();
-	var Pagrad = $('#Pagrad').val();
+	var Pagrad = $('#Pagrad option:selected').val();
 	var Paremarks = $('#Paremarks').val();
 	$.ajax({
         url:"../servlet/PaperServlet?value=3",
@@ -113,7 +126,8 @@ $(document).on("click",".updata",function(e){
 
 	// 审核通过
 	$(document).on("click","#pass",function(){
-		var Pasearchnum = $(this).closest("tr").find(".Pasearchnum").text();
+		var Pasearchnum = $('.Pasearchnum').text();
+		var message  = $('#message').val();
 		$.ajax({
 			url:"../servlet/PaperServlet?value=4",
 	        type:"post",
@@ -133,7 +147,8 @@ $(document).on("click",".updata",function(e){
 	
 	// 审核不通过
 	$(document).on("click","#nopass",function(){
-		var Pasearchnum = $(this).closest("tr").find(".Pasearchnum").text();
+		var Pasearchnum = $('.Pasearchnum').text();
+		var message  = $('#message').val();
 		$.ajax({
 			url:"../servlet/PaperServlet?value=5",
 	        type:"post",

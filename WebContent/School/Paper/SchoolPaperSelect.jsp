@@ -48,10 +48,10 @@
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
 				<div class="col-md-10 button-div form-inline">
+					<a href="../servlet/DownloadTemplate?count=2" class="btn btn-success">下载模板</a>
 					<form method="post" enctype="multipart/form-data" action="../servlet/UploadFileServlet?tally=1&count=2&grade=<%=grade %>" class="form-group importform">
-						<a href="../servlet/DownloadTemplate?count=2" class="btn btn-success">下载模板</a>
-						<input type="file" id="myfile" name="myfile" class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
-						<input type="button" name="" value="导入"  class="btn btn-info" id="importButton">
+						<input type="file" id="file"  class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
+						<input type="button" name="" value="导入"  class="btn btn-info" id="imporFileButton">
 					</form>			
 					<form action="../servlet/ExportServlet?sdept=<%=sdept %>&college=<%=college %>&starttime=<%=starttime %>&endtime=<%=endtime %>&Tname=<%=Tname %>&totalRecord=<%=totalRecord %>&count=2"  method="post" id="PatentForm" class="form-group">
 						<input type="hidden" name="count" value="2">
@@ -77,11 +77,11 @@
 								<th>级别</th>
 								<th>备注</th>
 								<th>附件</th>
-								<th>操作</th>
 							</tr>
 							<%	
 								for(int i=0; i<datalist.size(); i++){
 									String Pasearchnum = datalist.get(i).getPasearchnum();
+									String Paccessory = datalist.get(i).getPaccessory();
 									
 							%>
 							<tr>
@@ -94,9 +94,12 @@
 								<td class="Pagrad edit"><%=datalist.get(i).getPagrad()%></td>
 								<td class="Paremarks edit"><%=datalist.get(i).getParemarks()%></td>
 								<td class="Paccessory edit">
-									<a href="<%=datalist.get(i).getPaccessory()%>">查看附件</a>
+									<a href="../servlet/DownloadFileServlet?mainKey=<%=datalist.get(i).getPasearchnum() %>
+								&option=paper&Proname=<%=datalist.get(i).getPaname() %>" 
+								class=" btn btn-primary Download">查看附件</a>
+									<input type="hidden" class="accessoryPath" value="<%=Paccessory %>"/>
+									<input type="hidden" class="key" value="<%=Pasearchnum %>"/>
 								</td>
-								<td class=""><a class="delete">删除</a>&nbsp<a class="updata">编辑</a></td>
 							</tr>
 							
 							<% } 
@@ -116,32 +119,36 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/PageServlet?option=Paper&currentPage=1&teacher=admin" id="homePage">首页</a>
+						<a href="../servlet/PageServlet?option=Paper&currentPage=1&pageSize=<%=pageSize%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
+					&selectByNameVal=<%=Tname%>" id="homePage">首页</a>
 					</li>
 					<li>
 						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Paper&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
 					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[0]%></a></li>
 					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>
 					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
 					&selectByNameVal=<%=Tname%>"><%=pageArr[1]%></a></li>
 					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Paper&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[2]%></a></li>
 					<li>
 						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Paper&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/PageServlet?option=Paper&currentPage=<%=totalPage %>&teacher=admin" id="endPage" >尾页</a></li>
+					<li><a href="../servlet/PageServlet?option=Paper&currentPage=<%=totalPage %>&pageSize=<%=pageSize%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
+					&selectByNameVal=<%=Tname%>" id="endPage" >尾页</a></li>
 					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
@@ -160,7 +167,7 @@
 	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
 		var pageSizeSelect = $("#pageSize option:selected").val();
 		var href = "";
-		var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
+		var a = "../servlet/PageServlet?option=Paper&currentPage=<%=currentPage%>&pageSizeSelect=";
 		var b = "&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
 		href = href + a + pageSizeSelect + b;
 		window.location.href = href;
@@ -177,8 +184,12 @@
 				alert('请输入正确的页码！');
 				return
 			}
+			if(pageVal == ""){
+				alert('页码不能为空！');
+				return
+			}
 			var path = "";
-			var a = "../servlet/PageServlet?option=Paper&currentPage=";
+			var a = "../servlet/PageServlet?option=Paper&starttime=<%=starttime%>&currentPage=";
 			var b = "&pageSizeSelect=<%=pageSize%>&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
 			path = path + a + pageVal + b;
 			window.location.href = path;

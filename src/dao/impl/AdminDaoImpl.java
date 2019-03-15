@@ -76,5 +76,35 @@ public class AdminDaoImpl extends BaseDaoImpl implements IAdminDao{
 		}
 		return null;
 	}
+	
+	
+	//验证密码是否正确
+	@Override
+	public boolean verifyPassword(String Aname, String oldPassword) throws SQLException {
+		String sql = "select Apsw from Admin where Aname = ?";
+		System.out.println(Aname);
+		PreparedStatement stmt = dbUtil.getConnection().prepareStatement(sql);
+		stmt.setString(1, Aname);
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			String Apsw = rs.getString("Apsw"); 
+			if(Apsw.trim().equals(oldPassword)) 
+				return true;				
+			else
+				return false;
+		}
+		return false;
+	}
+	
+	//修改密码
+	@Override
+	public int alterPassword(String Aname, String newPassword) throws SQLException {
+		String sql = "update Admin set Apsw = ? where Aname = ?";
+		PreparedStatement stmt = dbUtil.getConnection().prepareStatement(sql);
+		stmt.setString(1, newPassword);
+		stmt.setString(2, Aname);
+		int result = stmt.executeUpdate();
+		return result;
+	}
 	}
 

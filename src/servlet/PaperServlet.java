@@ -51,6 +51,8 @@ public class PaperServlet extends HttpServlet {
 		String Padate = request.getParameter("Padate");
 		String Pagrad = request.getParameter("Pagrad");
 		String Paremarks = request.getParameter("Paremarks");
+		//审核意见
+		String message = request.getParameter("message");
 		PaperService paperService = new PaperService();
 		if (value.equals("1")) { // 删除对应的论文信息
 			try {
@@ -103,14 +105,13 @@ public class PaperServlet extends HttpServlet {
 			}
 			
 		}else if(value.equals("4")) {
-			paperService.paperAudit(Pasearchnum, "1");	//审核通过
+			paperService.paperAudit(Pasearchnum, "1",message);	//审核通过
 		}else if(value.equals("5")) {
-			paperService.paperAudit(Pasearchnum, "2");	//审核不通过
+			paperService.paperAudit(Pasearchnum, "2",message);	//审核不通过
 		}
 		try {
 			baseDao.closeCon(); //关闭资源
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

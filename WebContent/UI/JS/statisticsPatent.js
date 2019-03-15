@@ -106,7 +106,6 @@ $(function() {
 	var valueYearsArr = new Array();
 	var jsonListArr = [];
 	jsonList = $.parseJSON(jsonList);
-	console.log(jsonList)
 	var jsonlength = getJsonLength(jsonList[0])
 	for (var i = 0; i < 5; i++) {
 		for ( var key in jsonList[i]) {
@@ -266,7 +265,6 @@ $(function() {
 		for (var i = 0; i < jsonlength*5; i = i + jsonlength) {
 			if(jsonlength > 0){
 				arr1.push(jsonListArr[i][key])
-				console.log(jsonListArr[i][key])
 			}
 			if(jsonlength > 1){
 				arr2.push(jsonListArr[i+1][key])

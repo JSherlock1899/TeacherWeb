@@ -33,6 +33,7 @@
 		String Tname = (String) request.getAttribute("Tname");
 		int[] pageArr = (int[]) request.getAttribute("pageArr");
 		int grade = (int) session.getAttribute("grade"); //获取用户的权限等级
+		String user = (String) session.getAttribute("user");	//获取用户名
 	%>
 	<div class="table-main col-md-12">
 		<div class="col-md-4">
@@ -45,30 +46,16 @@
 		<div class="row" style="margin-left: col-md-2">
 			<div class="col-md-11 col-md-offset-1 ">
 				<div class="col-md-10 button-div form-inline">
-					<input type="button" value="新建记录" id="btn_add"
-						class="btn btn-success"> <a
-						href="../servlet/DownloadTemplate?count=4" class="btn btn-success">下载模板</a>
-					<form method="post" enctype="multipart/form-data"
-						action="../servlet/UploadFileServlet?tally=1&count=4&grade=<%=grade%>"
-						class="form-group importform">
-						<input type="file" id="myfile" name="myfile" class="btn btn-info"
-							style="display: none" onchange="$('.importform').submit()">
-						<input type="button" name="" value="导入" class="btn btn-info"
-							id="importButton">
+					<input type="button" value="新建记录" id="btn_add" class="btn btn-success">
 						<input type="hidden" id="totalPage" value="<%=totalPage %>"/>
 						<input type="hidden" id="currentPage" value="<%=currentPage %>"/>
 						<input type="hidden" id="totalRecord" value="<%=totalRecord %>"/>
-					</form>
 					<form action="../servlet/SelectExport" method="post" id="ProjectForm" class="form-group">
 						<input type="hidden" name="count" value="4"> 
-						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
-						<input type="file" id="file" name="file" class="btn btn-info" style="display: none" onchange="submitFile()">
-						<input type="button" name="" value="上传文件" class="btn btn-warning" id="imporFileButton"> 
 				</div>
 				<table border="1" id="table"
 					class="table table-striped table-bordered table-hover table-condensed">
 					<tr class="info">
-						<th><input type="checkbox" id="checkAll" /></th>
 						<th>项目编号</th>
 						<th>项目名称</th>
 						<th>负责人</th>
@@ -77,35 +64,21 @@
 						<th>科研状态</th>
 						<th>成员</th>
 						<th>经费</th>
-						<th>立项时间</th>
-						<th>结题时间</th>
-						<th>备注</th>
-						<th>附件</th>
-						<th>操作</th>
 					</tr>
 					<%
 						for (int i = 0; i < datalist.size(); i++) {
 							String Psn = datalist.get(i).getPsn();
 					%>
 					<tr>
-						<%
-							//导出为excel时的单选框，Pastn用于唯一标识各项目信息
-								out.print("<td><input type='checkbox' value = " + Psn + " name='select'  class='select'></td>");
-						%>
 						<td class="Psn edit"><%=Psn%></td>
-						<td class="Pname edit"><%=datalist.get(i).getPname()%></td>
+						<td class="Pname edit"><a href="../servlet/PageServlet?option=Project&teacher=teacher&count=1&Proname=
+								<%=datalist.get(i).getPname()%>&Patsn=<%=Psn%>&order=<%=i%>&pageSize=<%=pageSize%>&currentPage=<%=currentPage%>"><%=datalist.get(i).getPname()%></a></td>
 						<td class="Pleader edit"><%=datalist.get(i).getPleader()%></td>
 						<td class="Pgrad edit"><%=datalist.get(i).getPgrad()%></td>
 						<td class="Pkind edit"><%=datalist.get(i).getPkind()%></td>
 						<td class="Pcondition edit"><%=datalist.get(i).getPcondition()%></td>
 						<td class="Pmember edit"><%=datalist.get(i).getPmember()%></td>
 						<td class="Pmoney edit"><%=datalist.get(i).getPmoney()%></td>
-						<td class="Pstatime edit"><%=datalist.get(i).getPstatime()%></td>
-						<td class="Pendtime edit"><%=datalist.get(i).getPendtime()%></td>
-						<td class="Patremarks edit"><%=datalist.get(i).getPremarks()%></td>
-						<td class="Paccessory edit"><a
-							href="<%=datalist.get(i).getPaccessory()%>">查看附件</a></td>
-						<td class=""><a class="delete">删除</a>&nbsp<a class="updata">编辑</a></td>
 					</tr>
 
 					<%
@@ -124,33 +97,29 @@
 								<option value="25">25</option>
 						</select>
 					</span></li>
-					<li><a
-						href="../servlet/PageServlet?option=Project&currentPage=1&teacher=teacher"
-						id="homePage">首页</a></li>
-					<li><a aria-label="Previous" id="pre" class="prenextpage"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
-					&teacher=teacher">
-							<span>&laquo;</span>
-					</a></li>
-					<li id="page1"><a class="page"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher
+					<li>
+						<a href="../servlet/PageServlet?option=Project&currentPage=1&teacher=teacher&count=0" id="homePage">首页</a>
+					</li>
+					<li>
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize %>&count=0
+					&teacher=teacher"> 
+							<span >&laquo;</span>
+						</a>
+					</li>
+					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[0]%></a></li>
-					<li id="page2"><a class="page"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher
+					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[1]%></a></li>
-					<li id="page3"><a class="page"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher
+					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Project&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[2]%></a></li>
-					<li><a id="next" aria-label="Next" class="prenextpage"
-						href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
-					">
+					<li>
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Project&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize %>&count=0
+					&teacher=teacher"> 
 							<span>&raquo;</span>
-					</a></li>
-					<li><a
-						href="../servlet/PageServlet?option=Project&currentPage=<%=totalPage%>&teacher=teacher"
-						id="endPage">尾页</a></li>
+						</a>
+					</li>
+					<li><a href="../servlet/PageServlet?option=Project&currentPage=<%=totalPage %>&teacher=teacher&count=0" id="endPage" >尾页</a></li>
 					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
-				</ul>
 				</nav>
 				</form>
 				<div class="form-group pull-right">
@@ -173,26 +142,36 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label for="Psn">项目编号</label> <input type="text" name="Psn"
-									class="form-control" id="Psn" placeholder="项目编号">
+								<label for="Psn">项目编号</label> 
+								<input type="text" name="Psn" id="Psn" onfocus="showTips('Psn','项目编号为1-20位的数字')" 
+								onblur="checkPsn('Psn','请按要求输入项目编号')" class="form-control" id="Psn" placeholder="项目编号">
+								<div id="Psndiv" style="display:none">
+									<span id="Psnspan" ></span><br>
+								</div>
 							</div>
 							<div class="form-group">
-								<label for="Pname">项目名称</label> <input type="text" name="Pname"
-									class="form-control" id="Pname" placeholder="项目名称">
+								<label for="Pname">项目名称</label> 
+								<input type="text" name="Pname" id="Pname" onfocus="showTips('Pname','项目名称不能超过15个字符')" 
+								onblur="checkPname('Pname','请按要求输入项目名称')" class="form-control" id="Psn" placeholder="项目名称">
+								<div id="Pnamediv" style="display:none">
+									<span id="Pnamespan" ></span><br>
+								</div>
 							</div>
 							<div class="form-group">
-								<label for="Pleader">负责人</label> <input type="text"
+								<label for="Pleader">负责人</label> <input type="text"  value="<%=user %>"
 									name="Pleader" class="form-control" id="Pleader"
 									placeholder="负责人">
 							</div>
 							<div class="form-group">
-								<label for="Pmember">成员</label> <input type="text"
-									name="Pmember" class="form-control" id="Pmember"
-									placeholder="成员">
+								<label for="Pmember">成员</label>
+									<input type="text" name="Pmember" id="Pmember" onfocus="showTips('Pmember','项目成员不能超过50个字符')" 
+									onblur="checkPmember('Pmember','请按要求输入项目成员')" class="form-control" placeholder="成员">
+									<div id="Pmembersdiv" style="display:none">
+										<span id="Pmemberspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
-								<label for="Pgrad">级别</label> <input type="text" name="Pgrad"
-									class="form-control" id="Pgrad" placeholder="级别">
+								<label for="Pgrad">级别</label> 
 									<select name="Pgrad"
 									class="form-control" id="Pgrad">
 									<option value="校级">校级</option>
@@ -219,7 +198,12 @@
 							</div>
 							<div class="form-group">
 								<label for="Pmoney">经费 </label> <input type="text" name="Pmoney"
-									class="form-control" id="Pmoney" placeholder="经费">
+									class="form-control" id="Pmoney" placeholder="经费"
+									onfocus="showTips('Pmoney','项目经费为数字')" 
+									onblur="checkPmoney('Pmoney','请按要求输入项目经费')">
+									<div id="Pmoneydiv" style="display:none">
+										<span id="Pmoneyspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
 								<label for="Pstatime">立项时间 </label> <input type="date"
@@ -253,7 +237,36 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-		
+	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
+		var pageSizeSelect = $("#pageSize option:selected").val();
+		var href = "";
+		var a = "../servlet/PageServlet?option=Project&currentPage=<%=currentPage%>&pageSizeSelect=";
+		var b = "&teacher=teacher&count=0"
+		href = href + a + pageSizeSelect + b;
+		window.location.href = href;
+	})
+	
+	function skipPage(){								//输入页码跳转页面
+		//页码输入框输入的数
+		var pageVal = $('.pageVal').val();
+		//总页数
+		var totalPage = $('#totalPage').val();
+		//一页显示的条数
+		var pageSize = $('#pageSize').val();
+		if(pageVal > totalPage){
+			alert('请输入正确的页码！');
+			return
+		}
+		if(pageVal == ""){
+			alert('页码不能为空！');
+			return
+		}
+		var path = "";
+		var a = "../servlet/PageServlet?option=Project&currentPage=";
+		var b = "&pageSizeSelect=<%=pageSize%>&teacher=teacher&count=0"
+		path = path + a + pageVal + b;
+		window.location.href = path;
+	}	
 		
 		
 		//点击上传文件时打开文件上传选择窗口
@@ -269,7 +282,63 @@
 		    $('#ProjectForm').submit();
 	    }
 		
-		
+	  //新建按钮的事件
+		 $("#btn_add").click(function () {
+		 $("#myModalLabel").text("新建项目");
+		 $('#myModal').modal();
+		 });
+	  
+		 function showTips(id,info){
+				document.getElementById(id+"span").innerHTML="<font color='gray' size='2'>"+info+"</font>";
+			}
+			function checkPsn(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^\d{1,20}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+					return true;
+					
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+					
+				}
+			}
+			function checkPname(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^.{1,15}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+					return true;
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			function checkPmember(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^.{1,50}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+					return true;
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			function checkPmoney(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^\d{1,}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+					return true;
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			
+			function check(){
+				var check = checkPsn() && checkPname() && checkPmember() && checkPmoney() 
+				alert(check)	
+				return check;
+	            }
 	</script>
 </body>
 </html>

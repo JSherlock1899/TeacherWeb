@@ -17,6 +17,55 @@ public class Project {
 	private int totalRecord;
 	private String Paccessory;
 	private String message;//留言
+	private String Paudit;
+	
+	public Project(String psn, String pname, String pleader, String pmember, String pgrad, String pkind, int pmoney,
+			Date pstatime, String pcondition, Date pendtime, String premarks, int totalRecord, String paccessory,
+			String paudit) {
+		super();
+		Psn = psn;
+		Pname = pname;
+		Pleader = pleader;
+		Pmember = pmember;
+		Pgrad = pgrad;
+		Pkind = pkind;
+		Pmoney = pmoney;
+		Pstatime = pstatime;
+		Pcondition = pcondition;
+		Pendtime = pendtime;
+		Premarks = premarks;
+		this.totalRecord = totalRecord;
+		Paccessory = paccessory;
+		Paudit = paudit;
+	}
+
+
+
+
+	public Project(String psn, String pname, String pleader, String pmember, String pgrad, String pkind, int pmoney,
+			Date pstatime, String pcondition, Date pendtime, String premarks, int totalRecord, String paccessory,
+			String message, String paudit) {
+		super();
+		Psn = psn;
+		Pname = pname;
+		Pleader = pleader;
+		Pmember = pmember;
+		Pgrad = pgrad;
+		Pkind = pkind;
+		Pmoney = pmoney;
+		Pstatime = pstatime;
+		Pcondition = pcondition;
+		Pendtime = pendtime;
+		Premarks = premarks;
+		this.totalRecord = totalRecord;
+		Paccessory = paccessory;
+		this.message = message;
+		Paudit = paudit;
+	}
+
+
+
+
 	public Project(String psn, String pname, String pleader, String pmember, String pgrad, String pkind, int pmoney,
 			Date pstatime, String pcondition, Date pendtime, String premarks, int totalRecord) {
 		super();
@@ -154,6 +203,12 @@ public class Project {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getPaudit() {
+		return Paudit;
+	}
+	public void setPaudit(String paudit) {
+		Paudit = paudit;
 	}
 	
 }

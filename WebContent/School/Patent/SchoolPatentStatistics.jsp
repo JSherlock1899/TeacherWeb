@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>专利统计</title>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/bootstrap.css">
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/style.css">
 <script type="text/javascript" src="/TeacherWeb/UI/JS/jquery-3.3.1.min.js"></script>

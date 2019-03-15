@@ -17,5 +17,11 @@ public interface IAdminDao {
 	//获取院管理员的所属学院
 	public String getAdminCname(String Adminname)throws SQLException;
 	
+	//验证密码是否正确
+	public boolean verifyPassword(String Aname,String oldPassword)throws SQLException;
+	
+	//修改密码
+	public int alterPassword(String Aname,String newPassword)throws SQLException;
+	
 		
 }

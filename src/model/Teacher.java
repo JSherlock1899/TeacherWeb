@@ -24,7 +24,8 @@ public class Teacher {
 	}
 	
 	
-
+	
+	
 	public Teacher(String tsn, String tname, String tsex, String ttel, String tmail, String cname, String dname,
 			int totalRecord, String tID) {
 		super();
@@ -41,7 +42,9 @@ public class Teacher {
 
 
 
-	public Teacher(String tsn, String tname, String tsex, String ttel, String tmail, String cname, String dname) {
+
+	public Teacher(String tsn, String tname, String tsex, String ttel, String tmail, String cname, String dname,
+			String tID) {
 		super();
 		Tsn = tsn;
 		Tname = tname;
@@ -50,7 +53,12 @@ public class Teacher {
 		Tmail = tmail;
 		Cname = cname;
 		Dname = dname;
+		TID = tID;
 	}
+
+
+
+
 	public String getTID() {
 		return TID;
 	}

@@ -84,7 +84,6 @@ public class LoginServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 			;
-
 		}
 		case 2: {
 

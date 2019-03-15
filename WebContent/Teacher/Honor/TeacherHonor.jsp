@@ -33,6 +33,7 @@
 							String Tname = (String) request.getAttribute("Tname");
 							int[] pageArr = (int[]) request.getAttribute("pageArr"); 
 							int grade = (int) session.getAttribute("grade");	//获取用户的权限等级
+							String user = (String) session.getAttribute("user");	//获取用户名
 				%>
 	<div class="table-main col-md-12" >
 		<div class="col-md-4" >
@@ -48,10 +49,6 @@
 					<input type="button" value="新建记录" id="btn_add" class="btn btn-success"> 	
 					<form action="../servlet/SelectExport"  method="post" id="HonorForm" class="form-group">
 						<input type="hidden" name="count" value="4">
-						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
-						<a class="btn btn-warning" href="../servlet/SelectExport?all=all&count=4">导出全部数据</a>
-						<input type="file" id="file" name="file"  class="btn btn-info" style="display: none" onchange="submitFile()"> 
-						<input type="button" name="" value="上传文件"  class="btn btn-warning" id="imporFileButton">
 						<input type="hidden" id="totalPage" value="<%=totalPage %>"/>
 						<input type="hidden" id="currentPage" value="<%=currentPage %>"/>
 						<input type="hidden" id="pageSize" value="<%=pageSize %>"/>
@@ -59,7 +56,6 @@
 				</div>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
-								<th><input type="checkbox" id="checkAll" /></th>
 								<th>编号</th>
 								<th>名称</th>
 								<th>获奖者</th>
@@ -68,8 +64,6 @@
 								<th>级别</th>
 								<th>奖金</th>
 								<th>备注</th>
-								<th>附件</th>
-								<th>操作</th>
 							</tr>
 							<%	
 								for(int i=0; i<datalist.size(); i++){
@@ -77,21 +71,15 @@
 									
 							%>
 							<tr>
-								<% //导出为excel时的单选框，Hsn用于唯一标识各荣誉信息
-								out.print("<td><input type='checkbox' value = " + Hsn + " name='select'  class='select'></td>"); %>
 								<td class="Hsn edit"><%=Hsn%></td>
-								<td class="Hname edit"><%=datalist.get(i).getHname()%></td>
+								<td class="Hname edit"><a href="../servlet/PageServlet?option=Honor&teacher=teacher&count=1&Proname=
+								<%=datalist.get(i).getHname()%>&Patsn=<%=Hsn%>&order=<%=i%>&pageSize=<%=pageSize%>&currentPage=<%=currentPage%>"><%=datalist.get(i).getHname()%></a></td>
 								<td class="Hwinner edit"><%=datalist.get(i).getHwinner()%></td>
 								<td class="Hdate edit"><%=datalist.get(i).getHdate()%></td>
 								<td class="Hcompany edit"><%=datalist.get(i).getHcompany()%></td>
 								<td class="Hgrad edit"><%=datalist.get(i).getHgrad()%></td>
 								<td class="Hreward edit"><%=datalist.get(i).getHreward()%></td>
-								<td class="Hremarks edit"><%=datalist.get(i).getHremarks()%></td>	
-								<td class="Paccessory edit">
-									<a href="<%=datalist.get(i).getHaccessory()%>">查看附件</a>
-									<a name="" class="imporFileButton" >上传文件</a>
-								</td>						
-								<td class=""><a class="delete">删除</a>&nbsp<a class="updata">编辑</a></td>
+								<td class="Hremarks edit"><%=datalist.get(i).getHremarks()%></td>					
 							</tr>
 							
 							<% } 
@@ -111,27 +99,27 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/PageServlet?option=Honor&currentPage=1&teacher=teacher" id="homePage">首页</a>
+						<a href="../servlet/PageServlet?option=Honor&currentPage=1&teacher=teacher&count=0" id="homePage">首页</a>
 					</li>
 					<li>
-						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
+						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize %>&count=0
 					&teacher=teacher"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
-					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher
+					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[0]%></a></li>
-					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher
+					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[1]%></a></li>
-					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher
+					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>&teacher=teacher&count=0
 					"><%=pageArr[2]%></a></li>
 					<li>
-						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
-					"> 
+						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize %>&count=0
+					&teacher=teacher"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/PageServlet?option=Honor&currentPage=<%=totalPage %>&teacher=teacher" id="endPage" >尾页</a></li>
+					<li><a href="../servlet/PageServlet?option=Honor&currentPage=<%=totalPage %>&teacher=teacher&count=0" id="endPage" >尾页</a></li>
 					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
@@ -156,34 +144,63 @@
 						<div class="modal-body">
 							<div class="form-group">
 								<label for="Hsn">荣誉编号</label> <input type="text" name="Hsn"
-									class="form-control" id="Hsn" placeholder="荣誉编号">
+									class="form-control" id="Hsn" placeholder="荣誉编号"
+									onfocus="showTips('Hsn','荣誉编号为1-20位的数字')" 
+									onblur="checkHsn('Hsn','请按要求输入荣誉编号')">
+									<div id="Hsndiv" style="display:none">
+										<span id="Hsnspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
 								<label for="Hname">荣誉名称</label> <input type="text" name="Hname"
-									class="form-control" id="Hname" placeholder="荣誉名称">
+									class="form-control" id="Hname" placeholder="荣誉名称"
+									onfocus="showTips('Hname','荣誉名称不能超过15个字符')" 
+									onblur="checkHname('Hname','请按要求输入荣誉名称')">
+									<div id="Hnamediv" style="display:none">
+										<span id="Hnamespan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
-								<label for="Hwinner">获奖者</label> <input type="text"
+								<label for="Hwinner">获奖者</label> <input type="text"  value="<%=user %>"
 									name="Hwinner" class="form-control" id="Hwinner"
-									placeholder="获奖者">
+									placeholder="获奖者" onfocus="showTips('Hwinner','获奖者不能超过50个字符')" 
+									onblur="checkHwinner('Hwinner','请按要求输入获奖者')">
+									<div id="Hwinnerdiv" style="display:none">
+										<span id="Hwinnerspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
 								<label for="Hdate">获奖时间</label> <input type="date"
 									name="Hdate" class="form-control" id="Hdate"
-									placeholder="获奖时间">
+									placeholder="获奖时间" >
 							</div>
 							<div class="form-group">
 								<label for="Hcompany">颁奖单位</label> <input type="text" name="Hcompany"
-									class="form-control" id="Hcompany" placeholder="颁奖单位">
+									class="form-control" id="Hcompany" placeholder="颁奖单位"
+									onfocus="showTips('Hcompany','颁发单位不能超过16个字符')" 
+									onblur="checkHcompany('Hcompany','请按要求输入颁发单位')">
+									<div id="Hcompanydiv" style="display:none">
+										<span id="Hcompanyspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
-								<label for="Hgrad">级别</label> <input type="text" name="Hgrad"
-									class="form-control" id="Hgrad" placeholder="级别">
+								<label for="Hgrad">级别</label>
+									<select name="Hgrad"
+									class="form-control" id="Hgrad">
+									<option value="校级">校级</option>
+									<option value="市级">市级</option>
+									<option value="省级">省级</option>
+									<option value="国家级">国家级</option>
+								</select>
 							</div>
              			 <div class="form-group">
 								<label for="Hreward">奖金</label> <input type="text"
 									name="Hreward" class="form-control" id="Hreward"
-									placeholder="奖金">
+									placeholder="奖金" onfocus="showTips('Hreward','奖金为数字')" 
+									onblur="checkHreward('Hreward','请按要求输入奖金')">
+									<div id="Hrewarddiv" style="display:none">
+										<span id="Hrewardspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
 								<label for="Hremarks">备注</label> <input type="text"
@@ -229,7 +246,93 @@
 		    $('#HonorForm').submit();
 	    }
 		
-		 
+		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
+			var pageSizeSelect = $("#pageSize option:selected").val();
+			var href = "";
+			var a = "../servlet/PageServlet?option=Honor&currentPage=<%=currentPage%>&pageSizeSelect=";
+			var b = "&teacher=teacher&count=0"
+			href = href + a + pageSizeSelect + b;
+			window.location.href = href;
+		})
+		
+		function skipPage(){								//输入页码跳转页面
+			//页码输入框输入的数
+			var pageVal = $('.pageVal').val();
+			//总页数
+			var totalPage = $('#totalPage').val();
+			//一页显示的条数
+			var pageSize = $('#pageSize').val();
+			if(pageVal > totalPage){
+				alert('请输入正确的页码！');
+				return
+			}
+			if(pageVal == ""){
+				alert('页码不能为空！');
+				return
+			}
+			var path = "";
+			var a = "../servlet/PageServlet?option=Honor&currentPage=";
+			var b = "&pageSizeSelect=<%=pageSize%>&teacher=teacher&count=0"
+			path = path + a + pageVal + b;
+			window.location.href = path;
+		}	 
+		
+		//新建按钮的事件
+		 $("#btn_add").click(function () {
+		 $("#myModalLabel").text("新建荣誉");
+		 $('#myModal').modal();
+		 });
+		
+		 function checkHsn(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^\d{1,20}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			function checkHname(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^.{1,15}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			function checkHwinner(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^.{1,50}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			function checkHcompany(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^.{1,16}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			function checkHreward(id,info){
+				var uValue = document.getElementById(id).value;
+				if(!/^\d{1,}$/.test(uValue)){
+					document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+					document.getElementById(id+"div").style.display="block";
+				}else{
+					document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				}
+			}
+			
+			
+			function showTips(id,info){
+				document.getElementById(id+"span").innerHTML="<font color='gray' size='2'>"+info+"</font>";
+			}
 	</script>
 </body>
 </html>

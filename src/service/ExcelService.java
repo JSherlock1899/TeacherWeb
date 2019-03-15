@@ -1,7 +1,11 @@
 package service;
 
 
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 
 import dao.IExcelDao;
 import dao.impl.ExcelDaoImpl;
@@ -26,5 +30,9 @@ public class ExcelService {
 
 	public int insertPaperValues(List list) {
 		return excelDao.insertPaperValues(list);
+	}
+	
+	public int insertTeacherValues(List list) {
+		return excelDao.insertTeacherValues(list);
 	}
 }

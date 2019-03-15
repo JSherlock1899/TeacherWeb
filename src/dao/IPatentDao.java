@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import model.ExcelPatent;
 import model.Patent;
 
 public interface IPatentDao {
@@ -29,7 +30,9 @@ public interface IPatentDao {
 	
 	public void saveFilePath(String path,String patsn);  //保存上传的附件的路径
 	
-	public List<Patent> getExcelDataList(ResultSet rs);//获取导出excel的集合
+	public List<ExcelPatent> getExcelDataList(ResultSet rs);//获取导出excel的集合
 	
 	public List<Patent> getlist(Patent patent);//获取单个专利的详细信息
+	
+	public String getAccessory(String Patsn); //获取对应的附件路径
 }

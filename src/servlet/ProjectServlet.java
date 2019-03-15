@@ -41,7 +41,7 @@ public class ProjectServlet extends HttpServlet {
 		String Pgrad = request.getParameter("Pgrad");
 		String Pkind = request.getParameter("Pkind");
 		int Pmoney = 0;
-		if(request.getParameter("Pmoney")!=null) {
+		if(request.getParameter("Pmoney")!=null && !request.getParameter("Pmoney").equals("")) {
 			Pmoney = Integer.parseInt(request.getParameter("Pmoney"));
 		}
 		String Pstatime = request.getParameter("Pstatime"); // 获取要更新的各字段值
@@ -49,6 +49,9 @@ public class ProjectServlet extends HttpServlet {
 		String Pendtime = request.getParameter("Pendtime");
 		String Premarks = request.getParameter("Premarks");
 		String Paccessory = request.getParameter("Paccessory");
+		//审核意见
+		String message = request.getParameter("message");
+		System.out.println("message = " + message);
 		if (value.equals("1")) { // 删除对应的项目信息
 			try {
 				int result = Projectservice.delProject(Psn);
@@ -104,9 +107,9 @@ public class ProjectServlet extends HttpServlet {
 				e.printStackTrace();
 			}			
 		}else if(value.equals("4")) {			//审核通过
-			Projectservice.projectAudit(Psn, "1");
+			Projectservice.projectAudit(Psn, "1",message);
 		}else if(value.equals("5")) {			//审核不通过
-			Projectservice.projectAudit(Psn, "2");
+			Projectservice.projectAudit(Psn, "2",message);
 		}
 		try {
 			baseDao.closeCon(); //关闭资源

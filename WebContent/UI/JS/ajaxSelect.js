@@ -30,20 +30,17 @@ function ajaxSelect(option) {
 		}
 
 		function Honorchange(){
-			resetSelect()
 			ajaxSelect("Honor")
-
+			resetSelect()
 		}
 
 		function Patentchange(){	
-			resetSelect()
 			ajaxSelect("Patent")
-			
+			resetSelect()		
 		}
 		function Teacherchange(){	
-			resetSelect()
 			ajaxSelect("Teacher")
-			
+			resetSelect()
 		}
 
 		//获取iframe中的src
@@ -66,12 +63,15 @@ function ajaxSelect(option) {
 		    var firsturl = result.split('option='); //通过字符串分割得到option
 		    //根据url中是否含Page来判断是查询还是统计
 		    var judge = result.indexOf("PageServlet");			
-		    var judge1 = result.indexOf("StatusticsServlet");
+		    var judge1 = result.indexOf("StatisticsServlet");
+		    var judge2 = result.indexOf("AuditServlet");
 		    var option = firsturl[1];
 		    if(judge!=-1){
 		    	ajaxSelect(option);
-		    }else if(judge1=-1){
+		    }else if(judge1!=-1){
 		    	goStatistics(option);
+		    }else if(judge2!=-1){
+		    	goAudit(option);
 		    }  
 		}
 
@@ -111,6 +111,42 @@ function ajaxSelect(option) {
 		function PatentStatistics(){	
 			resetSelect();
 			goStatistics("Patent")
+		}
+		
+		//分发到审核页面
+		function goAudit(option){
+			var collegevalue = $('#college option:selected').val();// 选中的学院值
+			var sdeptValue = $('#sdept option:selected').val();// 选中的专业值
+			var starttime = $('#starttime').val();
+			var endtime = $('#endtime').val();
+			var selectByNameVal = $("#selectByNameVal").val();
+			var pageSizeSelect = $("#pageSizeSelect").val();
+			var currentPage = $("#currentPage").val();
+			document.getElementById("select_frame").src="../servlet/AuditServlet?sdept=" +sdeptValue 
+			+ "&college=" +collegevalue + "&starttime=" + starttime + "&endtime=" + endtime + "&selectByNameVal=" + selectByNameVal
+			+ "&pageSizeSelect=" + pageSizeSelect + "&currentPage=" + currentPage + "&option=" + option;
+		}
+		function ProjectAudit(){
+			goAudit("Project")
+			resetSelect()
+		    }
+			
+
+
+		function PaperAudit(){
+			goAudit("Paper")
+			resetSelect()
+			
+		}
+
+		function HonorAudit(){
+			goAudit("Honor")
+			resetSelect()
+		}
+
+		function PatentAudit(){	
+			goAudit("Patent")
+			resetSelect()		
 		}
 		
 		//重置下拉框和文本框

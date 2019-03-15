@@ -2,9 +2,11 @@ package service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import dao.IProjectDao;
 import dao.impl.ProjectDaoImpl;
+import model.ExcelProject;
 import model.Project;
 
 public class ProjectService {
@@ -30,13 +32,34 @@ public class ProjectService {
 		return projectdao.selectCollegeProject(college, sdept, starttime, endtime, Tname, currentPage, pageSize);
 	}
 	
+	
 	public List<Project> getDataList(ResultSet rs) {
 		return projectdao.getDataList(rs);
 	}
 	
-		//对未审核的项目进行审核
-		public int projectAudit(String Psn, String Paudit) {
-			return projectdao.projectAudit(Psn, Paudit);
-		}
+	//对未审核的项目进行审核
+	public int projectAudit(String Psn, String Paudit,String message) {
+		return projectdao.projectAudit(Psn, Paudit,message);
+	}
+	
+	//获取对应的附件路径
+	public String getAccessory(String Psn) {
+		return projectdao.getAccessory(Psn);
+	}
+	
+	//获取审核的详细信息
+	public List<Project> getlist(Project project) {
+		return projectdao.getlist(project);
+	}
+	
+	//保存上传的附件的路径
+	public void saveFilePath(String path,String psn) { 
+		projectdao.saveFilePath(path, psn);
+	}; 
+	
+	//获取导出excel的集合
+	public List<ExcelProject> getExcelDataList(ResultSet rs) {
+		return projectdao.getExcelDataList(rs);
+	}
 	
 }

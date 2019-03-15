@@ -10,6 +10,7 @@ import java.util.List;
 
 import dao.IBaseDao;
 import dao.IPaperDao;
+import model.ExcelPaper;
 import model.Paper;
 import util.CommonUtil;
 import util.DbUtil;
@@ -19,7 +20,8 @@ public class PaperDaoImpl implements IPaperDao{
 	protected DbUtil dbUtil = new DbUtil();
 	private PreparedStatement stmt = null;
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
-	CommonUtil commondao = new CommonUtil();
+	CommonUtil util = new CommonUtil();
+	IBaseDao baseDao = new BaseDaoImpl();
 
 	@Override
 	public int delPaper(String Panum) {
@@ -40,9 +42,9 @@ public class PaperDaoImpl implements IPaperDao{
 	@Override
 	public int alterPaper(Paper paper) throws SQLException {
 		String Tsn = teacherdao.getTsn(paper.getPawriter().trim());			//获取该论文作者对应的教师号
-		String sql = "update paper set Paname = ?,Pawriter = ?,Padate = ?,Papublish = ? ,Pagrad = ?,Paremarks = ?,Pdisvol = ?,Tsn = ? "
+		String sql = "update paper set Paname = ?,Pawriter = ?,Padate = ?,Papublish = ? ,Pagrad = ?,Paremarks = ?,Pdisvol = ?,Tsn = ?,Paudit = 0"
 				+ "where Pasearchnum = ?";
-		Date Padate = commondao.utilToSql(paper.getPadate());
+		Date Padate = util.utilToSql(paper.getPadate());
 		List params = Arrays.asList(paper.getPaname(),paper.getPawriter(),Padate,paper.getPapublish(),paper.getPagrad(),
 				paper.getParemarks(),paper.getPdisvol(),Tsn,paper.getPasearchnum());
 		return dbUtil.getUpdateResult(sql, params);
@@ -52,7 +54,7 @@ public class PaperDaoImpl implements IPaperDao{
 	public int insertPaper(Paper paper) throws SQLException {
 		String Tsn = teacherdao.getTsn(paper.getPawriter().trim());			//获取该论文作者对应的教师号
 		String sql = "insert into paper (Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Tsn,Paudit) Values(?,?,?,?,?,?,?,?,?,?)";
-		Date Padate = commondao.utilToSql(paper.getPadate());
+		Date Padate = util.utilToSql(paper.getPadate());
 		List params = Arrays.asList(paper.getPasearchnum(),paper.getPaname(),paper.getPawriter(),paper.getPapublish(),Padate,paper.getPagrad(),paper.getParemarks(),
 				paper.getPdisvol(),Tsn,0);
 		return dbUtil.getUpdateResult(sql, params);
@@ -74,56 +76,52 @@ public class PaperDaoImpl implements IPaperDao{
 		sdept = CommonUtil.disposeSdeptValue(sdept);
 		endtime = CommonUtil.disposePageValue(endtime);
 		Tname = CommonUtil.disposePageValue(Tname);
-		System.out.println("college = " + college);
-		System.out.println("sdept = " + sdept);
-		System.out.println("endtime = " + endtime);
-		System.out.println("Tname = " + Tname);
 		//什么都没有设置
-		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol "
+		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Paccessory,Paudit,message"
 				+ ",ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn ) as pp where pp.r "
 				+ "between ? and ?";
 		//设置了要查询的学院
-		String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname ," + 
+		String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p  left join Teacher t on p.Tsn = t.Tsn "
 				+ "join College c on t.Csn = c.Csn where c.Cname = ?) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业
-		String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Dname ," 
+		String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Dname,Paccessory,Paudit,message," 
 				+ "ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join Sdept s "
 				+ "on t.Dsn = s.Dsn join College c on t.Csn = c.Csn where Cname = ? and Dname = ?) as pp where pp.r between ? and ?";	
 		//设置了要查询的起止时间
-		String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Pdisvol,Paremarks  ," + 
+		String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Pdisvol,Paremarks,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn  where Padate <= ? ) "
 				+ "as pp where pp.r between ? and ?";
 		//设置了要查询的学院和起止时间
-		String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname ,"
+		String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname,Paccessory,Paudit,message,"
 				+	"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ 	"on t.Csn = c.Csn where c.Cname = ? and Padate <= ? ) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业和起止时间
-		String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Dname,Pdisvol ,"
+		String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Dname,Pdisvol,Paccessory,Paudit,message,"
 				+	"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Dname = ? and Padate <= ? ) as pp where pp.r between ? and ?";	
 		//没有设置要查询的教师名
-		String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol  ," + 
+		String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn where Tname = ?) "
 				+ "as pp where pp.r between ? and ?";
 		//设置了要查询的学院和教师名
-		String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname  ," + 
+		String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn where c.Cname = ? and Tname = ?) as pp where pp.r between ? and ?";
 		//没有设置要查询的学院和专业和教师名
-		String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Dname" + 
+		String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Dname,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c "
 				+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where c.Cname = ? and  Dname = ? and Tname = ?) as pp where pp.r between ? and ?";
 		//设置了要查询的起止时间和教师名
-		String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol," + 
+		String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn "
 				+ "where  Padate <= ?  and Tname = ?) as pp where pp.r between ? and ?";
 		//设置了要查询的学院和起止时间和教师名
-		String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname,Pdisvol ," + 
+		String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Cname,Pdisvol,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 				+ " where  c.Cname = ? and Padate <= ?  and Tname = ?) as pp where pp.r between ? and ?"; 
 		//设置了要查询的学院和专业和起止时间和教师名
-		String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname,Dname" + 
+		String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Pasearchnum,Paname,Pawriter,Papublish,Padate,Pagrad,Paremarks,Pdisvol,Cname,Dname,Paccessory,Paudit,message" + 
 				",ROW_NUMBER() over (order by Pasearchnum) as r from paper p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 				+ " join Sdept s on t.Dsn = s.Dsn  where  c.Cname = ? and Dname = ? and Padate <= ? and Tname = ?) as pp where pp.r between ? and ?"; ;	
 		try {
@@ -185,7 +183,8 @@ public class PaperDaoImpl implements IPaperDao{
 		try {
 			while(rs.next()) {
 				datalist.add(new Paper(rs.getString("Pasearchnum"),rs.getString("Paname"), rs.getString("Pawriter"),rs.getString("Papublish"),
-						rs.getString("Pagrad"),rs.getDate("Padate"),rs.getString("Paremarks"),rs.getInt("totalRecord")));
+						rs.getString("Pagrad"),rs.getDate("Padate"),rs.getString("Paremarks"),rs.getInt("totalRecord"),rs.getString("Paccessory")
+						,rs.getString("message"),rs.getString("Paudit")));
 			}
 			return datalist;
 		} catch (SQLException e) {
@@ -196,11 +195,11 @@ public class PaperDaoImpl implements IPaperDao{
 	
 	//获取导出excel的集合
 	@Override
-	public List<Paper> getExcelDataList(ResultSet rs) {
-		List<Paper> datalist = new ArrayList<Paper>();
+	public List<ExcelPaper> getExcelDataList(ResultSet rs) {
+		List<ExcelPaper> datalist = new ArrayList<ExcelPaper>();
 		try {
 			while(rs.next()) {
-				datalist.add(new Paper(rs.getString("Pasearchnum"),rs.getString("Paname"), rs.getString("Pawriter"),rs.getString("Papublish"),
+				datalist.add(new ExcelPaper(rs.getString("Pasearchnum"),rs.getString("Paname"), rs.getString("Pawriter"),rs.getString("Papublish"),
 						rs.getString("Pagrad"),rs.getDate("Padate"),rs.getString("Paremarks")));
 			}
 			return datalist;
@@ -212,12 +211,13 @@ public class PaperDaoImpl implements IPaperDao{
 	
 	//对未审核的论文进行审核
 	@Override
-	public int paperAudit(String Pasearchnum,String Paudit) {
-		String sql = "update Paper set Paudit = ? where Pasearchnum = ?";
+	public int paperAudit(String Pasearchnum,String Paudit,String Message) {
+		String sql = "update Paper set Paudit = ? ,message = ? where Pasearchnum = ?";
 		try {
 			stmt = dbUtil.getConnection().prepareStatement(sql);
 			stmt.setString(1, Paudit);
-			stmt.setString(2, Pasearchnum);
+			stmt.setString(2, Message);	
+			stmt.setString(3, Pasearchnum);
 			int result = stmt.executeUpdate();
 			return result;
 		} catch (SQLException e) {
@@ -225,5 +225,50 @@ public class PaperDaoImpl implements IPaperDao{
 		}	
 		return 0;
 	}
-
+	
+	//获取审核的详细信息
+	@Override
+	public List<Paper> getlist(Paper paper) {
+		String Paudit = util.disposeAuditValue(paper.getPaudit());
+		String Message = util.disposeMessageValue(paper.getMessage());
+		List<Paper> datalist = new ArrayList<Paper>();
+		datalist.add(new Paper(paper.getPasearchnum(),paper.getPaname(), paper.getPawriter(),paper.getPapublish(),
+				paper.getPagrad(),paper.getPadate(),paper.getParemarks(),paper.getTotalRecord(),paper.getPaccessory(),Message
+				,Paudit));
+		return datalist;
+	}
+	
+	
+	//获取对应的附件路径
+	public String getAccessory(String Pasearchnum) {
+		String sql = "select Paccessory from Paper where Pasearchnum = ?";
+		try {
+			stmt = dbUtil.getConnection().prepareStatement(sql);
+			stmt.setString(1,Pasearchnum);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				String accessory = rs.getString("Paccessory");
+				return accessory;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	//保存上传的附件的路径
+	@Override
+	public void saveFilePath(String path,String pasearchnum) {
+		String sql = "update Paper set Paccessory = ? where Pasearchnum = ?";
+		try {
+			stmt = dbUtil.getConnection().prepareStatement(sql);
+			stmt.setString(1, path);
+			stmt.setString(2, pasearchnum);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+			
+			
 }

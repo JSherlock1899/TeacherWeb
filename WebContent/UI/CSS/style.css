@@ -45,7 +45,6 @@ body{height:auto}
 .topbar-nav-col ul li a:hover{ background-color:#f2f2f2;}
 .topbar-nav-col .topbar-nav-item{ border-bottom:solid 1px #f2f2f2;} 
 .collapse{background:#2b3643;}
-
 /*搜索*/
 .select-main{margin-top:50px;margin-left:40px}
 #college{width:200px}
@@ -58,11 +57,11 @@ body{height:auto}
 .table-main{background:#fff;padding:1px 0;box-shadow: 5px 5px 1px #ccc;}
 .button-div{margin-bottom:20px}
 /*面包屑*/
-.breadcrumb{background:#fff}
+.breadcrumb{background:#fff;padding: 8px 15px;margin-bottom: 20px;list-style: none;border-radius: 4px;}
 /*教师*/
 .teacher-main{margin-left:3em;margin-top:1em}
 /*统计*/
 .bar{height:400px}
 /*表格*/
 .tdwidth{width:100px}
-
+.hide{display:hidden}

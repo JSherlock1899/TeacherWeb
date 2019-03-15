@@ -1,12 +1,15 @@
 package service;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import dao.ITeacherDao;
 import dao.impl.TeacherDaoImpl;
+import model.ExcelTeacher;
 import model.Teacher;
 
 public class TeacherService {
@@ -57,4 +60,36 @@ public class TeacherService {
 		public List<Teacher> getDataList(ResultSet rs) {
 			return teacherDao.getDataList(rs);
 		}
+		
+		//获取导出excel的集合
+		public List<ExcelTeacher> getExcelDataList(ResultSet rs) throws SQLException {
+			return teacherDao.getExcelDataList(rs);
+		}
+		
+		//删除教师信息
+		public int delTeacher(String Tsn) throws SQLException {
+			return teacherDao.delTeacher(Tsn);
+		}
+		
+		//新建教师信息
+		public int insertTeacher(Teacher teacher) throws SQLException {
+			return teacherDao.insertTeacher(teacher);
+		}
+		
+		
+		//修改教师信息
+		public int alterTeacher(Teacher teacher) throws SQLException {
+			return teacherDao.alterTeacher(teacher);
+		}
+		
+		//验证密码是否正确
+		public boolean verifyPassword(String Tsn, String oldPassword) throws SQLException {
+			return teacherDao.verifyPassword(Tsn, oldPassword);
+		}
+			
+		//修改密码
+		public int alterPassword(String Tsn, String newPassword) throws SQLException {
+			return teacherDao.alterPassword(Tsn, newPassword);
+		}
+
 }

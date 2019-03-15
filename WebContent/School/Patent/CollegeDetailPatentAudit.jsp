@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>项目审核</title>
+<title>专利审核</title>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/bootstrap.css">
 <script type="text/javascript" src="/TeacherWeb/UI/JS/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxPatentData.js"></script>
@@ -45,6 +45,7 @@
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
 				<div class="col-md-10 button-div form-inline">
+				<input type="hidden" value="<%=datalist.get(0).getPaccessory()%>" class="accessory"/>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
 								<td>名称</td>
@@ -74,7 +75,13 @@
 							</tr>
 							<tr>
 								<td>附件</td>
-								<td class="Paccessory edit"  colspan="3"><a href="<%=datalist.get(0).getPaccessory()%>" class="t btn btn-primary">查看附件</a></td>
+								<td class="Paccessory edit"  colspan="3" >
+								<a href="../servlet/DownloadFileServlet?mainKey=<%=Patsn %>
+								&option=patent&Proname=<%=datalist.get(0).getPatname() %>" 
+								class=" btn btn-primary Download">查看附件</a>
+								<input type="hidden" class="accessoryPath" value="<%=datalist.get(0).getPaccessory() %>"/>
+								<input type="hidden" class="key" value="<%=Patsn %>"/>
+								</td>
 							</tr>
 							<tr>
 								<td>审核</td>
@@ -88,30 +95,7 @@
 	 		</div>
 	</div>
 	<script type="text/javascript">
-		if(<%=currentPage %> == 1){					//首页和尾页时分别隐藏对应按钮
-			$('#pre').css("display","none");
-		}
 		
-		if(<%=currentPage %> == <%=totalPage %>){
-			$('#next').css("display","none");
-		}
-		
-		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
-			var pageSizeSelect = $("#pageSize option:selected").val();
-			var href = "";
-			var a = "../servlet/AuditServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
-			href = href + a + pageSizeSelect;
-			window.location.href = href;
-		})
-		
-		function skipPage(){								//输入页码跳转页面
-			var pageVal = $('.pageVal').val();
-			var path = "";
-			var a = "../servlet/AuditServlet?option=Patent&currentPage=";
-			var b = "&pageSizeSelect=<%=pageSize%>"
-			path = path + a + pageVal + b;
-			window.location.href = path;
-		}
 		
 		//点击上传文件时打开文件上传选择窗口
 	    $(function(){

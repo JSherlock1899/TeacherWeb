@@ -19,4 +19,6 @@ public interface IExcelDao {
 	
 	public int insertPaperValues(List list) ;
 	
+	
+	public int insertTeacherValues(List list) ;
 }

@@ -13,7 +13,7 @@ public interface IStatisticsDao {
 	public ResultSet getSdeptCount(String option, String collegevalue)throws SQLException;
 	
 	//获取各学院的项目经费之和
-	public ResultSet getProjectMoney()throws SQLException;
+	public ResultSet getProjectMoney(String starttime,String endtime)throws SQLException;
 	
 	//获取各专业的项目经费之和
 	public ResultSet getSdeptProjectMoney(String collegevalue)throws SQLException;

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import model.ExcelPaper;
 import model.Paper;
 import model.Patent;
 
@@ -22,7 +23,15 @@ public interface IPaperDao {
 	
 	public List<Paper> getDataList(ResultSet rs);	//将结果集转化为集合
 	
-	public int paperAudit(String Pasearchnum,String Paudit); //审核
+	public int paperAudit(String Pasearchnum,String Paudit,String Message); //审核
 	
-	public List<Paper> getExcelDataList(ResultSet rs);//获取导出excel的集合
+	public List<ExcelPaper> getExcelDataList(ResultSet rs);//获取导出excel的集合
+	
+	
+	public List<Paper> getlist(Paper paper); //获取审核的详细信息
+
+	
+	public String getAccessory(String Patsn); //获取对应的附件路径
+	
+	public void saveFilePath(String path,String pasearchnum);  //保存上传的附件的路径
 }

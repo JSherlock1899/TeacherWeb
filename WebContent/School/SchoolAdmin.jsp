@@ -139,28 +139,28 @@
 						<li>
 							<div class="showtitle" style="width: 100px;">项目审核</div> <a
 							href="../servlet/AuditServlet?option=Project&college=<%=college %>" 
-							onclick="ProjectStatistics()" target="select_frame"><span
+							onclick="ProjectAudit()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-check"></span><span
 								class="sub-title">项目审核</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">论文审核</div> <a
 							href="../servlet/AuditServlet?option=Paper&college=<%=college %>" 
-							onclick="PaperStatistics()" target="select_frame"><span
+							onclick="PaperAudit()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-check"></span><span
 								class="sub-title">论文审核</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">荣誉审核</div> <a
 							href="../servlet/AuditServlet?option=Honor&college=<%=college %>" 
-							onclick="HonorStatistics()" target="select_frame"><span
+							onclick="HonorAudit()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-check"></span><span
 								class="sub-title">荣誉审核</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">专利审核</div> <a
 							href="../servlet/AuditServlet?option=Patent&college=<%=college %>" 
-							onclick="PatentStatistics()" target="select_frame"><span
+							onclick="PatentAudit()" target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-check"></span><span
 								class="sub-title">专利审核</span></a>
 						</li>
@@ -182,14 +182,14 @@
 						<li class="permissions">
 							<div class="showtitle" style="width: 100px;">权限管理</div> <a
 							href="" 
-							onclick="PaperStatistics()" target="select_frame"><span
+							 target="select_frame"><span
 								class="sublist-icon glyphicon glyphicon-th"></span><span
 								class="sub-title">权限管理</span></a>
 						</li>
 						<li>
 							<div class="showtitle" style="width: 100px;">密码管理</div> <a
 							href="../School/Other/alterPassword.jsp" 
-							onclick="HonorStatistics()" target="select_frame"><span
+							 target="select_frame"><span
 								class="sublist-icon glyphicon  glyphicon-asterisk"></span><span
 								class="sub-title">密码管理</span></a>
 						</li>

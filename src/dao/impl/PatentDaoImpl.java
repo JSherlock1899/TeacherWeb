@@ -43,10 +43,11 @@ public class PatentDaoImpl implements IPatentDao{
 		return 0;
 	}
 	
+	//修改专利信息，重新编辑再审核
 	@Override
 	public int alterPatent(Patent patent) throws SQLException{		//根据授权号修改对应的修改专利内容
 		String Tsn = teacherdao.getTsn(patent.getPleader().trim());			//获取该专利第一所有者的教师号
-		String sql = "update Patent set Patname = ?,Patapdate = ?,Patendate = ?,Patgrad = ?,Patremarks = ?,Tsn = ? "
+		String sql = "update Patent set Patname = ?,Patapdate = ?,Patendate = ?,Patgrad = ?,Patremarks = ?,Tsn = ?,Paudit = 0"
 				+ "where Patsn = ?";
 		Date Patapdate = util.utilToSql(patent.getPatapdate());
 		java.sql.Date Patendate = new java.sql.Date(patent.getPatemdate().getTime());
@@ -82,11 +83,6 @@ public class PatentDaoImpl implements IPatentDao{
 		starttime = CommonUtil.disposePageValue(starttime);
 		endtime = CommonUtil.disposePageValue(endtime);
 		Tname = CommonUtil.disposePageValue(Tname);
-//		System.out.println("college =" + college);
-//		System.out.println("sdept =" + sdept);
-//		System.out.println("starttime =" + starttime);
-//		System.out.println("endtime =" + endtime);
-//		System.out.println("Tname =" + Tname);
 		//什么都没有设置
 		String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Patname,Patnum,Patsn,Patapdate,Patendate,Patgrad,Patremarks,Paccessory,Tname,message,Paudit," + 
 		"ROW_NUMBER() over (order by Patnum) as r from Patent p left join Teacher t on p.Tsn = t.Tsn ) as pp where pp.r between ? and ?";
@@ -204,13 +200,12 @@ public class PatentDaoImpl implements IPatentDao{
 	
 	//获取导出excel的集合
 	@Override	
-	public List<Patent> getExcelDataList(ResultSet rs){	
-		List<Patent> datalist = new ArrayList<Patent>();
+	public List<ExcelPatent> getExcelDataList(ResultSet rs){	
+		List<ExcelPatent> datalist = new ArrayList<ExcelPatent>();
 		try {
 			while(rs.next()) {
-				datalist.add(new Patent(rs.getString("Patname"),rs.getString("Tname"), rs.getString("Patsn"),rs.getDate("Patapdate"),
-						rs.getDate("Patendate"), rs.getString("Patgrad"),rs.getString("Patremarks")
-						));
+				datalist.add(new ExcelPatent(rs.getString("Patname"),rs.getString("Tname"), rs.getString("Patsn"),rs.getDate("Patapdate"),
+						rs.getDate("Patendate"), rs.getString("Patgrad"),rs.getString("Patremarks")));
 			}
 			return datalist;
 		} catch (SQLException e) {
@@ -263,5 +258,22 @@ public class PatentDaoImpl implements IPatentDao{
 					patent.getPatemdate(),patent.getPatgrad(),patent.getPatremarks(),patent.getPaccessory(),patent.getTotalRecord(),Message
 					,Paudit));
 			return datalist;
+		}
+		
+		//获取对应的附件路径
+		public String getAccessory(String Patsn) {
+			String sql = "select Paccessory from Patent where Patsn = ?";
+			try {
+				stmt = dbUtil.getConnection().prepareStatement(sql);
+				stmt.setString(1,Patsn);
+				ResultSet rs = stmt.executeQuery();
+				while(rs.next()) {
+					String accessory = rs.getString("Paccessory");
+					return accessory;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return null;
 		}
 }

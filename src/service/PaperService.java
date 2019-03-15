@@ -2,10 +2,12 @@ package service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.IPaperDao;
 import dao.impl.PaperDaoImpl;
+import model.ExcelPaper;
 import model.Paper;
 
 public class PaperService {
@@ -47,7 +49,28 @@ public class PaperService {
 	}
 	
 	//对未审核的论文进行审核
-	public int paperAudit(String Pasearchnum,String Paudit) {
-		return Paperdao.paperAudit(Pasearchnum, Paudit);
+	public int paperAudit(String Pasearchnum,String Paudit,String message) {
+		return Paperdao.paperAudit(Pasearchnum, Paudit,message);
 	}
+	
+	//获取审核的详细信息
+	public List<Paper> getlist(Paper paper) {
+		return Paperdao.getlist(paper);
+	}
+		
+	//获取对应的附件路径
+	public String getAccessory(String Pasearchnum) {
+		return Paperdao.getAccessory(Pasearchnum);
+	}
+	
+	//保存上传的附件的路径
+	public void saveFilePath(String path,String pasearchnum) { 
+		 Paperdao.saveFilePath(path, pasearchnum);
+	}; 
+	
+	//获取导出excel的集合
+	public List<ExcelPaper> getExcelDataList(ResultSet rs) {
+		return Paperdao.getExcelDataList(rs);
+	}
+		
 }

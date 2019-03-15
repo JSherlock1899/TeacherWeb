@@ -89,7 +89,7 @@ public class DbUtil {
 		//处理导入excel时的空单元格
 		public List disposeNullCell(List list) {
 			for(Object i : list) {
-				if(i == null || i.equals("")) {
+				if(i == null || "".equals(i)) {
 					i = " ";
 				}
 			}

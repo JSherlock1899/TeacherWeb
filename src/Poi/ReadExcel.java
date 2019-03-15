@@ -44,12 +44,11 @@ public class ReadExcel {
 					HSSFCell cell = row.getCell(j);
 					evaluator = workbook.getCreationHelper().createFormulaEvaluator();
 					// 判断单元格是否为空
-					if (cell != null) {
+					if (cell != null || "".equals(cell)) {
 						int cellType = cell.getCellType();
 						if (cellType == Cell.CELL_TYPE_FORMULA) { // 表达式类型
 							cellType = evaluator.evaluate(cell).getCellType();
 						}
-
 						switch (cellType) {
 						case Cell.CELL_TYPE_STRING: // 字符串类型
 							String cellValue = cell.getStringCellValue().trim();
@@ -70,12 +69,11 @@ public class ReadExcel {
 							}
 							break;
 						default: // 其它类型，取空串
-							cellValue = "";
-							list.add(cellValue);
+							list.add("未填写");
 							break;
 						}
 					}else {
-						list.add(null);
+						list.add("未填写");
 					}
 				}
 			}

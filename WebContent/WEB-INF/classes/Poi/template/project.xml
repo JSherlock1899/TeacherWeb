@@ -23,13 +23,13 @@
         	<th value="项目编号" />
             <th value="项目名称" />
             <th value="负责人" />
+            <th value="成员" />
             <th value="级别" />
             <th value="类型" />
-            <th value="科研状态" />
-            <th value="成员" />
             <th value="经费" />            
             <th value="立项时间" />
             <th value="结题时间" />
+            <th value="科研状态" />
             <th value="备注" />            
         </tr>
     </thead>

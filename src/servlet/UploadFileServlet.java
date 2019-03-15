@@ -21,7 +21,6 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONArray;
 
 import dao.ITeacherDao;
 import dao.impl.TeacherDaoImpl;
@@ -49,11 +48,16 @@ public class UploadFileServlet extends HttpServlet {
 		String tally = request.getParameter("tally");
 		// count用来分发到不同项目对应的servlet
 		String count = request.getParameter("count");
-		//获取对应的项目名称
+		//grade为用户权限等级
+		String grade = request.getParameter("grade");
+		//Proname为项目名
 		String Proname = request.getParameter("Proname");
-		//获取对应项目所对应的主键
-		String majorKey = request.getParameter("majorKey");
+		//类别
 		String option = request.getParameter("option");
+		//获取主键
+		String key = request.getParameter("key");
+		HttpSession session=request.getSession();
+		String college = (String)session.getAttribute("Cname");
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		// 设置上传文件时 用到的临时文件的大小DiskFileItemFactory
@@ -69,15 +73,36 @@ public class UploadFileServlet extends HttpServlet {
 			items = upload.parseRequest(request);
 			// 遍历items中的数据
 			Iterator<FileItem> iter = items.iterator();
-			//存放文件的主目录
-			String path = "D:\\uploadFile"; 
 			while (iter.hasNext()) {
 				FileItem item = iter.next();
 				if (!item.isFormField()) {
 					String fileName = item.getName();
-					//获取文件后缀名
-					String ext = fileName.substring(fileName.indexOf(".") + 1);{
-						//教师上传文件至对应的项目文件夹
+					String ext = fileName.substring(fileName.indexOf(".") + 1);
+					
+					String path = "D:\\uploadFile";
+					//分不同身份上传文件
+					if(grade.equals("1")) {		//判断用户权限
+						path = path + "\\校管理员";
+						File fileupload = new File(path);
+						if (!fileupload.exists()) {
+							fileupload.mkdir();
+						}
+						File file = new File(path, fileName);
+						item.write(file);// 上传
+					}else if(grade.equals("2")) {
+						path = path + "\\" + college;
+						File fileupload = new File(path);
+						if (!fileupload.exists()) {
+							fileupload.mkdir();
+						}
+						path = path + "\\院管理员";
+						fileupload = new File(path);
+						if(!fileupload.exists()) {
+							fileupload.mkdir();
+						}
+						File file = new File(path, fileName);
+						item.write(file);// 上传
+					}else if(grade.equals("3")) {
 						ITeacherDao teacherDao = new TeacherDaoImpl();
 						String Tsn = (String) request.getSession().getAttribute("Tsn");
 						String Tname = teacherDao.getTname(Tsn);
@@ -87,45 +112,38 @@ public class UploadFileServlet extends HttpServlet {
 						if (!fileupload.exists()) {
 							fileupload.mkdir();				
 						}
-						path = path + "\\" + Tname;	
-						
+						path = path + "\\" + Tname;
 						fileupload = new File(path);
 						if(!fileupload.exists()) {
 							fileupload.mkdir();
 						}
-						path = path + "\\" + Proname;	
+						path = path + "\\" + Proname;
 						fileupload = new File(path);
 						if(!fileupload.exists()) {
 							fileupload.mkdir();
 						}
 						File file = new File(path, fileName);
 						item.write(file);// 上传
-						
-						//保存附件路径
-						if(option!=null) {
-							if(option.equals("project")) {
-								ProjectService service = new ProjectService();
-							}else if(option.equals("paper")) {
-								PaperService service = new PaperService();
-							}else if(option.equals("honor")) {
-								HonorService service = new HonorService();
-							}else if(option.equals("patent")) {
-								PatentService service = new PatentService();
-								service.saveFilePath(path, majorKey);
-							}
+					}
+					if(option!=null) {
+						if(option.equals("project")) {
+							ProjectService service = new ProjectService();
+							service.saveFilePath(path, key);
+						}else if(option.equals("paper")) {
+							PaperService service = new PaperService();
+							service.saveFilePath(path, key);
+						}else if(option.equals("honor")) {
+							HonorService service = new HonorService();
+							service.saveFilePath(path, key);
+						}else if(option.equals("patent")) {
+							PatentService service = new PatentService();
+							service.saveFilePath(path, key);
 						}
-						
 					}
 					
+					fileName = java.net.URLEncoder.encode(fileName,"utf-8");
+					path = java.net.URLEncoder.encode(path,"utf-8");
 					
-					//返回给fileinput的json数据
-					 response.setContentType("application/json;charset=utf-8");//指定返回的格式为JSON格式
-					 response.setCharacterEncoding("UTF-8");//setContentType与setCharacterEncoding的顺序不能调换，否则还是无法解决中文乱码的问题
-					 String StringjsonStr ="{\"id\":\"123\"}";
-					 out =response.getWriter() ;
-					 out.write(StringjsonStr);
-					 out.close();
-
 					//导入excel的接口
 					if (tally != null && tally.equals("1")) {
 						// 判断是不是excel文件如果是则导入数据
@@ -140,6 +158,13 @@ public class UploadFileServlet extends HttpServlet {
 						}
 					}
 					
+					// 返回给fileinput的json数据
+					response.setContentType("application/json;charset=utf-8");// 指定返回的格式为JSON格式
+					response.setCharacterEncoding("UTF-8");// setContentType与setCharacterEncoding的顺序不能调换，否则还是无法解决中文乱码的问题
+					String StringjsonStr = "{\"id\":\"123\"}";
+					out = response.getWriter();
+					out.write(StringjsonStr);
+					out.close();
 					return;
 				}
 			}
@@ -152,7 +177,7 @@ public class UploadFileServlet extends HttpServlet {
 		} catch (Exception e) {// 解析请求
 			e.printStackTrace();
 		}
-
+		
 	}
 
 }

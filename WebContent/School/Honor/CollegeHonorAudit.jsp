@@ -15,9 +15,9 @@
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/bootstrap.css">
 <script type="text/javascript" src="/TeacherWeb/UI/JS/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxHonorData.js"></script>
-<script type="text/javascript" src="/TeacherWeb/UI/JS/commonUse.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/bootstrap-table.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxSelect.js"></script>
+<script type="text/javascript" src="/TeacherWeb/UI/JS/commonUse.js"></script>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/style.css">
 </head>
 <body>
@@ -30,7 +30,11 @@
 							int totalRecord = pager.getTotalRecord();		//获取数据总条数
 							int totalPage = pager.getTotalPage();			//总页数
 							int[] pageArr = (int[]) request.getAttribute("pageArr"); 
-							String college = (String) request.getAttribute("college"); 
+							String college = (String) request.getAttribute("college");	//搜索的条件
+							String sdept = (String) request.getAttribute("sdept");
+							String starttime = (String) request.getAttribute("starttime");
+							String endtime = (String) request.getAttribute("endtime");
+							String Tname = (String) request.getAttribute("Tname");
 							int grade = (int) session.getAttribute("grade");	//获取用户的权限等级
 				%>
 	<div class="table-main col-md-12">
@@ -40,16 +44,13 @@
 		    <li><a href="#">审核</a></li>
 		    <li class="active">荣誉审核</li>
 		  </ol>
-		   <input id="college" value=<%=college%> type="hidden">
 		   <input id="currentPage" value=<%=currentPage%> type="hidden">
-		   <input id="totalPage" value=<%=totalPage%> type="hidden">
 		</div>
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
 				<div class="col-md-10 button-div form-inline">
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
-								<th><input type="checkbox" id="checkAll" /></th>
 								<th>编号</th>
 								<th>名称</th>
 								<th>获奖者</th>
@@ -58,7 +59,6 @@
 								<th>级别</th>
 								<th>奖金</th>
 								<th>备注</th>
-								<th>操作</th>
 							</tr>
 							<%	
 								for(int i=0; i<datalist.size(); i++){
@@ -66,17 +66,15 @@
 									
 							%>
 							<tr>
-								<% //导出为excel时的单选框，Hsn用于唯一标识各荣誉信息
-								out.print("<td><input type='checkbox' value = " + Hsn + " name='select'  class='select'></td>"); %>
 								<td class="Hsn edit"><%=Hsn%></td>
-								<td class="Hname edit"><%=datalist.get(i).getHname()%></td>
+								<td class="Hname edit"><a href="../servlet/AuditServlet?count=1&order=<%=i %>&option=Honor&college=<%=college%>
+								&pageSize=<%=pageSize%>&currentPage=<%=currentPage%>"><%=datalist.get(i).getHname()%></a></td>
 								<td class="Hwinner edit"><%=datalist.get(i).getHwinner()%></td>
 								<td class="Hdate edit"><%=datalist.get(i).getHdate()%></td>
 								<td class="Hcompany edit"><%=datalist.get(i).getHcompany()%></td>
 								<td class="Hgrad edit"><%=datalist.get(i).getHgrad()%></td>
 								<td class="Hreward edit"><%=datalist.get(i).getHreward()%></td>
 								<td class="Hremarks edit"><%=datalist.get(i).getHremarks()%></td>							
-								<td class=""><a id="pass">通过</a>&nbsp<a id="nopass">不通过</a></td>
 							</tr>
 							
 							<% } 
@@ -117,34 +115,47 @@
 						</a>
 					</li>
 					<li><a href="../servlet/AuditServlet?option=Honor&currentPage=<%=totalPage %>&college=<%=college %>&pageSize=<%=pageSize%>" id="endPage" >尾页</a></li>
-					<li><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
+					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
 			</form>
 			<div class="form-group pull-right">
 			  	共<%=totalPage %>页
 			  <input type="text" class="pageVal" style="width:100px;">
-			  <button type="submit" class="btn btn-default " id="pageGo">GO</button>
+			  <button type="submit" class="btn btn-default" id="pageGo" onclick="skipPage()">GO</button>
 			</div>
 		</div>
 	 </div>
 	</div>
 	<script type="text/javascript">
-		if(<%=currentPage %> == 1){					//首页和尾页时分别隐藏对应按钮
-			$('#pre').css("display","none");
+	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
+		var pageSizeSelect = $("#pageSize option:selected").val();
+		var href = "";
+		var a = "../servlet/AuditServlet?option=Honor&currentPage=<%=currentPage%>&pageSizeSelect=";
+		var b = "&college=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
+		href = href + a + pageSizeSelect + b;
+		window.location.href = href;
+	})
+	
+	function skipPage(){								//输入页码跳转页面
+		//页码输入框输入的数
+		var pageVal = $('.pageVal').val();
+		//总页数
+		var totalPage = $('#totalPage').val();
+		//一页显示的条数
+		var pageSize = $('#pageSize').val();
+		console.log(pageVal)
+		console.log(totalPage)
+		if(pageVal > totalPage){
+			alert('请输入正确的页码！');
+			return
 		}
-		
-		if(<%=currentPage %> == <%=totalPage %>){
-			$('#next').css("display","none");
-		}
-		
-		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
-			var pageSizeSelect = $("#pageSize option:selected").val();
-			var href = "";
-			var a = "../servlet/AuditServlet?option=Honor&college=<%=college %>&currentPage=<%=currentPage%>&pageSizeSelect=";
-			href = href + a + pageSizeSelect;
-			window.location.href = href;
-		})
+		var path = "";
+		var a = "../servlet/AuditServlet?option=Honor&currentPage=";
+		var b = "&pageSizeSelect=<%=pageSize%>&college=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
+		path = path + a + pageVal + b;
+		window.location.href = path;
+	}
 		
 		
 	</script>

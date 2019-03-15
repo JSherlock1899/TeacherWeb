@@ -14,8 +14,8 @@
 <title>专利查询</title>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/bootstrap.css">
 <script type="text/javascript" src="/TeacherWeb/UI/JS/jquery-3.3.1.min.js"></script>
-<script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxPatentData.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/commonUse.js"></script>
+<script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxPatentData.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/bootstrap-table.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxSelect.js"></script>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/style.css">
@@ -50,21 +50,13 @@
 				<div class="col-md-10 button-div form-inline">
 					<a href="../servlet/DownloadTemplate?count=4" class="btn btn-success">下载模板</a>
 					<form method="post" enctype="multipart/form-data" action="../servlet/UploadFileServlet?tally=1&count=4&grade=<%=grade %>" class="form-group importform">
-						<input type="file" id="file"  class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
+						<input type="file" id="file" name="file" class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
 						<input type="button" name="" value="导入"  class="btn btn-info" id="imporFileButton">
-					</form>			
+					</form>
 					<form action="../servlet/ExportServlet?sdept=<%=sdept %>&college=<%=college %>&starttime=<%=starttime %>&endtime=<%=endtime %>&Tname=<%=Tname %>&totalRecord=<%=totalRecord %>&count=4"  method="post" id="PatentForm" class="form-group">
-						<input type="hidden" name="count" value="4">
 						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
-						<input type="hidden" id="college" value="<%=college %>"/>
-						<input type="hidden" id="sdept" value="<%=sdept %>"/>
-						<input type="hidden" id="starttime" value="<%=starttime %>"/>
-						<input type="hidden" id="endtime" value="<%=endtime %>"/>
-						<input type="hidden" id="Tname" value="<%=Tname %>"/>
-						<input type="hidden" id="grade" value="<%=grade %>"/>
-						<input type="hidden" id="totalPage" value="<%=totalPage %>"/>
+						
 						<input type="hidden" id="currentPage" value="<%=currentPage %>"/>
-						<input type="hidden" id="totalRecord" value="<%=totalRecord %>"/>
 				</div>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
@@ -76,12 +68,12 @@
 								<th>级别</th>
 								<th>备注</th>
 								<th>附件</th>
-								<th>操作</th>
 							</tr>
 							<%	
 								for(int i=0; i<datalist.size(); i++){
 									String Patsn = datalist.get(i).getPatsn();
 									
+									String accessory = datalist.get(i).getPaccessory();
 							%>
 							<tr>
 								<td class="Patname edit"><%=datalist.get(i).getPatname()%></td>
@@ -92,9 +84,12 @@
 								<td class="Patgrad edit"><%=datalist.get(i).getPatgrad()%></td>
 								<td class="Patremarks edit"><%=datalist.get(i).getPatremarks()%></td>
 								<td class="Paccessory edit">
-									<a href="<%=datalist.get(i).getPaccessory()%>">查看附件</a>
+									<a href="../servlet/DownloadFileServlet?mainKey=<%=datalist.get(i).getPatsn() %>
+								&option=patent&Proname=<%=datalist.get(i).getPatname() %>" 
+								class=" btn btn-primary Download">查看附件</a>
 								</td>
-								<td class=""><a class="delete">删除</a>&nbsp<a class="updata">编辑</a></td>
+								<input type="hidden" class="accessoryPath" value="<%=accessory %>"/>
+									<input type="hidden" class="key" value="<%=Patsn %>"/>
 							</tr>
 							
 							<% } 
@@ -114,32 +109,36 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/PageServlet?option=Patent&currentPage=1&teacher=admin&pageSize=<%=pageSize%>" id="homePage">首页</a>
+						<a href="../servlet/PageServlet?option=Patent&currentPage=1&pageSize=<%=pageSize%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
+					&selectByNameVal=<%=Tname%>" id="homePage">首页</a>
 					</li>
 					<li>
 						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Patent&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
 					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[0]%></a></li>
 					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[1]%></a></li>
 					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Patent&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[2]%></a></li>
 					<li>
 						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Patent&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/PageServlet?option=Patent&currentPage=<%=totalPage %>&teacher=admin&pageSize=<%=pageSize%>" id="endPage" >尾页</a></li>
+					<li><a href="../servlet/PageServlet?option=Patent&currentPage=<%=totalPage %>&pageSize=<%=pageSize%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
+					&selectByNameVal=<%=Tname%>" id="endPage" >尾页</a></li>
 					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
@@ -175,19 +174,18 @@
 				alert('请输入正确的页码！');
 				return
 			}
+			if(pageVal == ""){
+				alert('页码不能为空！');
+				return
+			}
 			var path = "";
-			var a = "../servlet/PageServlet?option=Patent&currentPage=";
+			var a = "../servlet/PageServlet?option=Patent&starttime=<%=starttime%>&currentPage=";
 			var b = "&pageSizeSelect=<%=pageSize%>&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
 			path = path + a + pageVal + b;
 			window.location.href = path;
 		}
 		
-		//点击上传文件时打开文件上传选择窗口
-	    $(function(){
-	    	$('#imporFileButton').on("click",function(){
-	    		$('#file').click();
-	    	})
-	    })
+		
 	    
 	    
 	</script>

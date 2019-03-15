@@ -50,9 +50,9 @@
 				<div class="col-md-10 button-div form-inline">
 					<a href="../servlet/DownloadTemplate?count=3" class="btn btn-success">下载模板</a>
 					<form method="post" enctype="multipart/form-data" action="../servlet/UploadFileServlet?tally=1&count=3&grade=<%=grade %>" class="form-group importform">
-						<input type="file" id="myfile" name="myfile" class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
-						<input type="button" name="" value="导入"  class="btn btn-info" id="importButton">
-					</form>			
+						<input type="file" id="file" name="file" class="btn btn-info" style="display: none" onchange="$('.importform').submit()"> 
+						<input type="button" name="" value="导入"  class="btn btn-info" id="imporFileButton">
+					</form>		
 					<form action="../servlet/ExportServlet?sdept=<%=sdept %>&college=<%=college %>&starttime=<%=starttime %>&endtime=<%=endtime %>&Tname=<%=Tname %>&totalRecord=<%=totalRecord %>&count=3"  method="post" id="PatentForm" class="form-group">
 						<input type="hidden" name="count" value="3">
 						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
@@ -77,11 +77,11 @@
 								<th>奖金</th>
 								<th>备注</th>
 								<th>附件</th>
-								<th>操作</th>
 							</tr>
 							<%	
 								for(int i=0; i<datalist.size(); i++){
 									String Hsn = datalist.get(i).getHsn();
+									String Haccessory = datalist.get(i).getHaccessory();
 									
 							%>
 							<tr>
@@ -94,9 +94,12 @@
 								<td class="Hreward edit"><%=datalist.get(i).getHreward()%></td>
 								<td class="Hremarks edit"><%=datalist.get(i).getHremarks()%></td>
 								<td class="Paccessory edit">
-									<a href="<%=datalist.get(i).getHaccessory()%>">查看附件</a>
+								<a href="../servlet/DownloadFileServlet?mainKey=<%=datalist.get(i).getHsn() %>
+								&option=honor&Proname=<%=datalist.get(i).getHname() %>" 
+								class=" btn btn-primary Download">查看附件</a>
+									<input type="hidden" class="accessoryPath" value="<%=Haccessory %>"/>
+									<input type="hidden" class="key" value="<%=Hsn %>"/>
 								</td>							
-								<td class=""><a class="delete">删除</a>&nbsp<a class="updata">编辑</a></td>
 							</tr>
 							
 							<% } 
@@ -116,32 +119,36 @@
 					</span>
 					</li>
 					<li>
-						<a href="../servlet/PageServlet?option=Honor&currentPage=1&teacher=admin" id="homePage">首页</a>
+						<a href="../servlet/PageServlet?option=Honor&currentPage=1&pageSize=<%=pageSize%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
+					&selectByNameVal=<%=Tname%>" id="homePage">首页</a>
 					</li>
 					<li>
 						<a aria-label="Previous" id="pre" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage - 1%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"> 
 							<span >&laquo;</span>
 						</a>
 					</li>
 					<li id="page1"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[0]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[0]%></a></li>
 					<li id="page2"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[1]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[1]%></a></li>
 					<li id="page3"><a class="page" href="../servlet/PageServlet?option=Honor&currentPage=<%=pageArr[2]%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"><%=pageArr[2]%></a></li>
 					<li>
 						<a id="next" aria-label="Next" class="prenextpage" href="../servlet/PageServlet?option=Honor&currentPage=<%=currentPage + 1%>&pageSize=<%=pageSize%>
-					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
 					&selectByNameVal=<%=Tname%>"> 
 							<span>&raquo;</span>
 						</a>
 					</li>
-					<li><a href="../servlet/PageServlet?option=Honor&currentPage=<%=totalPage %>&teacher=admin" id="endPage" >尾页</a></li>
+					<li><a href="../servlet/PageServlet?option=Honor&currentPage=<%=totalPage %>&pageSize=<%=pageSize%>
+					&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&teacher=admin&starttime=<%=starttime%>
+					&selectByNameVal=<%=Tname%>" id="endPage" >尾页</a></li>
 					<li id="totalPage" value="<%=totalPage %>"><span>当前第<%=currentPage %>页，共<%=totalRecord %>条记录</span></li>
 				</ul>
 				</nav>
@@ -160,7 +167,7 @@
 	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
 		var pageSizeSelect = $("#pageSize option:selected").val();
 		var href = "";
-		var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
+		var a = "../servlet/PageServlet?option=Honor&currentPage=<%=currentPage%>&pageSizeSelect=";
 		var b = "&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
 		href = href + a + pageSizeSelect + b;
 		window.location.href = href;
@@ -177,9 +184,13 @@
 				alert('请输入正确的页码！');
 				return
 			}
+			if(pageVal == ""){
+				alert('页码不能为空！');
+				return
+			}
 			var path = "";
-			var a = "../servlet/PageServlet?option=Honor&currentPage=";
-			var b = "&pageSizeSelect=<%=pageSize%>&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
+			var a = "../servlet/PageServlet?option=Honor&starttime=<%=starttime%>&currentPage=";
+			var b = "&pageSizeSelect=<%=pageSize%>&collegevalue=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
 			path = path + a + pageVal + b;
 			window.location.href = path;
 		}

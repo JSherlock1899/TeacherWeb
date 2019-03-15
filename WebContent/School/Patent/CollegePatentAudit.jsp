@@ -11,7 +11,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>项目审核</title>
+<title>专利审核</title>
 <link rel="stylesheet" href="/TeacherWeb/UI/CSS/bootstrap.css">
 <script type="text/javascript" src="/TeacherWeb/UI/JS/jquery-3.3.1.min.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/ajaxPatentData.js"></script>
@@ -29,9 +29,13 @@
 							int pageSize = pager.getPageSize();			//获取每页显示多少条数据
 							int totalRecord = pager.getTotalRecord();		//获取数据总条数
 							int totalPage = pager.getTotalPage();			//总页数
+							String college = (String) request.getAttribute("college");	//搜索的条件
+							String sdept = (String) request.getAttribute("sdept");
+							String starttime = (String) request.getAttribute("starttime");
+							String endtime = (String) request.getAttribute("endtime");
+							String Tname = (String) request.getAttribute("Tname");
 							int[] pageArr = (int[]) request.getAttribute("pageArr"); 
-							String college = (String) request.getAttribute("college"); 
-							int grade = (int) session.getAttribute("grade");	//获取用户的权限等级
+							int grade = (int) session.getAttribute("grade");	//获取用户的权限
 				%>
 	<div class="table-main col-md-12">
 		<div class="col-md-4" >
@@ -40,10 +44,6 @@
 		    <li><a href="#">审核</a></li>
 		    <li class="active">专利审核</li>
 		  </ol>
-		  <input id="college" value=<%=college%> type="hidden">
-		  <input id="currentPage" value=<%=currentPage%> type="hidden">
-		   <input id="totalPage" value=<%=totalPage%> type="hidden">
-		   <input id="pageSize" value=<%=pageSize%> type="hidden">
 		</div>
 		<div class="row">
 			<div class="col-md-11 col-md-offset-1 ">
@@ -63,7 +63,8 @@
 									
 							%>
 							<tr>
-								<td class="Patname edit"><a href="../servlet/AuditServlet?count=1&order=<%=i %>&option=Patent&college=<%=college%>"><%=datalist.get(i).getPatname()%></a></td>
+								<td class="Patname edit"><a href="../servlet/AuditServlet?count=1&order=<%=i %>&option=Patent&college=<%=college%>
+								&pageSize=<%=pageSize%>&currentPage=<%=currentPage%>"><%=datalist.get(i).getPatname()%></a></td>
 								<td class="Pleader edit"><%=datalist.get(i).getPleader()%></td>
 								<td class="Patsn edit"><%=Patsn%></td>
 								<td class="Patapdate edit"><%=datalist.get(i).getPatemdate()%></td>
@@ -74,6 +75,7 @@
 							<% } 
 					      basedao.closeCon();%>
 						</table>
+						<input type="hidden" id="currentPage" value="<%=currentPage %>"/>
 				<nav aria-label="Page navigation">
 				<ul class="pagination" style="display:block">
 					<li>
@@ -116,7 +118,7 @@
 			<div class="form-group pull-right">
 			  	共<%=totalPage %>页
 			  <input type="text" class="pageVal" style="width:100px;">
-			  <button type="submit" class="btn btn-default" id="pageGo">GO</button>
+			  <button type="submit" class="btn btn-default" id="pageGo" onclick="skipPage()">GO</button>
 			</div>
 		</div>
 	 </div>
@@ -124,13 +126,32 @@
 	<script type="text/javascript">
 	
 		
-		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
-			var pageSizeSelect = $("#pageSize option:selected").val();
-			var href = "";
-			var a = "../servlet/AuditServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
-			href = href + a + pageSizeSelect;
-			window.location.href = href;
-		})
+	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
+		var pageSizeSelect = $("#pageSize option:selected").val();
+		var href = "";
+		var a = "../servlet/AuditServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
+		var b = "&college=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
+		href = href + a + pageSizeSelect + b;
+		window.location.href = href;
+	})
+	
+	function skipPage(){								//输入页码跳转页面
+		//页码输入框输入的数
+		var pageVal = $('.pageVal').val();
+		//总页数
+		var totalPage = $('#totalPage').val();
+		//一页显示的条数
+		var pageSize = $('#pageSize').val();
+		if(pageVal > totalPage){
+			alert('请输入正确的页码！');
+			return
+		}
+		var path = "";
+		var a = "../servlet/AuditServlet?option=Patent&currentPage=";
+		var b = "&pageSizeSelect=<%=pageSize%>&college=<%=college%>&sdeptValue=<%=sdept%>&starttime=<%=starttime%>&endtime=<%=endtime%>&selectByNameVal=<%=Tname%>&teacher=admin"
+		path = path + a + pageVal + b;
+		window.location.href = path;
+	}
 		
 	
 	

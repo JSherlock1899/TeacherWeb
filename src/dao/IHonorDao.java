@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import model.ExcelHonor;
 import model.Honor;
 import model.Patent;
 
@@ -21,9 +22,13 @@ public interface IHonorDao {
 	
 	public List<Honor> getDataList(ResultSet rs);	//将结果集转化为集合
 		
-	public int honorAudit(String Hsn,String Paudit); //审核
+	public int honorAudit(String Hsn,String Haudit,String Message); //审核
 	
-	public List<Honor> getExcelDataList(ResultSet rs);//获取导出excel的集合
+	public List<ExcelHonor> getExcelDataList(ResultSet rs);//获取导出excel的集合
 	
 	public List<Honor> getlist(Honor honor);
+	
+	public String getAccessory(String Hsn); //获取对应的附件路径
+	
+	public void saveFilePath(String path,String hsn);  //保存上传的附件的路径
 }

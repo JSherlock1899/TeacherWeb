@@ -2,9 +2,11 @@ package service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import dao.IPatentDao;
 import dao.impl.PatentDaoImpl;
+import model.ExcelPatent;
 import model.Patent;
 
 //业务逻辑层
@@ -55,11 +57,24 @@ public class PatentService {
 		return patentdao.patentAudit(Patsn, Paudit,message);
 	}
 	
-	public void saveFilePath(String path,String patsn) { //保存上传的附件的路径
+	
+	//保存上传的附件的路径
+	public void saveFilePath(String path,String patsn) { 
 		 patentdao.saveFilePath(path, patsn);
 	}; 
 	
+	//获取单条专利信息的详细信息
 	public List<Patent> getlist(Patent patent){
 		return patentdao.getlist(patent);
+	}
+	
+	//获取对应的附件路径
+	public String getAccessory(String Patsn) {
+		return patentdao.getAccessory(Patsn);
+	}
+	
+	//获取导出excel的集合
+	public List<ExcelPatent> getExcelDataList(ResultSet rs){			
+		return patentdao.getExcelDataList(rs);
 	}
 }

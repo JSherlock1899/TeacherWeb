@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import model.ExcelProject;
+import model.Paper;
 import model.Patent;
 import model.Project;
 
@@ -26,10 +28,16 @@ public int delProject(String Psn);		//根据项目号删除对应的项目信息
 		
 
 	
-	public List<Project> getExcelDataList(ResultSet rs);//获取导出excel的集合
+	public List<ExcelProject> getExcelDataList(ResultSet rs);//获取导出excel的集合
 	
 	
 	public List<Project> getDataList(ResultSet rs);//将结果集转化为集合
 	
-	public int projectAudit(String Psn,String Paudit); //审核
+	public int projectAudit(String Psn,String Paudit,String message); //审核
+	
+	public List<Project> getlist(Project project); //获取审核的详细信息
+	
+	public String getAccessory(String Psn); //获取对应的附件路径
+	
+	public void saveFilePath(String path,String psn);  //保存上传的附件的路径
 }

@@ -8,10 +8,12 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -25,32 +27,42 @@ import org.json.JSONObject;
 public class CommonUtil {
 	
 	//将字符串型的数据转化为日期型
-	public Date stringToDate(String str) {		
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = null;
-		// String转Date
-		try {
-			date = format.parse(str);
+	public Date stringToDate(String str) {	
+		System.out.println("str = " + str);
+		if(str!=null && !str.equals("")) {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = null;
+			// String转Date
+			try {
+				date = format.parse(str);
+				return date;
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			return date;
-		} catch (ParseException e) {
-			e.printStackTrace();
+		}else {
+			return null;
 		}
-		return date;
 	}
 	
 	
 	//util.Date转化为sql.Date
-	public java.sql.Date utilToSql(Date utildate) {			
-		java.sql.Date sqlDate=new java.sql.Date(utildate.getTime());
-		return sqlDate;
+	public java.sql.Date utilToSql(Date utildate) {	
+		//防止用户未输入时间
+		if(utildate != null && !utildate.equals("")) {
+			java.sql.Date sqlDate=new java.sql.Date(utildate.getTime());
+		}else {
+			return null;
+		}
+		
+		return null;
 		
 	}
 	
-	//util.Date转化为sql.Date
+	//sql.Date转化为util.Date
 		public java.util.Date sqlToUtil(java.sql.Date sqldate) {			
 			java.util.Date utilDate=new java.util.Date(sqldate.getTime());
 			return utilDate;
-			
 		}
 	
 	public void download(String path, HttpServletResponse response) {
@@ -159,14 +171,42 @@ public class CommonUtil {
 			return "无";
 		}
 		return message;
-	}
-	public static void main(String[] args) {
+	}	
 	
-	}
-
-
-
-
-
+	//获取一个文件夹下的所有文件
+	public File[] getFiles(ArrayList<File> fileList, String path) {
+        File[] allFiles = new File(path).listFiles();
+        	for (int i = 0; i < allFiles.length; i++) {
+                File file = allFiles[i];
+                if (file.isFile()) {
+                        fileList.add(file);
+                } else  {
+                    getFiles(fileList, file.getAbsolutePath());
+                }
+            }
+    		return allFiles;
+        
+    }
 	
+//	//处理学院名
+//	public String disposeCollegeName(String college) {
+//		if(college!=null) {
+//			if(college.equals("")) {
+//				System.out.println("college1 = " + college);
+//				return "null";
+//			}
+//			System.out.println("college111 = " + college);
+//		}else {
+//			System.out.println("college11 = " + college);
+//			return college;
+//		}
+//		return college;
+//	}
+	
+	public String disposeDate(java.util.Date date) {
+		if(date == null) {
+			return "null";
+		}
+		return null;
+	}
 }

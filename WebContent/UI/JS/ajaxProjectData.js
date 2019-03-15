@@ -41,18 +41,25 @@ $(document).on("click",".updata",function(e){
 
 //获取该行当前每个表格单元的信息并提交到servlet进行修改
 $(document).on("click",".save",function(){
-	var Psn = $(this).closest("tr").find(".Psn").text();
-	var Pleader = $(this).closest("tr").find(".Pname").text();
-	var Pname = $(this).closest("tr").find(".Pleader").text();
-	var Pmember = $(this).closest("tr").find(".Pmember").text();
-	var Pgrad = $(this).closest("tr").find(".Pgrad").text();
-	var Pkind = $(this).closest("tr").find(".Pkind").text();
-	var Pmoney = $(this).closest("tr").find(".Pmoney").text();
-	var Pstatime = $(this).closest("tr").find(".Pstatime").text();
-	var Pcondition = $(this).closest("tr").find(".Pcondition").text();
-	var Pendtime = $(this).closest("tr").find(".Pendtime").text();
-	var Premarks = $(this).closest("tr").find(".Premarks").text();
-	var Paccessory = $(this).closest("tr").find(".Paccessory").text();
+	if(function check(){
+		var check = checkPsn() && checkPname() && checkPmember() && checkPmoney() 
+		return check;
+        }){
+	alert('输入不合法！')
+	return;
+}
+	var Psn = $("#Psn").val();
+	var Pleader = $("#Pleader").val();
+	var Pname = $("#Pname").val();
+	var Pmember = $("#Pmember").val();
+	var Pgrad = $('#Pgrad option:selected').val();
+	var Pkind = $('Pkind option:selected').val();
+	var Pmoney = $("#Pmoney").val();
+	var Pstatime = $("#Pstatime").val();
+	var Pcondition = $('#Pcondition option:selected').val();
+	var Pendtime = $("#Pendtime").val();
+	var Premarks = $("#Premarks").val();
+	var Paccessory = $("Paccessory").val();
 	$.ajax({
         url:"../servlet/ProjectServlet?value=2",
         type:"post",
@@ -85,6 +92,13 @@ $(document).on("click",".save",function(){
 //新建信息
 //获取新建行当前每个表格单元的信息
 $(document).on("click",".saveNewMsg",function(){
+	if(function check(){
+			var check = checkPsn() && checkPname() && checkPmember() && checkPmoney() 
+			return check;
+            }){
+		alert('输入不合法！')
+		return;
+	}
 	var Psn = $('#Psn').val();
 	var Pleader = $('#Pleader').val();
 	var Pname = $('#Pname').val();
@@ -127,13 +141,15 @@ $(document).on("click",".saveNewMsg",function(){
 
 	//审核通过
 	$(document).on("click","#pass",function(){
-		var Psn = $(this).closest("tr").find(".Psn").text();
+		var Psn = $('.Psn').text();
+		var message  = $('#message').val();
 		$.ajax({
 			url:"../servlet/ProjectServlet?value=4",
 	        type:"post",
 	        datatype:"json",
 	        data:{
 	        	"Psn" : Psn,
+	        	"message" : message
 	        },
 	        success : function(result){
 	                alert("操作成功");
@@ -148,13 +164,15 @@ $(document).on("click",".saveNewMsg",function(){
 	
 	//审核不通过
 	$(document).on("click","#nopass",function(){
-		var Psn = $(this).closest("tr").find(".Psn").text();
+		var Psn = $('.Psn').text();
+		var message  = $('#message').val();
 		$.ajax({
 			url:"../servlet/ProjectServlet?value=5",
 	        type:"post",
 	        datatype:"json",
 	        data:{
 	        	"Psn" : Psn,
+	        	"message" : message
 	        },
 	        success : function(result){
 	                alert("操作成功");
@@ -167,11 +185,7 @@ $(document).on("click",".saveNewMsg",function(){
 	})
 
 
-	 //新建按钮的事件
-		$("#btn_add").click(function () {
-		$("#myModalLabel").text("新建项目信息");
-		$('#myModal').modal();
-		});
+	
 	
 	function skipPage(){								//输入页码跳转页面
 		//页码输入框输入的数
@@ -196,12 +210,10 @@ $(document).on("click",".saveNewMsg",function(){
 	$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
 		var pageSizeSelect = $("#pageSize option:selected").val();
 		var pageSize = $('#pageSize').val();
+		var totalRecord = $('#totalRecord').val();
 		var currentPage = $('#currentPage').val();
 		//数据总条数
-		var totalRecord = $('#totalRecord').val();
-		if(totalRecord < pageSize){
-			alert('数据总数小于' + pageSize + "!");
-		}
+		
 		var href = "";
 		var a = "../servlet/PageServlet?option=Project&currentPage=" + currentPage + "&pageSizeSelect=";
 		href = href + a + pageSizeSelect + "&teacher=teacher"
@@ -214,7 +226,6 @@ $(document).on("click",".saveNewMsg",function(){
 		if(currentPage == 1){					//首页和尾页时分别隐藏对应按钮
 			$('#pre').css("display","none");
 		}
-		
 		if(currentPage == totalPage ){
 			$('#next').css("display","none");
 		}

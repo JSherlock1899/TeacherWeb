@@ -29,14 +29,21 @@ $(document).on("click",".delete",function(e,url){
 //改
 //获取该行当前每个表格单元的信息并提交到servlet进行修改
 $(document).on("click",".save",function(){
-	var Hsn = $(this).closest("tr").find(".Hsn").text();
-	var Hname = $(this).closest("tr").find(".Hname").text();
-	var Hwinner = $(this).closest("tr").find(".Hwinner").text();
-	var Hdate = $(this).closest("tr").find(".Hdate").text();
-	var Hcompany = $(this).closest("tr").find(".Hcompany").text();
-	var Hgrad = $(this).closest("tr").find(".Hgrad").text();
-	var Hreward = $(this).closest("tr").find(".Hreward").text();
-	var Hremarks = $(this).closest("tr").find(".Hremarks").text();
+	if(function check(){
+		var check = checkHreward() && checkHcompany() && checkHwinner() && checkHname() && checkHsn();
+		return check;
+        }){
+	alert('输入不合法！')
+	return;
+}
+	var Hsn = $("#Hsn").val();
+	var Hname = $("#Hname").val();
+	var Hwinner = $("#Hwinner").val();
+	var Hdate = $("#Hdate").val();
+	var Hcompany = $("#Hcompany").val();
+	var Hgrad = $('#Hgrad option:selected').val();
+	var Hreward = $("#Hreward").val();
+	var Hremarks = $("#Hremarks").val();
 	$.ajax({
         url:"../servlet/HonorServlet?value=2",
         type:"post",
@@ -65,12 +72,19 @@ $(document).on("click",".save",function(){
 //新建信息
 //获取新建行当前每个表格单元的信息
 $(document).on("click",".saveNewMsg",function(){
+	if(function check(){
+		var check = checkHreward() && checkHcompany() && checkHwinner() && checkHname() && checkHsn();
+		return check;
+        }){
+	alert('输入不合法！')
+	return;
+}
 	var Hsn = $('#Hsn').val();
 	var Hname = $('#Hname').val();
 	var Hwinner = $('#Hwinner').val();
 	var Hdate = $('#Hdate').val();
 	var Hcompany = $('#Hcompany').val();
-	var Hgrad = $('#Hgrad').val();
+	var Hgrad = $('#Hgrad option:selected').val();
 	var Hreward = $('#Hreward').val();
 	var Hremarks = $('#Hremarks').val();
 	$.ajax({
@@ -111,13 +125,15 @@ $(document).on("click",".updata",function(e){
 
 	//审核通过
 	$(document).on("click","#pass",function(){
-		var Hsn = $(this).closest("tr").find(".Hsn").text();
+		var Hsn = $('.Hsn').text();
+		var message  = $('#message').val();
 		$.ajax({
 			url:"../servlet/HonorServlet?value=4",
 	        type:"post",
 	        datatype:"json",
 	        data:{
 	        	"Hsn" : Hsn,
+	        	"message" : message,
 	        },
 	        success : function(result){
 	                alert("操作成功");
@@ -131,13 +147,15 @@ $(document).on("click",".updata",function(e){
 	
 	//审核不通过
 	$(document).on("click","#nopass",function(){
-		var Hsn = $(this).closest("tr").find(".Hsn").text();
+		var Hsn = $('.Hsn').text();
+		var message  = $('#message').val();
 		$.ajax({
 			url:"../servlet/HonorServlet?value=5",
 	        type:"post",
 	        datatype:"json",
 	        data:{
 	        	"Hsn" : Hsn,
+	        	"message" : message,
 	        },
 	        success : function(result){
 	                alert("操作成功");
@@ -150,31 +168,7 @@ $(document).on("click",".updata",function(e){
 	})
 	
 	
-	 //新建按钮的事件
-		 $("#btn_add").click(function () {
-		 $("#myModalLabel").text("新建荣誉");
-		 $('#myModal').modal();
-		 });
-
-function skipPage(){								//输入页码跳转页面
-	//页码输入框输入的数
-	var pageVal = $('.pageVal').val();
-	//总页数
-	var totalPage = $('#totalPage').val();
-	//一页显示的条数
-	var pageSize = $('#pageSize').val();
-	var college = $('#college').val();
-	alert(college)
-	if(pageVal > totalPage){
-		alert('请输入正确的页码！');
-		return
-	}
-	var path = "";
-	var a = "../servlet/PageServlet?option=Honor&currentPage=";
-	var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher&count=0&college=" + college
-	path = path + a + pageVal + b;
-	window.location.href = path;
-}
+	
 
 $(function(){
 	var totalPage = $('#totalPage').val();

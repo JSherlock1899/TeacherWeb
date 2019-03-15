@@ -79,7 +79,10 @@
 								<td>级别</td>
 								<td class="Patgrad edit"><%=datalist.get(0).getPatgrad()%></td>
 								<td>附件</td>
-								<td colspan="3"><a href="../servlet/DownloadFileServlet" multiple class="btn btn-primary" value="上传">下载附件</a></td>	
+								<td colspan="3"><a href="../servlet/DownloadFileServlet?mainKey=<%=datalist.get(0).getPatsn() %>
+								&option=patent&Proname=<%=datalist.get(0).getPatname() %>"  class="btn btn-primary Download" value="上传">下载附件</a></td>	
+								<input type="hidden" class="accessoryPath" value="<%=datalist.get(0).getPaccessory() %>"/>
+								<input type="hidden" class="key" value="<%=datalist.get(0).getPatsn() %>"/>
 							</tr>
 							<tr>
 								<td>备注</td>
@@ -101,7 +104,7 @@
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-              <h4 class="modal-title" id="myModalLabel">新建专利信息</h4>
+              <h4 class="modal-title" id="myModalLabel">修改专利信息</h4>
 							<button type="button" class="close" data-dismiss="modal"
 								aria-label="Close">
 								<span aria-hidden="true">×</span>
@@ -109,17 +112,28 @@
 						</div>
 						<div class="modal-body">
 							<div class="form-group">
-								<label for="Patname">名称</label> <input type="text" name="Patname" value="<%=datalist.get(0).getPatname()%>"
-									class="form-control" id="Patname" placeholder="名称">
+								<label for="Patname">名称</label> 
+									<input type="text" name="Patname"   value="<%=datalist.get(0).getPatname()%>"
+									class="form-control" id="Patname" placeholder="名称"
+									 onfocus="showTips('Patname','专利名称不能超过15个字符')" 
+									onblur="checkPatname('Patname','请按要求输入专利名称')">
+									<div id="Patnamediv" style="display:none">
+										<span id="Patnamespan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
 								<label for="Pleader">第一作者</label> <input type="text" name="Pleader" value="<%=datalist.get(0).getPleader()%>"
 									class="form-control" id="Pleader" placeholder="第一作者">
 							</div>
 							<div class="form-group">
-								<label for="Patsn">授权号</label> <input type="text" value="<%=datalist.get(0).getPatsn()%>"
+								<label for="Patsn">授权号</label> 
+									<input type="text"  value="<%=datalist.get(0).getPatsn()%>"
 									name="Patsn" class="form-control" id="Patsn"
-									placeholder="授权号">
+									placeholder="授权号" onfocus="showTips('Patsn','专利授权号为1-20位的数字')" 
+									onblur="checkPatsn('Patsn','请按要求输入专利授权号')">
+									<div id="Patsndiv" style="display:none">
+										<span id="Patsnspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
 								<label for="Patapdate">申请时间</label> <input type="date" value="<%=datalist.get(0).getPatapdate()%>"
@@ -146,7 +160,7 @@
 								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭
 							</button>
 							<button type="submit" id="btn_submit"
-								class="btn btn-primary saveNewMsg">
+								class="btn btn-primary save">
 								<span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存
 							</button>
 						</div>
@@ -173,17 +187,9 @@
 	 		</div>
 	</div>
 	<script type="text/javascript">
-		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
-			var pageSizeSelect = $("#pageSize option:selected").val();
-			var href = "";
-			var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
-			href = href + a + pageSizeSelect + "&teacher=teacher"
-			window.location.href = href;
-		})    
-		
 		//新建按钮的事件
 		 $("#btn_add").click(function () {
-		 $("#myModalLabel").text("新建专利");
+		 $("#myModalLabel").text("修改专利信息");
 		 $('#myModal').modal();
 		 });
 		
@@ -196,7 +202,7 @@
 	        var control = $('#' + ctrlName);
 	        control.fileinput({
 	            language: 'zh', //设置语言
-	            uploadUrl: "../servlet/UploadFileServlet?Proname=<%=datalist.get(0).getPatname()%>&majorKey=<%= datalist.get(0).getPatsn()%>", //上传的地址
+	            uploadUrl: "../servlet/UploadFileServlet?Proname=<%=datalist.get(0).getPatname()%>&key=<%= datalist.get(0).getPatsn()%>&grade=3&option=patent", //上传的地址
 	            allowedFileExtensions: ['jpg', 'gif', 'png','doc','docx','pdf','ppt','pptx','txt'],//接收的文件后缀
 	            maxFilesNum : 5,//上传最大的文件数量
 	            //uploadExtraData:{"id": 1, "fileName":'123.mp3'},
@@ -223,14 +229,36 @@
 			}
 			
 		$('#uploadfile').on('filebatchuploadsuccess', function(event, data, previewId, index) { 
-			console.log(event);
-			console.log(data); 
-			console.log(previewId); 
-			console.log(index); 
+
 			});
 		
 		
+		function checkPatname(id,info){
+			var uValue = document.getElementById(id).value;
+			if(!/^.{1,15}$/.test(uValue)){
+				document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+				document.getElementById(id+"div").style.display="block";
+				return true
+			}else{
+				document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				return false
+			}
+		}
+		function checkPatsn(id,info){
+			var uValue = document.getElementById(id).value;
+			if(!/^\d{1,20}$/.test(uValue)){
+				document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+				document.getElementById(id+"div").style.display="block";
+				return true
+			}else{
+				document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				return false
+			}
+		}
 
+		function showTips(id,info){
+			document.getElementById(id+"span").innerHTML="<font color='gray' size='2'>"+info+"</font>";
+		}
 	</script>
 </body>
 </html>

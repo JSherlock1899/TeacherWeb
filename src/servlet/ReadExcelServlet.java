@@ -42,35 +42,43 @@ public class ReadExcelServlet extends HttpServlet {
 				out.flush();// 清空缓存
 				if(count.equals("1")) {
 					int result = excelService.insertProjectValues(CellValues);
-					if (result == 1) {
+					if (result == 0) {
 						out.print("<script>alert('数据导入成功！')</script>");
 					} else {
-						out.print("<script>alert('数据导入出错！')</script>");
+						out.print("<script>alert('第" + result + "条数据导入出错！')</script>");
 					}
 				}else if(count.equals("2")) {
 					int result = excelService.insertPaperValues(CellValues);
-					if (result == 1) {
+					if (result == 0) {
 						out.print("<script>alert('数据导入成功！')</script>");
 					} else {
-						out.print("<script>alert('数据导入出错！')</script>")	;
+						out.print("<script>alert('第" + result + "条数据导入出错！')</script>");
 					}
 				}else if(count.equals("3")) {
 					int result = excelService.insertHonorValues(CellValues);
-					if (result == 1) {
+					if (result == 0) {
 						out.print("<script>alert('数据导入成功！')</script>");
 					} else {
-						out.print("<script>alert('数据导入出错！')</script>");
+						out.print("<script>alert('第" + result + "条数据导入出错！')</script>");
 					}
 				}else if(count.equals("4")) {
 					int result = excelService.insertPatentValues(CellValues);
-					if (result == 1) {
+					if (result == 0) {
 						out.print("<script>alert('数据导入成功！')</script>");
 					} else {
-						out.print("<script>alert('数据导入出错！')</script>");
+						out.print("<script>alert('第" + result + "条数据导入出错！')</script>");
+					}
+				}else if(count.equals("5")) {
+					int result = excelService.insertTeacherValues(CellValues);
+					if (result == 0) {
+						out.print("<script>alert('数据导入成功！')</script>");
+					} else {
+						out.print("<script>alert('第" + result + "条数据导入出错！')</script>");
 					}
 				}else {
 					out.print("<script>alert('系统错误！')</script>");
 				}
+				out.close();
 	}
 
 }

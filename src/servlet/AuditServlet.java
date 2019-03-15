@@ -17,7 +17,9 @@ import model.Patent;
 import model.Project;
 import service.AuditService;
 import service.HonorService;
+import service.PaperService;
 import service.PatentService;
+import service.ProjectService;
 import util.PageUtil;
 
 /**
@@ -32,6 +34,7 @@ public class AuditServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String option = request.getParameter("option");
 		String college = request.getParameter("college");//管理员所在学院
+		String sdept = request.getParameter("sdept");
 		request.setAttribute("college", college);
 		//来判断是否是显示详细信息
 		String count = request.getParameter("count");
@@ -48,7 +51,7 @@ public class AuditServlet extends HttpServlet {
 		} else {
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
 		}
-		if (pageSizeString == null || currentPageString.equals("undefined")) {
+		if (pageSizeString == null || pageSizeString.equals("undefined")) {
 			pageSize = 5;// 默认每页显示5条数据
 		} else {
 			pageSize = Integer.parseInt(request.getParameter("pageSizeSelect"));
@@ -58,7 +61,7 @@ public class AuditServlet extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			if(option.equals("Project")) {
 				//在数据库中，grade为0代表未审核。grade为1代表审核通过，grade为2代表审核未通过
-				List<Project> datalist = auditService.getAllUnauditedProject(0, college, currentPage, pageSize);
+				List<Project> datalist = auditService.getAllUnauditedProject(0, college,sdept, currentPage, pageSize);
 				if (datalist.size() > 0) {
 					int totalRecord = datalist.get(0).getTotalRecord(); // 获取数据总条数
 					int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
@@ -66,13 +69,25 @@ public class AuditServlet extends HttpServlet {
 					Pager pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
 					int[] pageArr = pageutil.getPage(currentPage, totalPage); // 获取正确的页码
 					request.setAttribute("pager", pager);
-					request.setAttribute("currentPage", currentPage);
 					request.setAttribute("pageArr", pageArr);
+					if(count!=null) {
+						if(order!=null) {
+							ProjectService projectService = new ProjectService();
+							int number = Integer.parseInt(order);
+							Project project = datalist.get(number);
+							datalist = projectService.getlist(project);
+							//覆盖原先的pager
+							pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							request.setAttribute("pager", pager);
+							request.getRequestDispatcher("/School/Project/CollegeDetailProjectAudit.jsp").forward(request,response);
+						}
+					}else {
 					request.getRequestDispatcher("/School/Project/CollegeProjectAudit.jsp").forward(request,response);
+					}
 				}
 				out.println("<script>alert('已不存在未审核的项目')</script>");
 			}else if(option.equals("Paper")) {
-				List<Paper> datalist = auditService.getAllUnauditedPaper(0, college, currentPage, pageSize);
+				List<Paper> datalist = auditService.getAllUnauditedPaper(0, college,sdept,  currentPage, pageSize);
 				if (datalist.size() > 0) {
 					int totalRecord = datalist.get(0).getTotalRecord(); // 获取数据总条数
 					int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
@@ -82,11 +97,24 @@ public class AuditServlet extends HttpServlet {
 					request.setAttribute("pager", pager);
 					request.setAttribute("currentPage", currentPage);
 					request.setAttribute("pageArr", pageArr);
+					if(count!=null) {
+						if(order!=null) {
+							PaperService paperService = new PaperService();
+							int number = Integer.parseInt(order);
+							Paper paper = datalist.get(number);
+							datalist = paperService.getlist(paper);
+							//覆盖原先的pager
+							pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+							request.setAttribute("pager", pager);
+							request.getRequestDispatcher("/School/Paper/CollegeDetailPaperAudit.jsp").forward(request,response);
+						}
+					}else {
 					request.getRequestDispatcher("/School/Paper/CollegePaperAudit.jsp").forward(request,response);
+					}
 				}
 				out.println("<script>alert('已不存在未审核的论文')</script>");
 			}else if(option.equals("Honor")) {
-				List<Honor> datalist = auditService.getAllUnauditedHonor(0, college, currentPage, pageSize);
+				List<Honor> datalist = auditService.getAllUnauditedHonor(0, college, sdept, currentPage, pageSize);
 				if (datalist.size() > 0) {
 					int totalRecord = datalist.get(0).getTotalRecord(); // 获取数据总条数
 					int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数
@@ -105,7 +133,7 @@ public class AuditServlet extends HttpServlet {
 							//覆盖原先的pager
 							pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
 							request.setAttribute("pager", pager);
-							request.getRequestDispatcher("/School/Patent/CollegeDetailPatentAudit.jsp").forward(request,response);
+							request.getRequestDispatcher("/School/Honor/CollegeDetailHonorAudit.jsp").forward(request,response);
 						}
 					}else {
 					request.getRequestDispatcher("/School/Honor/CollegeHonorAudit.jsp").forward(request,response);
@@ -113,7 +141,7 @@ public class AuditServlet extends HttpServlet {
 				}
 				out.println("<script>alert('已不存在未审核的荣誉')</script>");
 			}else if(option.equals("Patent")) {
-				List<Patent> datalist = auditService.getAllUnauditedPatent(0, college, currentPage, pageSize);
+				List<Patent> datalist = auditService.getAllUnauditedPatent(0, college, sdept, currentPage, pageSize);
 				if (datalist.size() > 0) {
 					int totalRecord = datalist.get(0).getTotalRecord(); // 获取数据总条数
 					int totalPage = pageutil.getTotalPage(totalRecord, pageSize);// 获取总页数

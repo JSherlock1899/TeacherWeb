@@ -8,11 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import dao.IBaseDao;
 import dao.IProjectDao;
-import model.Patent;
+import model.ExcelProject;
 import model.Project;
 import util.CommonUtil;
 import util.DbUtil;
@@ -23,7 +22,7 @@ public class ProjectDaoImpl implements IProjectDao{
 	private PreparedStatement stmt = null;
 	TeacherDaoImpl teacherdao = new TeacherDaoImpl();
 	IBaseDao baseDao = new BaseDaoImpl();
-	CommonUtil commondao = new CommonUtil();
+	CommonUtil util = new CommonUtil();
 	@Override
 	public int delProject(String Psn) {
 		String sql = "delete from project where Psn = ?";		
@@ -43,10 +42,10 @@ public class ProjectDaoImpl implements IProjectDao{
 	@Override
 	public int alterProject(Project project) throws SQLException {
 		String Tsn = teacherdao.getTsn(project.getPleader().trim());			//获取该项目负责人对应的教师号
-		String sql = "update Project set Pname = ?,Pleader = ?,Pmember = ?,Pgrad = ?,Pkind = ?,Pmoney = ?,Pstatime = ?,Pcondition = ?,Pendtime = ?,Premarks = ?,Tsn = ? "
+		String sql = "update Project set Pname = ?,Pleader = ?,Pmember = ?,Pgrad = ?,Pkind = ?,Pmoney = ?,Pstatime = ?,Pcondition = ?,Pendtime = ?,Premarks = ?,Tsn = ?,Paudit = 0 "
 				+ "where Psn = ?";
-		Date Pstatime = commondao.utilToSql(project.getPstatime());
-		Date Pendtime = commondao.utilToSql(project.getPendtime());
+		Date Pstatime = util.utilToSql(project.getPstatime());
+		Date Pendtime = util.utilToSql(project.getPendtime());
 		List params = Arrays.asList(project.getPname(),project.getPleader(),project.getPmember(),project.getPgrad(),project.getPkind(),
 				project.getPmoney(),Pstatime,project.getPcondition(),Pendtime,project.getPremarks(),Tsn,project.getPsn());
 		return dbUtil.getUpdateResult(sql, params);
@@ -56,8 +55,8 @@ public class ProjectDaoImpl implements IProjectDao{
 	public int insertProject(Project project) throws SQLException {
 		String Tsn = teacherdao.getTsn(project.getPleader().trim());			//获取该项目负责人对应的教师号
 		String sql = "insert into Project (Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tsn,Paudit) Values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
-		Date Pstatime = commondao.utilToSql(project.getPstatime());
-		Date Pendtime = commondao.utilToSql(project.getPendtime());
+		Date Pstatime = util.utilToSql(project.getPstatime());
+		Date Pendtime = util.utilToSql(project.getPendtime());
 		List params = Arrays.asList(project.getPsn(),project.getPname(),project.getPleader(),project.getPmember(),project.getPgrad(),project.getPkind(),
 				project.getPmoney(),Pstatime,project.getPcondition(),Pendtime,project.getPremarks(),Tsn,0);
 		return dbUtil.getUpdateResult(sql, params);
@@ -78,56 +77,56 @@ public class ProjectDaoImpl implements IProjectDao{
 				starttime = CommonUtil.disposePageValue(starttime);
 				endtime = CommonUtil.disposePageValue(endtime);
 				Tname = CommonUtil.disposePageValue(Tname);
-//				System.out.println("college =" + college);
+//				tem.out.println("college =" + college);
 //				System.out.println("sdept =" + sdept);
 //				System.out.println("starttime =" + starttime);
 //				System.out.println("endtime =" + endtime);
 //				System.out.println("Tname =" + Tname);
 				//什么都没有设置
-				String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname ," + 
+				String sql1 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Paccessory,Paudit,message," + 
 				"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn where p.Paudit = 1) as pp where pp.r between ? and ?";
 				//设置了要查询的学院
-				String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Cname," + 
+				String sql2 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Cname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p  left join Teacher t on p.Tsn = t.Tsn "
 						+ "join College c on t.Csn = c.Csn where c.Cname = ? and p.Paudit = 1) as pp where pp.r between ? and ?"; 
 				//设置了要查询的学院和专业
-				String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname ,Cname,Dname," 
+				String sql3 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname ,Cname,Dname,Paccessory,Paudit,message," 
 						+ "ROW_NUMBER() over (order by Psn desc) as r from Project p left join Teacher t on p.Tsn = t.Tsn join Sdept s "
 						+ "on t.Dsn = s.Dsn join College c on t.Csn = c.Csn where Cname = ? and Dname = ? and p.Paudit = 1) as pp where pp.r between ? and ?";	
 				//设置了要查询的起止时间
-				String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname ," + 
+				String sql4 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn  where Pstatime >= ? and Pendtime <= ? and p.Paudit = 1) "
 						+ "as pp where pp.r between ? and ?";
 				//设置了要查询的学院和起止时间
-				String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,"
+				String sql5 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Paccessory,Paudit,message,"
 						+	"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn join College c "
 						+ 	"on t.Csn = c.Csn where c.Cname = ? and Pstatime >= ? and Pendtime <= ? and p.Paudit = 1) as pp where pp.r between ? and ?"; 
 				//设置了要查询的学院和专业和起止时间
-				String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Dname,"
+				String sql6 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Dname,Paccessory,Paudit,message,"
 						+	"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn join College c "
 						+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where Cname = ? and Dname = ? and Pstatime >= ? and Pendtime <= ? and p.Paudit = 1) as pp where pp.r between ? and ?";	
 				//没有设置要查询的教师名
-				String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname ," + 
+				String sql7 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn where Tname = ? and p.Paudit = 1) "
 						+ "as pp where pp.r between ? and ?";
 				//设置了要查询的学院和教师名
-				String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Cname ," + 
+				String sql8 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Cname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn join College c "
 						+ "on t.Csn = c.Csn where c.Cname = ? and Tname = ? and p.Paudit = 1) as pp where pp.r between ? and ?";
 				//没有设置要查询的学院和专业和教师名
-				String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Dname ," + 
+				String sql9 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Dname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn join College c "
 						+ "on t.Csn = c.Csn join Sdept s on t.Dsn = s.Dsn where c.Cname = ? and  Dname = ? and Tname = ? and p.Paudit = 1) as pp where pp.r between ? and ?";
 				//设置了要查询的起止时间和教师名
-				String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname ," + 
+				String sql10 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn "
 						+ "where  Pstatime >= ? and Pendtime <= ? and Tname = ? and p.Paudit = 1) as pp where pp.r between ? and ?";
 				//设置了要查询的学院和起止时间和教师名
-				String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname ," + 
+				String sql11 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 						+ " where  c.Cname = ? and Pstatime >= ? and Pendtime <= ? and Tname = ? and p.Paudit = 1) as pp where pp.r between ? and ?"; 
 				//设置了要查询的学院和专业和起止时间和教师名
-				String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Cname,Dname ," + 
+				String sql12 = "select * from (select COUNT(*)OVER() AS totalRecord,Psn,Pname,Pleader,Pmember,Pgrad,Pkind,Pmoney,Pstatime,Pcondition,Pendtime,Premarks,Tname,Cname,Dname,Paccessory,Paudit,message," + 
 						"ROW_NUMBER() over (order by Psn) as r from Project p left join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn"
 						+ " join Sdept s on t.Dsn = s.Dsn  where  c.Cname = ? and Dname = ? and Pendtime <= ? and Tname = ? and p.Paudit = 1) as pp where pp.r between ? and ?"; ;	
 				try {
@@ -188,7 +187,8 @@ public class ProjectDaoImpl implements IProjectDao{
 		try {
 			while(rs.next()) {
 				datalist.add(new Project(rs.getString("Psn"),rs.getString("Pname"),rs.getString("Pleader"), rs.getString("Pmember"),rs.getString("Pgrad"),rs.getString("Pkind"),rs.getInt("Pmoney"),
-						rs.getDate("Pstatime"), rs.getString("Pcondition"),rs.getDate("Pendtime"),rs.getString("Premarks"),rs.getInt("totalRecord")));
+						rs.getDate("Pstatime"), rs.getString("Pcondition"),rs.getDate("Pendtime"),rs.getString("Premarks"),rs.getInt("totalRecord")
+						,rs.getString("Paccessory"),rs.getString("message"),rs.getString("Paudit")));
 			}
 			return datalist;
 		} catch (SQLException e) {
@@ -199,11 +199,11 @@ public class ProjectDaoImpl implements IProjectDao{
 	
 	//获取导出excel的集合
 	@Override
-	public List<Project> getExcelDataList(ResultSet rs) {
-		List<Project> datalist = new ArrayList<Project>();
+	public List<ExcelProject> getExcelDataList(ResultSet rs) {
+		List<ExcelProject> datalist = new ArrayList<ExcelProject>();
 		try {
 			while(rs.next()) {
-				datalist.add(new Project(rs.getString("Psn"),rs.getString("Pname"),rs.getString("Pleader"), rs.getString("Pmember"),rs.getString("Pgrad"),rs.getString("Pkind"),rs.getInt("Pmoney"),
+				datalist.add(new ExcelProject(rs.getString("Psn"),rs.getString("Pname"),rs.getString("Pleader"), rs.getString("Pmember"),rs.getString("Pgrad"),rs.getString("Pkind"),rs.getInt("Pmoney"),
 						rs.getDate("Pstatime"), rs.getString("Pcondition"),rs.getDate("Pendtime"),rs.getString("Premarks")));
 			}
 			return datalist;
@@ -216,19 +216,64 @@ public class ProjectDaoImpl implements IProjectDao{
 	
 	//对未审核的项目进行审核
 	@Override
-	public int projectAudit(String Psn, String Paudit) {
-		String sql = "update Project set Paudit = ? where Psn = ?";
+	public int projectAudit(String Psn, String Paudit,String message) {
+		System.out.println("message = " + message);
+		String sql = "update Project set Paudit = ? ,message = ? where Psn = ?";
 		try {
 			stmt = dbUtil.getConnection().prepareStatement(sql);
 			stmt.setString(1, Paudit);
-			stmt.setString(2, Psn);
+			stmt.setString(2, message);	
+			stmt.setString(3, Psn);
 			int result = stmt.executeUpdate();
 			return result;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return 0;
+	}
+	
+	//获取对应的附件路径
+	public String getAccessory(String Psn) {
+		String sql = "select Paccessory from Project where Psn = ?";
+		try {
+			stmt = dbUtil.getConnection().prepareStatement(sql);
+			stmt.setString(1,Psn);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				String accessory = rs.getString("Paccessory");
+				return accessory;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+		
+		
+	//获取审核的详细信息
+	@Override
+	public List<Project> getlist(Project project) {
+		String Paudit = util.disposeAuditValue(project.getPaudit());
+		String Message = util.disposeMessageValue(project.getMessage());
+		List<Project> datalist = new ArrayList<Project>();
+		datalist.add(new Project(project.getPsn(),project.getPname(), project.getPleader(),project.getPmember(),project.getPgrad(),
+				project.getPkind(),project.getPmoney(),project.getPstatime(),project.getPcondition(),project.getPendtime(),
+				project.getPremarks(),project.getTotalRecord(),project.getPaccessory(),Message,Paudit));
+		return datalist;
+	}
+		
+	//保存上传的附件的路径
+	@Override
+	public void saveFilePath(String path,String psn) {
+		String sql = "update Project set Paccessory = ? where Psn = ?";
+		try {
+			stmt = dbUtil.getConnection().prepareStatement(sql);
+			stmt.setString(1, path);
+			stmt.setString(2, psn);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

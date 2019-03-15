@@ -22,8 +22,8 @@ public class StatisticsService {
 		return statisticDao.getSdeptCount(option,collegevalue);
 	};
 	
-	public ResultSet getProjectMoney()throws SQLException{  //获取各学院的项目经费之和
-		return statisticDao.getProjectMoney();
+	public ResultSet getProjectMoney(String starttime,String endtime)throws SQLException{  //获取各学院的项目经费之和
+		return statisticDao.getProjectMoney(starttime,endtime);
 	}
 	
 	public ResultSet getSdeptProjectMoney(String collegevalue)throws SQLException{

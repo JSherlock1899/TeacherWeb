@@ -42,13 +42,20 @@ $(document).on("click",".updata",function(e){
 
 //获取该行当前每个表格单元的信息并提交到servlet进行修改
 $(document).on("click",".save",function(){
-	var Patname = $(this).closest("tr").find(".Patname").text();
-	var Pleader = $(this).closest("tr").find(".Pleader").text();
-	var Patsn = $(this).closest("tr").find(".Patsn").text();
-	var Patapdate = $(this).closest("tr").find(".Patapdate").text();
-	var Patemdate = $(this).closest("tr").find(".Patemdate").text();
-	var Patgrad = $(this).closest("tr").find(".Patgrad").text();
-	var Patremarks = $(this).closest("tr").find(".Patremarks").text();
+	if(function check(){
+		var check = checkPatsn() && checkPatname();
+		return check;
+        }){
+	alert('输入不合法！')
+	return;
+}
+	var Patname = $("#Patname").val();
+	var Pleader = $("#Pleader").val();
+	var Patsn = $("#Patsn").val();
+	var Patapdate = $("#Patapdate").val();
+	var Patemdate = $("#Patemdate").val();
+	var Patgrad = $("#Patgrad").val();
+	var Patremarks = $("#Patremarks").val();
 	$.ajax({
         url:"../servlet/PatentServlet?value=2",
         type:"post",
@@ -76,12 +83,22 @@ $(document).on("click",".save",function(){
 //新建信息
 //获取新建行当前每个表格单元的信息
 $(document).on("click",".saveNewMsg",function(){
+	if(function check(){
+		var check = checkPatsn() && checkPatname();
+		alert(check)
+		return check;
+        }){
+	alert('输入不合法！')
+	alert(checkPatsn())
+	alert(checkPatname())
+	return;
+}
 	var Patname = $('#Patname').val();
 	var Pleader = $('#Pleader').val();
 	var Patsn = $('#Patsn').val();
 	var Patapdate = $('#Patapdate').val();
 	var Patemdate = $('#Patemdate').val();
-	var Patgrad = $('#Patgrad').val();
+	var Patgrad = $('#Patgrad option:selected').val();
 	var Patremarks = $('#Patremarks').val();
 	$.ajax({
         url:"../servlet/PatentServlet?value=3",
@@ -155,29 +172,7 @@ $(document).on("click","#nopass",function(){
 	   
 	    
 	    
-		//输入页码跳转页面
-		$(document).on("click","#pageGo",function(){
-			//页码输入框输入的数
-			var pageVal = $('.pageVal').val();
-			//总页数
-			var totalPage = $('#totalPage').val();
-			//一页显示的条数
-			var pageSize = $('#pageSize').val();
-			console.log(pageVal)
-			console.log(totalPage)
-			console.log(pageSize)
-			var college = $('#college').val();
-			if(pageVal > totalPage){
-				alert('请输入正确的页码！');
-				return
-			}
-			var path = "";
-			var a = "../servlet/PageServlet?option=Patent&currentPage=";
-			var b = "&pageSizeSelect=" + pageSize + "&teacher=teacher&count=0&college=" + college
-			path = path + a + pageVal + b;
-			alert(path)
-			window.location.href = path;
-		})								
+								
 			
 		
 		
@@ -192,4 +187,8 @@ $(document).on("click","#nopass",function(){
 				$('#next').css("display","none");
 			}
 		})
+		
+		
+		
+		
 		

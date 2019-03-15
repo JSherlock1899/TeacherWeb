@@ -34,6 +34,9 @@ public class DownloadTemplate extends HttpServlet {
 		else if(count.equals("1")) {
 			template.createExcel(response,"project");
 		}
+		else if(count.equals("5")) {
+			template.createExcel(response,"teacher");
+		}
 	}
 
 

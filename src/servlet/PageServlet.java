@@ -46,7 +46,7 @@ public class PageServlet extends HttpServlet {
 		String collegevalue = request.getParameter("collegevalue");// select下拉框中的学院
 		String college = request.getParameter("college");// session中的学院
 		String teacher = request.getParameter("teacher");
-		if (college != null) { // 判断是否是院管理员
+		if (college != null ) { // 判断是否是院管理员
 			collegevalue = college;
 		}
 		String sdeptValue = request.getParameter("sdeptValue");// 所属专业
@@ -64,7 +64,7 @@ public class PageServlet extends HttpServlet {
 		} else {
 			currentPage = Integer.parseInt(request.getParameter("currentPage"));
 		}
-		if (pageSizeString == null || currentPageString.equals("undefined")) {
+		if (pageSizeString == null || pageSizeString.equals("undefined")) {
 			pageSize = 5;// 默认每页显示5条数据
 		} else {
 			pageSize = Integer.parseInt(request.getParameter("pageSizeSelect"));
@@ -80,8 +80,7 @@ public class PageServlet extends HttpServlet {
 				//管理员部分
 				if (option.equals("Patent")) {
 					PatentService patentService = new PatentService();
-					ResultSet patentRs = patentService.selectCollegePatent(collegevalue, sdeptValue, starttime, endtime,
-							selectByNameVal, m, n);
+					ResultSet patentRs = patentService.selectCollegePatent(collegevalue, sdeptValue, starttime, endtime,selectByNameVal, m, n);
 					List<Patent> datalist = patentService.getDataList(patentRs); //获取查询得到的结果集
 					if (datalist.size() > 0) {
 						int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
@@ -171,7 +170,7 @@ public class PageServlet extends HttpServlet {
 					TeacherService teacherService = new TeacherService();
 					ResultSet teacherrRs;
 					try {
-						teacherrRs = teacherService.selectTeacher(college, sdeptValue, selectByNameVal, m, n);
+						teacherrRs = teacherService.selectTeacher(collegevalue, sdeptValue, selectByNameVal, m, n);
 						List<Teacher> datalist = teacherService.getDataList(teacherrRs);
 						if (datalist.size() > 0) {
 							int totalRecord = datalist.get(0).getTotalRecord();// 获取数据总条数
@@ -245,11 +244,27 @@ public class PageServlet extends HttpServlet {
 							request.setAttribute("pager", pager);
 							request.setAttribute("currentPage", currentPage);
 							request.setAttribute("pageArr", pageArr);
-							request.getRequestDispatcher("/Teacher/Honor/TeacherHonor.jsp").forward(request, response);
+							if(count.equals("1")) {
+								if(order!=null) {
+									int number = Integer.parseInt(order);
+									//获取要获取详细信息的那个patent对象
+									Honor honor = datalist.get(number);
+									//将patent对象转化为List
+									datalist = honorservice.getlist(honor);
+									//覆盖原先的pager
+									pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+									request.setAttribute("pager", pager);
+								}	
+								request.getRequestDispatcher("/Teacher/Honor/TeacherDetailHonor.jsp").forward(request, response);
+							}else {
+								request.getRequestDispatcher("/Teacher/Honor/TeacherHonor.jsp").forward(request, response);
+							}
+							
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
+
 				} else if (option.equals("Project")) {
 					ProjectService projectService = new ProjectService();
 					ResultSet projectRs;
@@ -265,7 +280,22 @@ public class PageServlet extends HttpServlet {
 							request.setAttribute("pager", pager);
 							request.setAttribute("currentPage", currentPage);
 							request.setAttribute("pageArr", pageArr);
-							request.getRequestDispatcher("/Teacher/Project/TeacherProject.jsp").forward(request, response);
+							if(count.equals("1")) {
+								if(order!=null) {
+									int number = Integer.parseInt(order);
+									//获取要获取详细信息的那个patent对象
+									Project project = datalist.get(number);
+									//将patent对象转化为List
+									datalist = projectService.getlist(project);
+									//覆盖原先的pager
+									pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+									request.setAttribute("pager", pager);
+								}	
+								request.getRequestDispatcher("/Teacher/Project/TeacherDetailProject.jsp").forward(request, response);
+							}else {
+								request.getRequestDispatcher("/Teacher/Project/TeacherProject.jsp").forward(request, response);
+							}
+							
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -286,12 +316,26 @@ public class PageServlet extends HttpServlet {
 							request.setAttribute("pager", pager);
 							request.setAttribute("currentPage", currentPage);
 							request.setAttribute("pageArr", pageArr);
-							request.getRequestDispatcher("/Teacher/Paper/TeacherPaper.jsp").forward(request, response);
+							if(count.equals("1")) {
+								if(order!=null) {
+									int number = Integer.parseInt(order);
+									//获取要获取详细信息的那个patent对象
+									Paper paper = datalist.get(number);
+									//将patent对象转化为List
+									datalist = paperService.getlist(paper);
+									//覆盖原先的pager
+									pager = new Pager(pageSize, currentPage, totalRecord, totalPage, datalist);
+									request.setAttribute("pager", pager);
+								}	
+								request.getRequestDispatcher("/Teacher/Paper/TeacherDetailPaper.jsp").forward(request, response);
+							}else {
+								request.getRequestDispatcher("/Teacher/Paper/TeacherPaper.jsp").forward(request, response);
+							}
+							
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-
 				}
 			}
 		}

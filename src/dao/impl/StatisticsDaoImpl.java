@@ -23,29 +23,57 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 	//获取各学院的各项目的数目
 	@Override
 	public ResultSet getCollegeCount(String option,String starttime,String endtime) throws SQLException {
-		System.out.println(starttime);
-		System.out.println(endtime);
 		if(option!=null) {
 			if(option.equals("Project")) {
-				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Project p "
-						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
-				stmt = dbUtil.getConnection().prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery();
-				return rs;
+				if(starttime == null && endtime == null) {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Project p "
+							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}else {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Project p "
+							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Pstatime > ? and Pstatime < ?) b on a.Cname = b.Cname group by a.Cname"; 
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					stmt.setString(1, starttime);
+					stmt.setString(2, endtime);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}
 			}else if(option.equals("Paper")) {
-				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Paper p "
-						+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
-				stmt = dbUtil.getConnection().prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery();
-				return rs;
+				if(starttime == null && endtime == null) {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Paper p "
+							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}else {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Paper p "
+							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Padate > ? and Padate < ?) b on a.Cname = b.Cname group by a.Cname"; 
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					stmt.setString(1, starttime);
+					stmt.setString(2, endtime);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}
 			}else if(option.equals("Honor")) {
-				String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Honor h "
-						+ "join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
-				stmt = dbUtil.getConnection().prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery();
-				return rs;
+				if(starttime == null && endtime == null) {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Honor h "
+							+ "join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname";
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}else {
+					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Honor h "
+							+ "join Teacher t on h.Tsn = t.Tsn join College c on t.Csn = c.Csn where Hdate > ? and Hdate < ?) b on a.Cname = b.Cname group by a.Cname"; 
+					stmt = dbUtil.getConnection().prepareStatement(sql);
+					stmt.setString(1, starttime);
+					stmt.setString(2, endtime);
+					ResultSet rs = stmt.executeQuery();
+					return rs;
+				}
 			}else if(option.equals("Patent")) {
-				if(starttime == null) {
+				if(starttime == null && endtime == null) {
 					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Patent p "
 							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn) b on a.Cname = b.Cname group by a.Cname"; 
 					stmt = dbUtil.getConnection().prepareStatement(sql);
@@ -53,10 +81,10 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 					return rs;
 				}else {
 					String sql = "select a.Cname,COUNT(b.Cname) as count from (select Cname from College) a left join (select Cname from Patent p "
-							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Patendate < ? and Patendate > ?) b on a.Cname = b.Cname group by a.Cname"; 
+							+ "join Teacher t on p.Tsn = t.Tsn join College c on t.Csn = c.Csn where Patendate > ? and Patendate < ?) b on a.Cname = b.Cname group by a.Cname"; 
 					stmt = dbUtil.getConnection().prepareStatement(sql);
 					stmt.setString(1, starttime);
-					stmt.setString(1, endtime);
+					stmt.setString(2, endtime);
 					ResultSet rs = stmt.executeQuery();
 					return rs;
 				}
@@ -113,13 +141,25 @@ public class StatisticsDaoImpl implements IStatisticsDao {
 	
 	//获取各学院的项目经费之和
 	@Override
-	public ResultSet getProjectMoney() throws SQLException {
-		String sql = "select SUM(b.Pmoney) as Pmoney,a.Cname from (select Cname from College) a left join "
-				+ "(select Cname,Pmoney from Project p join Teacher t on p.Tsn = t.Tsn join College c on c.Csn = t.Csn) b on a.Cname = b.Cname "
-				+ "group by a.Cname";
-		stmt = dbUtil.getConnection().prepareStatement(sql);
-		ResultSet rs = stmt.executeQuery();
-		return rs;
+	public ResultSet getProjectMoney(String starttime,String endtime) throws SQLException {
+		if(starttime == null && endtime == null) {
+			String sql = "select SUM(b.Pmoney) as Pmoney,a.Cname from (select Cname from College) a left join "
+					+ "(select Cname,Pmoney from Project p join Teacher t on p.Tsn = t.Tsn join College c on c.Csn = t.Csn) b on a.Cname = b.Cname "
+					+ "group by a.Cname";
+			stmt = dbUtil.getConnection().prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			return rs;
+		}else {
+			String sql = "select SUM(b.Pmoney) as Pmoney,a.Cname from (select Cname from College) a left join "
+					+ "(select Cname,Pmoney from Project p join Teacher t on p.Tsn = t.Tsn join College c on c.Csn = t.Csn where Pstatime > ? "
+					+ "and Pstatime < ?) b on a.Cname = b.Cname "
+					+ "group by a.Cname";
+			stmt = dbUtil.getConnection().prepareStatement(sql);
+			stmt.setString(1, starttime);
+			stmt.setString(2, endtime);
+			ResultSet rs = stmt.executeQuery();
+			return rs;
+		}
 	}
 	
 	

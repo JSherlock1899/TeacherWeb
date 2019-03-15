@@ -14,7 +14,28 @@ public class Paper {
 	private String Paccessory; //附件
 	private String message;//留言
 	private String Pdisvol; 
+	private String Paudit; 
 	
+	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
+			String paremarks, int totalRecord, String paccessory, String message, String paudit) {
+		super();
+		Pasearchnum = pasearchnum;
+		Paname = paname;
+		Pawriter = pawriter;
+		Papublish = papublish;
+		Pagrad = pagrad;
+		Padate = padate;
+		Paremarks = paremarks;
+		this.totalRecord = totalRecord;
+		Paccessory = paccessory;
+		this.message = message;
+		Paudit = paudit;
+	}
+
+
+
+
+
 	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
 			String paremarks, int totalRecord, String pdisvol) {
 		super();
@@ -45,6 +66,27 @@ public class Paper {
 		Paremarks = paremarks;
 		Pdisvol = pdisvol;
 	}
+
+	
+	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
+			String paremarks, int totalRecord, String paccessory, String message, String pdisvol, String paudit) {
+		super();
+		Pasearchnum = pasearchnum;
+		Paname = paname;
+		Pawriter = pawriter;
+		Papublish = papublish;
+		Pagrad = pagrad;
+		Padate = padate;
+		Paremarks = paremarks;
+		this.totalRecord = totalRecord;
+		Paccessory = paccessory;
+		this.message = message;
+		Pdisvol = pdisvol;
+		Paudit = paudit;
+	}
+
+
+
 
 
 	public Paper(String pasearchnum, String paname, String pawriter, String papublish, String pagrad, Date padate,
@@ -146,6 +188,12 @@ public class Paper {
 
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public String getPaudit() {
+		return Paudit;
+	}
+	public void setPaudit(String paudit) {
+		Paudit = paudit;
 	}
 	
 	

@@ -52,8 +52,8 @@ public class ExcelPatent {
 	public void setTname(String tname) {
 		Tname = tname;
 	}
-	public ExcelPatent(String patname, String patsn, Date patapdate, Date patemdate, String patgrad, String patremarks,
-			String tname) {
+	public ExcelPatent(String patname, String patsn, String tname,Date patapdate, Date patemdate, String patgrad, String patremarks
+			) {
 		super();
 		Patname = patname;
 		Patsn = patsn;

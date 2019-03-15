@@ -41,6 +41,8 @@ public class HonorServlet extends HttpServlet {
 				String Hgrad = request.getParameter("Hgrad");
 				String Hreward = request.getParameter("Hreward");
 				String Hremarks = request.getParameter("Hremarks");
+				//审核意见
+				String message = request.getParameter("message");
 				if (value.equals("1")) { // 删除对应的专利信息
 					try {
 						int result = honorservice.delHonor(Hsn);
@@ -91,9 +93,9 @@ public class HonorServlet extends HttpServlet {
 						e.printStackTrace();
 					}
 				}else if(value.equals("4")) {			//审核通过
-					honorservice.honorAudit(Hsn, "1");
+					honorservice.honorAudit(Hsn, "1",message);
 				}else if(value.equals("5")) {			//审核不通过
-					honorservice.honorAudit(Hsn, "2");
+					honorservice.honorAudit(Hsn, "2",message);
 				}
 				try {
 					baseDao.closeCon(); //关闭资源

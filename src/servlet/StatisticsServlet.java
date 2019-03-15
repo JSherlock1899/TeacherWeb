@@ -51,7 +51,7 @@ public class StatisticsServlet extends HttpServlet {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 //		System.out.println(collegevalue);
 		//院管理员操作
-		if (!collegevalue.equals("null")) {
+		if (!collegevalue.equals("null") && !collegevalue.equals("")) {
 			try {
 				//获取统计结果的结果集
 				rs = statisticService.getSdeptCount(option, collegevalue);
@@ -84,9 +84,8 @@ public class StatisticsServlet extends HttpServlet {
 		
 		//传递用户权限等级
 		request.setAttribute("grade", grade);
-		
 			//判断是院管理员还是校管理员
-			if(!collegevalue.equals("null") && option.equals("Project")) {
+			if(!collegevalue.equals("null") && option.equals("Project") && !collegevalue.equals("")) {
 				//项目经费
 				//院管理员
 				try {
@@ -103,7 +102,7 @@ public class StatisticsServlet extends HttpServlet {
 				//项目经费
 				//校管理员
 				try {
-					rs = statisticService.getProjectMoney();
+					rs = statisticService.getProjectMoney(starttime,endtime);
 					map = util.moneyRsToMap(rs);					
 					JSONObject json = new JSONObject(map);					
 					request.setAttribute("Pmoney", json);

@@ -36,6 +36,7 @@
 							String Tname = (String) request.getAttribute("Tname");
 							int[] pageArr = (int[]) request.getAttribute("pageArr"); 
 							int grade = (int) session.getAttribute("grade");	//获取用户的权限等级
+							String user = (String) session.getAttribute("user");	//获取用户名
 				%>
 	<div class="table-main col-md-12" >
 		<div class="col-md-4" >
@@ -51,13 +52,7 @@
 					<input type="button" value="新建记录" id="btn_add" class="btn btn-success"> 								
 					<form action="../servlet/SelectExport"  method="post" id="PatentForm" class="form-group">
 						<input type="hidden" name="count" value="4">
-						<input type="submit" value="导出" id="submitChecked" class="btn btn-info">
-						<input type="file" id="file"style="display: none"> 
-						<input type="hidden" id="totalPage" value="<%=totalPage %>"/>
 						<input type="hidden" id="currentPage" value="<%=currentPage %>"/>
-						<input type="hidden" id="pageSize" value="<%=pageSize %>"/>
-						<input type="hidden" id="totalRecord" value="<%=totalRecord %>"/>
-						<input type="hidden" id="grade" value="<%=grade %>"/>
 				</div>
 					<table border="1" id="table" class="table table-striped table-bordered table-hover table-condensed">
 							<tr class="info">
@@ -71,8 +66,10 @@
 							<% 
 								for(int i=0; i<datalist.size(); i++){
 									String Patsn = datalist.get(i).getPatsn();
+									String name = datalist.get(i).getPleader();
 									
 							%>
+							<input type="hidden" id="name" value="<%=name %>"/>
 							<tr>
 								<td class="Patname edit"><a href="../servlet/PageServlet?option=Patent&teacher=teacher&count=1&Proname=
 								<%=datalist.get(i).getPatname()%>&Patsn=<%=Patsn%>&order=<%=i%>&pageSize=<%=pageSize%>&currentPage=<%=currentPage%>"><%=datalist.get(i).getPatname()%></a></td>
@@ -86,6 +83,7 @@
 							<% } 
 					      basedao.closeCon();%>
 						</table>
+						
 				<nav aria-label="Page navigation">
 				<ul class="pagination" style="display:block">
 					<li>
@@ -145,16 +143,25 @@
 						<div class="modal-body">
 							<div class="form-group">
 								<label for="Patname">名称</label> <input type="text" name="Patname"
-									class="form-control" id="Patname" placeholder="名称">
+									class="form-control" id="Patname" placeholder="名称"
+									 onfocus="showTips('Patname','专利名称不能超过15个字符')" 
+									onblur="checkPatname('Patname','请按要求输入专利名称')">
+									<div id="Patnamediv" style="display:none">
+										<span id="Patnamespan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
-								<label for="Pleader">第一作者</label> <input type="text" name="Pleader"
+								<label for="Pleader">第一作者</label> <input type="text" name="Pleader" value="<%=user %>"
 									class="form-control" id="Pleader" placeholder="第一作者">
 							</div>
 							<div class="form-group">
 								<label for="Patsn">授权号</label> <input type="text"
 									name="Patsn" class="form-control" id="Patsn"
-									placeholder="授权号">
+									placeholder="授权号" onfocus="showTips('Patsn','专利授权号为1-20位的数字')" 
+									onblur="checkPatsn('Patsn','请按要求输入专利授权号')">
+									<div id="Patsndiv" style="display:none">
+										<span id="Patsnspan" ></span><br>
+									</div>
 							</div>
 							<div class="form-group">
 								<label for="Patapdate">申请时间</label> <input type="date"
@@ -206,8 +213,63 @@
 		 });
 		
 			
-			
+		$(document).on("change","#pageSize",function(){			//根据下拉框值的改变改变每页显示的记录条数
+			var pageSizeSelect = $("#pageSize option:selected").val();
+			var href = "";
+			var a = "../servlet/PageServlet?option=Patent&currentPage=<%=currentPage%>&pageSizeSelect=";
+			var b = "&teacher=teacher&count=0"
+			href = href + a + pageSizeSelect + b;
+			window.location.href = href;
+		})
 		
+		function skipPage(){								//输入页码跳转页面
+			//页码输入框输入的数
+			var pageVal = $('.pageVal').val();
+			//总页数
+			var totalPage = $('#totalPage').val();
+			//一页显示的条数
+			var pageSize = $('#pageSize').val();
+			if(pageVal > totalPage){
+				alert('请输入正确的页码！');
+				return
+			}
+			if(pageVal == ""){
+				alert('页码不能为空！');
+				return
+			}
+			var path = "";
+			var a = "../servlet/PageServlet?option=Patent&currentPage=";
+			var b = "&pageSizeSelect=<%=pageSize%>&teacher=teacher&count=0"
+			path = path + a + pageVal + b;
+			window.location.href = path;
+		}	
+		
+		function checkPatname(id,info){
+			var uValue = document.getElementById(id).value;
+			if(!/^.{1,15}$/.test(uValue)){
+				document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+				document.getElementById(id+"div").style.display="block";
+				return true
+			}else{
+				document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				return false
+			}
+		}
+		function checkPatsn(id,info){
+			var uValue = document.getElementById(id).value;
+			if(!/^\d{1,20}$/.test(uValue)){
+				document.getElementById(id+"span").innerHTML="<font color='red' size='2'>"+info+"</font>";
+				document.getElementById(id+"div").style.display="block";
+				return true
+			}else{
+				document.getElementById(id+"span").innerHTML="<font color='green' size='3'> √</font>";
+				return false
+			}
+		}
+
+		function showTips(id,info){
+			document.getElementById(id+"span").innerHTML="<font color='gray' size='2'>"+info+"</font>";
+		}
 	</script>
 </body>
 </html>

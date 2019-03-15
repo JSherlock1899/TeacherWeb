@@ -132,8 +132,12 @@ public class ExportExcel<T> {
 				row = sheet.createRow(index);
 				T t = (T) it.next();
 				// 利用反射，根据javabean属性的先后顺序，动态调用getXxx()方法得到属性值
+				//因此重写javabean
 				Field[] fields = t.getClass().getDeclaredFields();
 				for (short i = 0; i < fields.length; i++) {
+					 if(row == null){
+				          continue;
+				  }
 					HSSFCell cell = row.createCell(i);
 	
 					Field field = fields[i];
@@ -149,11 +153,9 @@ public class ExportExcel<T> {
 							textValue = value.toString();
 						}
 						if (textValue != null) {
-	
 							HSSFRichTextString richString = new HSSFRichTextString(textValue);
 							cell.setCellValue(richString.toString().trim());
 						}
-	
 					} catch (SecurityException e) {
 						e.printStackTrace();
 					} catch (NoSuchMethodException e) {

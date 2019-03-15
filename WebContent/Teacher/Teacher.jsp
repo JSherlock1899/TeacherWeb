@@ -3,15 +3,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<%
-		
-	%>
-
-<head>
 <link rel="stylesheet" href="../UI/CSS/bootstrap.css">
 <link rel="stylesheet" href="../UI/CSS/style.css">
 <script type="text/javascript" src="../UI/JS/jquery-3.3.1.min.js"></script>
@@ -19,8 +10,7 @@
 <script type="text/javascript" src="/TeacherWeb/UI/JS/AdminJS.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/commonUse.js"></script>
 <script type="text/javascript" src="/TeacherWeb/UI/JS/bootstrap.min.js"></script>
-<script type="text/javascript"
-	src="/TeacherWeb/UI/JS/bootstrap-table.js"></script>
+<script type="text/javascript" src="/TeacherWeb/UI/JS/bootstrap-table.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 </head>
@@ -99,7 +89,21 @@
 						</li>
 					</ul>
 				</div>
-				
+				<div class="sBox otherAction">
+					<div class="subNav sublist-up">
+						<span class="title-icon glyphicon glyphicon-chevron-up"></span><span
+							class="sublist-title" style="font-size:15px;">其他</span>
+					</div>
+					<ul class="navContent" style="display: none">
+						<li>
+							<div class="showtitle" style="width: 100px;">密码管理</div> <a
+							href="../Teacher/Other/alterPassword.jsp" 
+							target="select_frame"><span
+								class="sublist-icon glyphicon  glyphicon-asterisk"></span><span
+								class="sub-title">密码管理</span></a>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 		<div class="table" class="col-md-12">
